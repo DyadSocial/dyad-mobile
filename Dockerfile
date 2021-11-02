@@ -29,10 +29,3 @@ ENV PATH "$PATH:/home/dev/Android/sdk/cmdline-tools/latest/bin"
 
 # Install Dart
 RUN flutter doctor
-
-# Emulator
-ENV PATH "$PATH:/home/dev/Android/sdk/emulator"
-RUN sdkmanager --install "system-images;android-29;default;x86"
-RUN echo "no" | avdmanager --verbose create avd --force --name "generic_10" --package "system-images;android-29;default;x86" --tag "default" --abi "x86"
-RUN emulator @generic_10 -no-boot-anim -netdelay none -accel on -no-snapshot -wipe-data -skin 768x1280 &
-
