@@ -106,6 +106,7 @@ class _LoginState extends State<Login> {
             Container(
               height: 80,
               child: TextFormField(
+                obscureText: true,
                 decoration: InputDecoration(
                   icon: Icon(Icons.lock),
                   labelText: 'Password',
