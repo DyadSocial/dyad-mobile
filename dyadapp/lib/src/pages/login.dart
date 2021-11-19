@@ -1,37 +1,30 @@
 import 'package:flutter/material.dart';
 
 // Login Info Class
-class LoginInfo {
-  String _username = '';
-  String _password = '';
+class Credentials {
+  final String phoneNumber;
+  final String password;
 
-  LoginInfo();
-
-  void setUsername(username) {
-    this._username = username;
-  }
-
-  void setPassword(password) {
-    this._password = password;
-  }
-
-  @override
-  String toString() {
-    return "username: ${this._username}, password: ${this._password}";
-  }
+  Credentials(this.phoneNumber, this.password);
 }
 
 // Login Widget
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  final ValueChanged<Credentials> onSignIn;
+
+  const LoginScreen({
+    required this.onSignIn,
+    Key? key,
+  }) : super(key: key);
 
   @override
-  _LoginState createState() => _LoginState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
 // Login State for Login
-class _LoginState extends State<Login> {
-  LoginInfo loginInfo = LoginInfo();
+class _LoginScreenState extends State<LoginScreen> {
+  final _phoneNumberController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +76,7 @@ class _LoginState extends State<Login> {
                   }
                 },
                 keyboardType: TextInputType.phone,
+                controller: _phoneNumberController,
               ),
             ),
             Container(
@@ -101,6 +95,7 @@ class _LoginState extends State<Login> {
                   }
                 },
                 keyboardType: TextInputType.text,
+                controller: _passwordController,
               ),
             ),
             Padding(
@@ -108,8 +103,13 @@ class _LoginState extends State<Login> {
               child: Container(
                 height: 40,
                 child: ElevatedButton(
-                  child: Text("Submit"),
-                  onPressed: () {},
+                  child: Text("Sign In"),
+                  onPressed: () async {
+                    widget.onSignIn(Credentials(
+                      _phoneNumberController.value.text,
+                      _passwordController.value.text,
+                    ));
+                  },
                 ),
               ),
             ),
