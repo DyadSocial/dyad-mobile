@@ -69,7 +69,7 @@ class _DyadState extends State<Dyad> {
 
   Future<ParsedRoute> _guard(ParsedRoute from) async {
     final signedIn = _auth.isSignedIn;
-    final signInRoute = ParsedRoute('/signin', '/signin', {}, {});
+    final signInRoute = ParsedRoute('/login', '/login', {}, {});
 
     if (!signedIn && from != signInRoute) {
       return signInRoute;
@@ -81,7 +81,7 @@ class _DyadState extends State<Dyad> {
 
   void _handleAuthStateChanged() {
     if (!_auth.isSignedIn) {
-      _routeState.go('/signin');
+      _routeState.go('/login');
     }
   }
 

@@ -1,5 +1,12 @@
 // Copyright 2014 The Chromium Authors. All rights reserved. See LICENSE file.
 
+/*
+Class SimpleRouterDelegate
+Description: Responds to push and pop route intents and notifies router to 
+rebuild. Also acts as the builder for Router widget and builds a navigating
+widget (class Navigator).
+*/
+
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';

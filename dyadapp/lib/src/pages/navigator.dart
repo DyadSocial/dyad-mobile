@@ -5,6 +5,7 @@ import '../auth.dart';
 import '../routing.dart';
 import '../data.dart';
 import 'login.dart';
+import 'scaffold.dart';
 import '../widgets/fade_transition_page.dart';
 
 class DyadNavigator extends StatefulWidget {
@@ -33,17 +34,17 @@ class _DyadNavigatorState extends State<DyadNavigator> {
     final pathTemplate = routeState.route.pathTemplate;
 
     Message? selectedMessage;
-    if (selectedMessage == '/message/:messageId') {
+    if (pathTemplate == '/message/:messageId') {
       // Route to messageId message
     }
 
     Post? selectedPost;
-    if (selectedPost == '/post/:postId') {
+    if (pathTemplate == '/post/:postId') {
       // Route to postId post
     }
 
     User? selectedProfile;
-    if (selectedProfile == '/profile/:userId') {
+    if (pathTemplate == '/profile/:userId') {
       // Route to userId profile
     }
 
@@ -68,17 +69,9 @@ class _DyadNavigatorState extends State<DyadNavigator> {
           )
         else ...[
           FadeTransitionPage<void>(
-            key: _signInKey,
-            child: LoginScreen(
-              onSignIn: (credentials) async {
-                var signedIn = await authState.signIn(
-                    credentials.phoneNumber, credentials.password);
-                if (signedIn) {
-                  routeState.go('/feed');
-                }
-              },
-            ),
-          )
+            key: _scaffoldKey,
+            child: const DyadScaffold(),
+          ),
         ]
       ],
     );
