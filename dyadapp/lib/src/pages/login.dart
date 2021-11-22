@@ -34,8 +34,8 @@ class _LoginScreenState extends State<LoginScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.help),
-            onPressed: _pushLoginHelp,
-            tooltip: 'Login Help',
+            onPressed: _pushAbout,
+            tooltip: 'About Dyad',
           ),
         ],
       ),
@@ -43,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _pushLoginHelp() {}
+  void _pushAbout() {}
 
   Widget _buildLogin() {
     return Center(
