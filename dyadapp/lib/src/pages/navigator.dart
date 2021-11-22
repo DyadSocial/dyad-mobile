@@ -1,5 +1,3 @@
-import 'package:collection/collection.dart';
-import 'package:dyadapp/src/pages/about.dart';
 import 'package:flutter/material.dart';
 
 import '../auth.dart';
@@ -49,7 +47,7 @@ class _DyadNavigatorState extends State<DyadNavigator> {
     if (pathTemplate == '/profile/:userId') {
       // Route to userId profile
     }
-
+    print("${routeState.route.pathTemplate}");
     return Navigator(
       key: widget.navigatorKey,
       onPopPage: (route, dynamic result) {
@@ -68,11 +66,6 @@ class _DyadNavigatorState extends State<DyadNavigator> {
                 }
               },
             ),
-          )
-        else if (routeState.route.pathTemplate == '/about')
-          FadeTransitionPage<void>(
-            key: _aboutKey,
-            child: const AboutScreen(),
           )
         else ...[
           FadeTransitionPage<void>(

@@ -25,7 +25,6 @@ class _DyadState extends State<Dyad> {
       allowedPaths: [
         '/login',
         '/feed',
-        '/about',
       ],
       guard: _guard,
       initialRoute: '/login',
@@ -71,9 +70,17 @@ class _DyadState extends State<Dyad> {
   Future<ParsedRoute> _guard(ParsedRoute from) async {
     final signedIn = _auth.isSignedIn;
     final signInRoute = ParsedRoute('/login', '/login', {}, {});
-
-    if (!signedIn && from != signInRoute) {
-      return signInRoute;
+    print("from: ${from.pathTemplate}");
+    // from sign in page
+    if (!signedIn && from.pathTemplate == '/about') {
+      return from;
+    }
+    if (!signedIn) {
+      if (from != signInRoute) {
+        return signInRoute;
+      } else if (from.pathTemplate == '/about') {
+        return from;
+      }
     } else if (signedIn && from == signInRoute) {
       return ParsedRoute('/feed', '/feed', {}, {});
     }

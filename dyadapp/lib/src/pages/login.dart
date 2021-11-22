@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dyadapp/src/pages/about.dart';
 import '../routing.dart';
 
 // Login Info Class
@@ -47,8 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
   RouteState get _routeState => RouteStateScope.of(context);
 
   void _handleAboutTapped() {
-    print("about button pressed");
-    _routeState.go('/about');
+    Navigator.of(context).push<void>(
+        MaterialPageRoute<void>(builder: (context) => const AboutScreen()));
   }
 
   Widget _buildLogin() {
