@@ -25,6 +25,7 @@ class _DyadState extends State<Dyad> {
       allowedPaths: [
         '/login',
         '/feed',
+        '/about',
       ],
       guard: _guard,
       initialRoute: '/login',

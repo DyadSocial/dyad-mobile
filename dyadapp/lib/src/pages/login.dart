@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../routing.dart';
 
 // Login Info Class
 class Credentials {
@@ -34,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.help),
-            onPressed: _pushAbout,
+            onPressed: _handleAboutTapped,
             tooltip: 'About Dyad',
           ),
         ],
@@ -43,7 +44,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _pushAbout() {}
+  RouteState get _routeState => RouteStateScope.of(context);
+
+  void _handleAboutTapped() {
+    print("about button pressed");
+    _routeState.go('/about');
+  }
 
   Widget _buildLogin() {
     return Center(

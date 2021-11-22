@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:dyadapp/src/pages/about.dart';
 import 'package:flutter/material.dart';
 
 import '../auth.dart';
@@ -23,6 +24,7 @@ class DyadNavigator extends StatefulWidget {
 class _DyadNavigatorState extends State<DyadNavigator> {
   final _signInKey = const ValueKey('Sign in');
   final _scaffoldKey = const ValueKey<String>('App scaffold');
+  final _aboutKey = const ValueKey<String>('About key');
   final _messageKey = const ValueKey<String>('Message detauls screen');
   final _postDetailsKey = const ValueKey<String>('Post details screen');
   final _profileDetailsKey = const ValueKey<String>('Profile details screen');
@@ -66,6 +68,11 @@ class _DyadNavigatorState extends State<DyadNavigator> {
                 }
               },
             ),
+          )
+        else if (routeState.route.pathTemplate == '/about')
+          FadeTransitionPage<void>(
+            key: _aboutKey,
+            child: const AboutScreen(),
           )
         else ...[
           FadeTransitionPage<void>(
