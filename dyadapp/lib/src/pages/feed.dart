@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../data.dart';
 import '../routing.dart';
 import '../widgets/feed_list.dart';
+import 'settings.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({
@@ -37,8 +38,18 @@ class _FeedScreenState extends State<FeedScreen>
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: const Text('Dyad'),
-          toolbarHeight: 110,
+          toolbarHeight: 125,
           bottomOpacity: 0.8,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.settings),
+              onPressed: () => {
+                Navigator.of(context).push<void>(MaterialPageRoute<void>(
+                    builder: (context) => const SettingsScreen()))
+              },
+              tooltip: 'About Dyad',
+            ),
+          ],
           bottom: TabBar(
             controller: _tabController,
             tabs: const <Widget>[

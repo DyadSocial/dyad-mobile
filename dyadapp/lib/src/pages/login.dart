@@ -45,8 +45,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  RouteState get _routeState => RouteStateScope.of(context);
-
   void _handleAboutTapped() {
     Navigator.of(context).push<void>(
         MaterialPageRoute<void>(builder: (context) => const AboutScreen()));
