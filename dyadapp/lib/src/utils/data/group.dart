@@ -2,7 +2,7 @@ import 'user.dart';
 
 final groupInstance = Group()
   ..addUser(username: 'vncp', nickname: 'Vincent', biography: 'no sleep..')
-  ..addUser(username: 'infuhnit', nickname: 'Jake', biography: 'im stimmer!');
+  ..addUser(username: 'infuhnit', nickname: 'Jake', biography: 'im strimmer!');
 
 class Group {
   final List<User> allUsers = [];
