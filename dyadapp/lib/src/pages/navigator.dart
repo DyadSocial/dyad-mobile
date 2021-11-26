@@ -47,7 +47,6 @@ class _DyadNavigatorState extends State<DyadNavigator> {
     if (pathTemplate == '/profile/:userId') {
       // Route to userId profile
     }
-    print("${routeState.route.pathTemplate}");
     return Navigator(
       key: widget.navigatorKey,
       onPopPage: (route, dynamic result) {

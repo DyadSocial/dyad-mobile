@@ -70,7 +70,6 @@ class _DyadState extends State<Dyad> {
   Future<ParsedRoute> _guard(ParsedRoute from) async {
     final signedIn = _auth.isSignedIn;
     final signInRoute = ParsedRoute('/login', '/login', {}, {});
-    print("from: ${from.pathTemplate}");
     // from sign in page
     if (!signedIn && from.pathTemplate == '/about') {
       return from;
