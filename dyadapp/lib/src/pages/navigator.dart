@@ -23,7 +23,7 @@ class _DyadNavigatorState extends State<DyadNavigator> {
   final _signInKey = const ValueKey('Sign in');
   final _scaffoldKey = const ValueKey<String>('App scaffold');
   final _aboutKey = const ValueKey<String>('About key');
-  final _messageKey = const ValueKey<String>('Message detauls screen');
+  final _messageKey = const ValueKey<String>('Message details screen');
   final _postDetailsKey = const ValueKey<String>('Post details screen');
   final _profileDetailsKey = const ValueKey<String>('Profile details screen');
 

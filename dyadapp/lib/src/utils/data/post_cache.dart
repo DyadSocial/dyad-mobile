@@ -10,10 +10,8 @@ final postCacheInstance = PostCache()
       'This is some good content chat',
       Image.asset(
         'assets/images/vincent.png',
-        height: 300.0,
-        width: 300.0,
-        fit: BoxFit.cover,
-        alignment: FractionalOffset.topCenter,
+        fit: BoxFit.fitWidth,
+        alignment: Alignment.center,
       ),
       groupInstance.allUsers.firstWhere((user) => user.username == 'vncp'),
       DateTime(2017, 9, 7, 17, 30),
@@ -25,9 +23,7 @@ final postCacheInstance = PostCache()
       'What up boyyos',
       Image.asset(
         'assets/images/jake.JPG',
-        height: 300.0,
-        width: 300.0,
-        fit: BoxFit.cover,
+        fit: BoxFit.fitWidth,
         alignment: FractionalOffset.topCenter,
       ),
       groupInstance.allUsers.firstWhere((user) => user.username == 'infuhnit'),
@@ -40,9 +36,7 @@ final postCacheInstance = PostCache()
       'Check out hot fresh single',
       Image.asset(
         'assets/images/sam.png',
-        height: 300.0,
-        width: 300.0,
-        fit: BoxFit.cover,
+        fit: BoxFit.fitWidth,
         alignment: FractionalOffset.topCenter,
       ),
       groupInstance.allUsers
@@ -65,6 +59,7 @@ class PostCache {
           post.author.username,
           post.author.nickname,
           post.author.biography,
+          post.author.profilePicture,
         );
         allUsers.add(author);
         return author;

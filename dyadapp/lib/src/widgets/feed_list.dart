@@ -16,9 +16,11 @@ class FeedList extends StatelessWidget {
   Widget build(BuildContext context) => ListView.builder(
         itemCount: posts.length,
         itemBuilder: (context, index) => PostTile(
-            image: posts[index].image,
-            title: posts[index].title,
-            author: posts[index].author.username,
-            viewCount: 691337420),
+          profilePicture: posts[index].author.profilePicture,
+          image: posts[index].image,
+          title: posts[index].title,
+          author: posts[index].author.username,
+          content: posts[index].content,
+        ),
       );
 }
