@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './post_tile.dart';
 import '../data.dart';
 
 class FeedList extends StatelessWidget {
@@ -14,14 +15,10 @@ class FeedList extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListView.builder(
         itemCount: posts.length,
-        itemBuilder: (context, index) => ListTile(
-          title: Text(
-            posts[index].title,
-          ),
-          subtitle: Text(
-            posts[index].author.username,
-          ),
-          onTap: onTap != null ? () => onTap!(posts[index]) : null,
-        ),
+        itemBuilder: (context, index) => PostTile(
+            image: posts[index].image,
+            title: posts[index].title,
+            author: posts[index].author.username,
+            viewCount: 691337420),
       );
 }
