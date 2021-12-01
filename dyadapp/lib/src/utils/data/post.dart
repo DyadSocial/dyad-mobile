@@ -1,4 +1,3 @@
-import 'package:dyadapp/src/utils/data/user.dart';
 import 'package:quiver/core.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +6,7 @@ class Post {
   String title;
   String content;
   DateTime timestamp;
-  User author;
+  String author;
   Image image;
 
   Post(this.title, this.content, this.image, this.author, this.timestamp) {

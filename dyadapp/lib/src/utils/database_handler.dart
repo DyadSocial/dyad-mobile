@@ -15,6 +15,13 @@ final String columnPostsTimestamp = 'timestamp';
 final String columnPostsAuthor = 'author';
 final String columnPostsImage = 'image;';
 
+// User Table - Column
+final String tableUsers = 'users';
+final String columnUserUsername = 'username';
+final String columnUserNickname = 'nickname';
+final String columnUserProfilePicture = 'profilepicture';
+final String columnUserBiography = 'biography';
+
 class DatabaseHandler {
   // Database singletons
   DatabaseHandler._constructor();
@@ -35,22 +42,52 @@ class DatabaseHandler {
   Future<Database> _initDatabase() async {
     var database = await openDatabase(
       join(await getDatabasesPath(), "post_database.db"),
-      onCreate: (db, version) => db.execute("CREATE TABLE $tablePosts("
-          "$columnPostsId INTEGER PRIMARY KEY AUTOINCREMENT,"
-          "$columnPostsTitle TEXT NOT NULL,"
-          "$columnPostsContent TEXT NOT NULL,"
-          "$columnPostsTimestamp TEXT NOT NULL,"
-          "$columnPostsAuthor TEXT NOT NULL,"
-          "$columnPostsImage BLOB)"),
+      onCreate: (db, version) {
+        db.execute("CREATE TABLE $tablePosts("
+            "$columnPostsId INTEGER PRIMARY KEY AUTOINCREMENT,"
+            "$columnPostsTitle TEXT NOT NULL,"
+            "$columnPostsContent TEXT NOT NULL,"
+            "$columnPostsTimestamp TEXT NOT NULL,"
+            "$columnPostsAuthor TEXT NOT NULL,"
+            "$columnPostsImage BLOB)");
+        db.execute("CREATE TABLE $tableUsers("
+            "$columnUserUsername TEXT PRIMARY KEY,"
+            "$columnUserNickname TEXT,"
+            "$columnUserProfilePicture BLOB NOT NULL,"
+            "$columnUserBiography TEXT)");
+      },
       version: 1,
     );
     return database;
+  }
+
+  Future<User> insertUser(User user) async {
+    var client = await database;
+    await client.insert(tableUsers, user.toMap());
+    return user;
   }
 
   Future<Post> insertPost(Post post) async {
     var client = await database;
     post.id = await client.insert(tablePosts, post.toMap());
     return post;
+  }
+
+  Future<User?> getUser(int username) async {
+    var client = await database;
+    List<Map<String, dynamic>> query = await client.query(tableUsers,
+        columns: [
+          columnUserUsername,
+          columnUserNickname,
+          columnUserBiography,
+          columnUserProfilePicture,
+        ],
+        where: '$columnUserUsername = ?',
+        whereArgs: [username]);
+    if (query.length > 0) {
+      return User.fromMap(query.first);
+    }
+    return null;
   }
 
   Future<Post?> getPost(int id) async {
@@ -61,7 +98,7 @@ class DatabaseHandler {
           columnPostsTitle,
           columnPostsContent,
           columnPostsAuthor,
-          columnPostsImage
+          columnPostsImage,
         ],
         where: '$columnPostsId = ?',
         whereArgs: [id]);
@@ -89,6 +126,19 @@ class DatabaseHandler {
     return null;
   }
 
+  Future<List<User>?> getAllUsers() async {
+    var client = await database;
+    List<Map<String, dynamic>> query = await client.query(tableUsers, columns: [
+      columnUserUsername,
+      columnUserNickname,
+      columnUserProfilePicture,
+      columnUserBiography,
+    ]);
+    if (query.length > 0) {
+      return <User>[for (var user in query) User.fromMap(user)];
+    }
+  }
+
   Future<List<Post>?> getAllPosts() async {
     var client = await database;
     List<Map<String, dynamic>> query = await client.query(tablePosts, columns: [
@@ -99,9 +149,19 @@ class DatabaseHandler {
       columnPostsImage
     ]);
     if (query.length > 0) {
-      return [for (var post in query) Post.fromMap(post)];
+      return <Post>[for (var post in query) Post.fromMap(post)];
     }
     return null;
+  }
+
+  Future<int> updateUser(User user) async {
+    var client = await database;
+    return await client.update(
+      tableUsers,
+      user.toMap(),
+      where: '$columnUserUsername = ?',
+      whereArgs: [user.username],
+    );
   }
 
   Future<int> updatePost(Post post) async {
@@ -114,6 +174,17 @@ class DatabaseHandler {
     );
   }
 
+  Future<int> deleteUserUsername(String username) async {
+    var client = await database;
+    return await client.delete(
+      tableUsers,
+      where: '$columnUserUsername = ?',
+      whereArgs: [username],
+    );
+  }
+
+  Future<int> deleteUser(User user) async => deleteUserUsername(user.username);
+
   Future<int> deletePostID(int id) async {
     var client = await database;
     return await client.delete(
@@ -124,6 +195,11 @@ class DatabaseHandler {
   }
 
   Future<int> deletePost(Post post) async => deletePostID(post.id);
+
+  Future<int> deleteAllUsers() async {
+    var client = await database;
+    return await client.delete(tableUsers);
+  }
 
   Future<int> deleteAllPosts() async {
     var client = await database;
