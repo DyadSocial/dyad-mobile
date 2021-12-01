@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 
 class Post {
   late final int id;
-  final String title;
-  final String content;
-  final DateTime timestamp;
-  final User author;
-  final Image image;
+  String title;
+  String content;
+  DateTime timestamp;
+  User author;
+  Image image;
 
   Post(this.title, this.content, this.image, this.author, this.timestamp) {
     this.id = hash4(
