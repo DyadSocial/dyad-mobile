@@ -34,7 +34,7 @@ class Group {
     required ImageProvider<Object> profilePicture,
   }) {
     var user = User(username, nickname, biography, profilePicture);
-    // Add future functionality for close friends
+    // TODO: Add future functionality for close friends
     allUsers.add(user);
   }
 }

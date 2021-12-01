@@ -30,8 +30,14 @@ dependencies:
   quiver: ^3.0.0
   url_launcher: 6.0.0
   url_strategy: ^0.2.0
+  # Hardware
   flutter_blue: 0.8.0
   geolocator: ^7.7.1
+  # Network
+  http:
+  # Data
+  sqflite:
+  path:
 
 dev_dependencies:
   flutter_test:

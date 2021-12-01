@@ -16,4 +16,19 @@ class Message {
       this.timestamp.toString(),
     );
   }
+
+  Map<String, dynamic> toMap() => <String, dynamic>{
+        'id': id,
+        'author': author,
+        'recipient': recipient,
+        'content': content,
+        'timestamp': timestamp
+      };
+
+  static Message fromMap(Map<String, dynamic> json) => Message(
+        json['author'],
+        json['recipient'],
+        json['content'],
+        json['timestamp'],
+      );
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'utils/dyad_auth.dart';
 import 'routing.dart';
-import 'auth.dart';
 import 'pages/navigator.dart';
 
 class Dyad extends StatefulWidget {

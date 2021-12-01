@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../auth.dart';
+import '../utils/dyad_auth.dart';
 import '../routing.dart';
 import '../data.dart';
 import 'login.dart';

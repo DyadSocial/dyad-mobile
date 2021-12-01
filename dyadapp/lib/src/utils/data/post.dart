@@ -18,4 +18,21 @@ class Post {
       this.timestamp.toString(),
     );
   }
+
+  Map<String, dynamic> toMap() => <String, dynamic>{
+        'id': id,
+        'title': title,
+        'content': content,
+        'timestamp': timestamp,
+        'author': author,
+        'image': image
+      };
+
+  static Post fromMap(Map<String, dynamic> json) => Post(
+        json['title'],
+        json['content'],
+        json['image'],
+        json['author'],
+        json['timestamp'],
+      );
 }
