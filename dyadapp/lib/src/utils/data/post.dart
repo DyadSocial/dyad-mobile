@@ -1,4 +1,4 @@
-import 'user.dart';
+import 'package:dyadapp/src/utils/data/user.dart';
 import 'package:quiver/core.dart';
 import 'package:flutter/material.dart';
 

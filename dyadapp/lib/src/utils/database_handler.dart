@@ -4,7 +4,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 // Database Models
-import '../data.dart';
+import 'package:dyadapp/src/data.dart';
 
 // Post Table - Column
 final String tablePosts = 'posts';

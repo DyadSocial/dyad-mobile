@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './post_tile.dart';
-import '../data.dart';
+import 'package:dyadapp/src/widgets/post_tile.dart';
+import 'package:dyadapp/src/data.dart';
 
 class FeedList extends StatelessWidget {
   final List<Post> posts;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/pages/about.dart';
-import '../routing.dart';
+import 'package:dyadapp/src/routing.dart';
 
 // Login Info Class
 class Credentials {

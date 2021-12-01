@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../data.dart';
-import '../routing.dart';
-import '../widgets/feed_list.dart';
-import 'settings.dart';
+import 'package:dyadapp/src/data.dart';
+import 'package:dyadapp/src/routing.dart';
+import 'package:dyadapp/src/widgets/feed_list.dart';
+import 'package:dyadapp/src/pages/settings.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({

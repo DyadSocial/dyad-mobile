@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'group.dart';
-import 'user.dart';
-import 'post.dart';
+import 'package:dyadapp/src/utils/data/group.dart';
+import 'package:dyadapp/src/utils/data/user.dart';
+import 'package:dyadapp/src/utils/data/post.dart';
 
 final postCacheInstance = PostCache()
   ..addPost(

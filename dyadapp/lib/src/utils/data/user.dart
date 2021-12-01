@@ -1,4 +1,4 @@
-import 'post.dart';
+import 'package:dyadapp/src/utils/data/post.dart';
 import 'package:flutter/material.dart';
 
 class User {

@@ -12,8 +12,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import 'parsed_route.dart';
-import 'route_state.dart';
+import 'package:dyadapp/src/utils/routing/parsed_route.dart';
+import 'package:dyadapp/src/utils/routing/route_state.dart';
 
 class SimpleRouterDelegate extends RouterDelegate<ParsedRoute>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<ParsedRoute> {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'utils/dyad_auth.dart';
-import 'routing.dart';
-import 'pages/navigator.dart';
+import 'package:dyadapp/src/utils/dyad_auth.dart';
+import 'package:dyadapp/src/routing.dart';
+import 'package:dyadapp/src/pages/navigator.dart';
 
 class Dyad extends StatefulWidget {
   const Dyad({Key? key}) : super(key: key);

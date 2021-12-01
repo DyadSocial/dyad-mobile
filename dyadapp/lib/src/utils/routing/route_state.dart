@@ -3,8 +3,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import 'parsed_route.dart';
-import 'parser.dart';
+import 'package:dyadapp/src/utils/routing/parsed_route.dart';
+import 'package:dyadapp/src/utils/routing/parser.dart';
 
 /// The current route state. To change the current route, call obtain the state
 /// using `RouteStateScope.of(context)` and call `go()`:

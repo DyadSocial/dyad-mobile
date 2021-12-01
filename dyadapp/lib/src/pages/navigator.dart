@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../utils/dyad_auth.dart';
-import '../routing.dart';
-import '../data.dart';
-import 'login.dart';
-import 'scaffold.dart';
-import '../widgets/fade_transition_page.dart';
+import 'package:dyadapp/src/utils/dyad_auth.dart';
+import 'package:dyadapp/src/routing.dart';
+import 'package:dyadapp/src/data.dart';
+import 'package:dyadapp/src/pages/login.dart';
+import 'package:dyadapp/src/pages/scaffold.dart';
+import 'package:dyadapp/src/widgets/fade_transition_page.dart';
 
 class DyadNavigator extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;

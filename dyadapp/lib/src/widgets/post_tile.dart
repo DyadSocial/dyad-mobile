@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './post_bar.dart';
+import 'package:dyadapp/src/widgets/post_bar.dart';
 
 class PostTile extends StatelessWidget {
   const PostTile({

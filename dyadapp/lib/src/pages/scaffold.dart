@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:adaptive_navigation/adaptive_navigation.dart';
 
-import '../routing.dart';
-import '../widgets/fade_transition_page.dart';
-import '../data.dart';
-import 'feed.dart';
+import 'package:dyadapp/src/routing.dart';
+import 'package:dyadapp/src/widgets/fade_transition_page.dart';
+import 'package:dyadapp/src/data.dart';
+import 'package:dyadapp/src/pages/feed.dart';
 /*
 Class DyadScaffold
 Description: Stateless widget with build() creating a navigation bar
