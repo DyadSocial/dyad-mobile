@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/pages/about.dart';
-import 'package:dyadapp/src/routing.dart';
+import 'package:dyadapp/src/pages/signup.dart';
+import 'package:dyadapp/src/pages/help.dart';
+import '../routing.dart';
 
 // Login Info Class
 class Credentials {
@@ -122,12 +124,16 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.only(top: 0, bottom: 0),
               child: TextButton(
                 child: Text('Trouble signing in?'),
-                onPressed: () {},
+                onPressed: () {
+                   Navigator.of(context).push<void>(MaterialPageRoute<void>(builder: (context) => const HelpScreen()));
+                },
               ),
             ),
             TextButton(
               child: Text('Create an account'),
-              onPressed: () {},
+              onPressed: () => {
+                 Navigator.of(context).push<void>(MaterialPageRoute<void>(builder: (context) => const SignupScreen()))
+              },
             )
           ],
         ),
