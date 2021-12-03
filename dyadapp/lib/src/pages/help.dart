@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
 
-class HelpScreen extends StatelessWidget {
+class HelpScreen extends StatefulWidget {
   const HelpScreen({Key? key}) : super(key: key);
 
   @override
+  _RecoveryScreenState createState() => _RecoveryScreenState();
+}
+
+class _RecoveryScreenState extends State<HelpScreen> {
+  final _phoneNumberController = TextEditingController();
+  final _emailController = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Help'),
-      ),
-      body: _buildRecovery(),
-    );
-  }
-  
-Widget _buildRecovery() {
- return Center(
+  return Scaffold(
+        appBar: AppBar(
+          title: const Text('Dyad'),
+        ),
+        body: _buildRecovery(),
+      );
+    }
+
+  Widget _buildRecovery() {
+    return Center(
       child: SizedBox(
         width: 300,
         child: ListView(
@@ -24,31 +32,57 @@ Widget _buildRecovery() {
               height: 125,
               child: Center(
                 child: Text(
-                  "Account Recovery",
+                  'Account Recovery',
                   style: TextStyle(fontSize: 36.0),
                 ),
               ),
             ),
-
             Container(
-              margin: const EdgeInsets.all(5.0),
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  //navigate to change password page ?
-                },
-                child: Text("Forgot Password"),
+              height: 100,
+              child: TextFormField(
+                decoration: InputDecoration(
+                  icon: Icon(Icons.call),
+                  labelText: 'Phone Number',
                 ),
-              ),
-
-            Container(
-              margin: const EdgeInsets.all(5.0),
-              height: 50,
-              child: ElevatedButton(
-                child: Text("Forgot Username"),
-                onPressed: () {
-                  //navigate to get username page ?
+                validator: (val) {
+                  if (val != null && val.isNotEmpty) {
+                    return null;
+                  } else if (val != null && val.length != 10) {
+                    return "Invalid phone number";
+                  }
                 },
+                keyboardType: TextInputType.phone,
+                controller: _phoneNumberController,
+              ),
+            ),
+            Container(
+              height: 80,
+              child: TextFormField(
+                decoration: InputDecoration(
+                  icon: Icon(Icons.mail_outline),
+                  labelText: 'Email',
+                ),
+                validator: (val) {
+                  if (val != null && val.isNotEmpty) {
+                    return null;
+                  } else {
+                    return "Email cannot be empty";
+                  }
+                },
+                keyboardType: TextInputType.text,
+                controller: _emailController,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(25, 20, 25, 20),
+              child: Container(
+                height: 40,
+                child: ElevatedButton(
+                  child: Text("Submit"),
+                  onPressed: () async {
+                    //TODO: Sam networking for confirmation
+                  },
+                ),
               ),
             )
           ]
