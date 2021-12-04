@@ -19,20 +19,17 @@ class PostTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          PostBar(
-            title: title,
-            author: author,
-            profilePicture: profilePicture,
-          ),
-          Center(child: image ?? Text(content)),
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        PostBar(
+          title: title,
+          author: author,
+          profilePicture: profilePicture,
+        ),
+        Center(child: image ?? Text(content)),
+      ],
     );
   }
 }

@@ -37,7 +37,9 @@ class _FeedScreenState extends State<FeedScreen>
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('Dyad'),
+          leading:
+              IconButton(icon: const Icon(Icons.post_add), onPressed: () => {}),
+          title: Center(child: const Text('Dyad')),
           toolbarHeight: 125,
           bottomOpacity: 0.8,
           actions: [

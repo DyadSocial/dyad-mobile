@@ -7,9 +7,9 @@ class Post {
   String content;
   DateTime timestamp;
   String author;
-  Image image;
+  Image? image;
 
-  Post(this.title, this.content, this.image, this.author, this.timestamp) {
+  Post(this.title, this.content, this.author, this.timestamp, {this.image}) {
     this.id = hash4(
       this.title,
       this.content,
@@ -27,11 +27,9 @@ class Post {
         'image': image
       };
 
-  static Post fromMap(Map<String, dynamic> json) => Post(
-        json['title'],
-        json['content'],
-        json['image'],
-        json['author'],
-        json['timestamp'],
-      );
+  static Post fromMap(Map<String, dynamic> json) {
+    return Post(
+        json['title'], json['content'], json['author'], json['timestamp'],
+        image: json['image']);
+  }
 }
