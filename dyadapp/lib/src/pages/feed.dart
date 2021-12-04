@@ -4,6 +4,7 @@ import 'package:dyadapp/src/data.dart';
 import 'package:dyadapp/src/routing.dart';
 import 'package:dyadapp/src/widgets/feed_list.dart';
 import 'package:dyadapp/src/pages/settings.dart';
+import 'package:dyadapp/src/widgets/post_writer.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({
@@ -17,10 +18,12 @@ class FeedScreen extends StatefulWidget {
 class _FeedScreenState extends State<FeedScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late bool _postWriterActive;
 
   @override
   void initState() {
     super.initState();
+    _postWriterActive = false;
     _tabController = TabController(
       initialIndex: 1,
       length: 2,
@@ -34,14 +37,26 @@ class _FeedScreenState extends State<FeedScreen>
     super.dispose();
   }
 
+  postWriterCloseCallback() {
+    setState(() {
+      _postWriterActive = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          leading:
-              IconButton(icon: const Icon(Icons.post_add), onPressed: () => {}),
+          leading: IconButton(
+            icon: const Icon(Icons.post_add),
+            onPressed: () {
+              setState(() {
+                _postWriterActive = !_postWriterActive;
+              });
+            },
+          ),
           title: Center(child: const Text('Dyad')),
-          toolbarHeight: 125,
-          bottomOpacity: 0.8,
+          toolbarHeight: _postWriterActive ? 110 : 125,
+          bottomOpacity: 1,
           actions: [
             IconButton(
               icon: const Icon(Icons.settings),
@@ -66,17 +81,32 @@ class _FeedScreenState extends State<FeedScreen>
             ],
           ),
         ),
-        body: TabBarView(
-          controller: _tabController,
-          children: <Widget>[
-            FeedList(
-              posts: postCacheInstance.allPosts,
-              onTap: _handlePostTapped,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 0,
+              child: Visibility(
+                visible: _postWriterActive,
+                child: PostWriter(postWriterCloseCallback),
+              ),
             ),
-            FeedList(
-              // TODO: change to postCacheInstance.trustedPosts
-              posts: postCacheInstance.allPosts,
-              onTap: _handlePostTapped,
+            Expanded(
+              flex: 5,
+              child: TabBarView(
+                controller: _tabController,
+                children: <Widget>[
+                  FeedList(
+                    posts: postCacheInstance.allPosts,
+                    onTap: _handlePostTapped,
+                  ),
+                  FeedList(
+                    // TODO: change to postCacheInstance.trustedPosts
+                    posts: postCacheInstance.allPosts,
+                    onTap: _handlePostTapped,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
