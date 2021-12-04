@@ -13,14 +13,18 @@ class FeedList extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => ListView.builder(
-        itemCount: posts.length,
-        itemBuilder: (context, index) => PostTile(
-          profilePicture: posts[index].author.profilePicture,
-          image: posts[index].image,
-          title: posts[index].title,
-          author: posts[index].author.username,
-          content: posts[index].content,
-        ),
-      );
+  Widget build(BuildContext context) {
+    print(groupInstance.getUser(posts[0].author));
+    return ListView.builder(
+      itemCount: posts.length,
+      itemBuilder: (context, index) => PostTile(
+        profilePicture:
+            groupInstance.getUser(posts[index].author).profilePicture,
+        image: posts[index].image,
+        title: posts[index].title,
+        author: posts[index].author,
+        content: posts[index].content,
+      ),
+    );
+  }
 }

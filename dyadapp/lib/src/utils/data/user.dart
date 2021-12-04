@@ -5,6 +5,7 @@ class User {
   final String nickname;
   final ImageProvider<Object> profilePicture;
   final String biography;
+  List<int> posts = [];
 
   User(this.username, this.nickname, this.biography, this.profilePicture);
 

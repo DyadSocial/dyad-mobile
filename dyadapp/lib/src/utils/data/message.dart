@@ -10,8 +10,8 @@ class Message {
 
   Message(this.author, this.recipient, this.content, this.timestamp) {
     hash4(
-      this.author.id,
-      this.recipient.id,
+      this.author,
+      this.recipient,
       this.content,
       this.timestamp.toString(),
     );

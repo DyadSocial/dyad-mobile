@@ -37,4 +37,12 @@ class Group {
     // TODO: Add future functionality for close friends
     allUsers.add(user);
   }
+
+  User getUser(String username) {
+    return allUsers.firstWhere((user) => user.username == username);
+  }
+
+  void removeUser(String username) {
+    allUsers.remove(allUsers.firstWhere((user) => user.username == username));
+  }
 }
