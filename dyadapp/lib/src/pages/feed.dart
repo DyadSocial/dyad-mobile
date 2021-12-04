@@ -55,7 +55,7 @@ class _FeedScreenState extends State<FeedScreen>
             },
           ),
           title: Center(child: const Text('Dyad')),
-          toolbarHeight: _postWriterActive ? 110 : 125,
+          toolbarHeight: _postWriterActive ? 50 : 60,
           bottomOpacity: 1,
           actions: [
             IconButton(
@@ -67,7 +67,7 @@ class _FeedScreenState extends State<FeedScreen>
               tooltip: 'About Dyad',
             ),
           ],
-          bottom: TabBar(
+/*           bottom: TabBar(
             controller: _tabController,
             tabs: const <Widget>[
               Tab(
@@ -79,7 +79,7 @@ class _FeedScreenState extends State<FeedScreen>
                 icon: Icon(Icons.favorite),
               ),
             ],
-          ),
+          ), */
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
