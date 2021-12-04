@@ -28,7 +28,12 @@ class PostTile extends StatelessWidget {
           author: author,
           profilePicture: profilePicture,
         ),
-        Center(child: image ?? Text(content)),
+        Center(
+            child: image ??
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(content),
+                )),
       ],
     );
   }

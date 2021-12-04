@@ -17,6 +17,13 @@ final groupInstance = Group()
         'https://scontent-sjc3-1.xx.fbcdn.net/v/t1.6435-9/122292494_3745393062147578_9171079194156674668_n.jpg?_nc_cat=107&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=slQEMErmpZgAX-AUIuG&_nc_ht=scontent-sjc3-1.xx&oh=45f59b5c1286c2fae62f46c248fa6745&oe=61CBF6A2'),
   )
   ..addUser(
+    username: 'primchi',
+    nickname: 'prim',
+    biography: 'I am ACM leader',
+    profilePicture: NetworkImage(
+        'https://scontent-sjc3-1.xx.fbcdn.net/v/t1.6435-9/102380597_1514900362022644_5290959128538387371_n.jpg?_nc_cat=105&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=XX21z4bwB1cAX87haow&_nc_ht=scontent-sjc3-1.xx&oh=2f05cc1801cb3c32196dc289e7e5ce80&oe=61D0E951'),
+  )
+  ..addUser(
     username: 'wavy_gooby',
     nickname: 'Sam',
     biography: 'music msuic msciu',

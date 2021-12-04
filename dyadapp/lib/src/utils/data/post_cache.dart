@@ -6,15 +6,10 @@ import 'package:dyadapp/src/utils/data/post.dart';
 final postCacheInstance = PostCache()
   ..addPost(
     post: Post(
-      'Hello World',
-      'This is some good content chat',
-      'vncp',
+      'Please come to the ACM meeting',
+      'It will have free pizza and food and drinks and please come at 6:00 PM tonight please.',
+      'primchi',
       DateTime(2017, 9, 7, 17, 30),
-      image: Image.asset(
-        'assets/images/vincent.png',
-        fit: BoxFit.fitWidth,
-        alignment: Alignment.center,
-      ),
     ),
   )
   ..addPost(
@@ -32,6 +27,19 @@ final postCacheInstance = PostCache()
   )
   ..addPost(
     post: Post(
+      'Hello World',
+      'This is some good content chat',
+      'vncp',
+      DateTime(2017, 9, 7, 17, 30),
+      image: Image.asset(
+        'assets/images/vincent.png',
+        fit: BoxFit.fitWidth,
+        alignment: Alignment.center,
+      ),
+    ),
+  )
+  ..addPost(
+    post: Post(
       "Music Drop",
       'Check out hot fresh single',
       'wavy_gooby',
@@ -41,14 +49,6 @@ final postCacheInstance = PostCache()
         fit: BoxFit.fitWidth,
         alignment: FractionalOffset.topCenter,
       ),
-    ),
-  )
-  ..addPost(
-    post: Post(
-      "Yo",
-      'This is text thats suppsed to show please',
-      'wavy_gooby',
-      DateTime(2021, 10, 2, 1, 24),
     ),
   );
 
