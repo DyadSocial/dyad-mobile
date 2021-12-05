@@ -29,12 +29,12 @@ class _PostWriterState extends State<PostWriter> {
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: Color(0xFF9A9A9A),
-            ),
+                //color: Color(0xFF9A9A9A),
+                ),
           ),
         ),
         child: Container(
-          color: Color(0xFFE8EDF1),
+          //color: Color(0xFFE8EDF1),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,

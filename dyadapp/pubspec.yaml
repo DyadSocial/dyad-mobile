@@ -38,6 +38,8 @@ dependencies:
   # Data
   sqflite:
   path:
+  provider:
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,9 @@ import 'package:dyadapp/src/utils/dyad_auth.dart';
 import 'package:dyadapp/src/routing.dart';
 import 'package:dyadapp/src/pages/navigator.dart';
 
+import 'package:dyadapp/src/utils/theme_model.dart';
+import 'package:provider/provider.dart';
+
 class Dyad extends StatefulWidget {
   const Dyad({Key? key}) : super(key: key);
 
@@ -45,23 +48,35 @@ class _DyadState extends State<Dyad> {
   }
 
   @override
-  Widget build(BuildContext context) => RouteStateScope(
-        notifier: _routeState,
-        child: DyadAuthScope(
-          notifier: _auth,
-          child: MaterialApp.router(
-            routerDelegate: _routerDelegate,
-            routeInformationParser: _routeParser,
-            theme: ThemeData(
-              pageTransitionsTheme: const PageTransitionsTheme(
-                builders: <TargetPlatform, PageTransitionsBuilder>{
-                  TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-                  TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-                  TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
-                  TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
-                },
-              ),
-            ),
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+        create: (_) => ThemeModel(),
+        child: RouteStateScope(
+          notifier: _routeState,
+          child: Consumer(
+            builder: (context, ThemeModel themeNotifier, child) {
+              return DyadAuthScope(
+                notifier: _auth,
+                child: MaterialApp.router(
+                  routerDelegate: _routerDelegate,
+                  routeInformationParser: _routeParser,
+                  theme: themeNotifier.isDark
+                      ? ThemeData.dark()
+                      : ThemeData.light(),
+                  /* ThemeData(
+                    pageTransitionsTheme: const PageTransitionsTheme(
+                      builders: <TargetPlatform, PageTransitionsBuilder>{
+                        TargetPlatform.android:
+                            FadeUpwardsPageTransitionsBuilder(),
+                        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                        TargetPlatform.linux:
+                            FadeUpwardsPageTransitionsBuilder(),
+                        TargetPlatform.windows:
+                            FadeUpwardsPageTransitionsBuilder(),
+                        
+                      }, */
+                ),
+              );
+            },
           ),
         ),
       );
