@@ -3,9 +3,9 @@
     "short_name": "dyadapp",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#4C566A",
+    "theme_color": "#5E81AC",
+    "description": "A social local network",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

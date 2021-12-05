@@ -88,7 +88,11 @@ class _FeedScreenState extends State<FeedScreen>
               flex: 0,
               child: Visibility(
                 visible: _postWriterActive,
-                child: PostWriter(postWriterCloseCallback),
+                child: PostWriter((postForm) async {
+                  print("${postForm.title}");
+                  print("${postForm.content}");
+                  print("${postForm.imageFile}");
+                }, postWriterCloseCallback),
               ),
             ),
             Expanded(

@@ -14,7 +14,6 @@ class FeedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(groupInstance.getUser(posts[0].author));
     return ListView.builder(
       itemCount: posts.length,
       itemBuilder: (context, index) => PostTile(
