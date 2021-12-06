@@ -69,7 +69,10 @@ class _DyadState extends State<Dyad> {
                           colorScheme: ColorScheme.fromSwatch(
                               primarySwatch: Colors.blueGrey),
                         )
-                      : ThemeData.light(),
+                      : ThemeData.from(
+                          colorScheme: ColorScheme.fromSwatch(
+                              primarySwatch: Colors.grey),
+                        ),
                 ),
               );
             },
@@ -81,8 +84,6 @@ class _DyadState extends State<Dyad> {
     final signedIn = _auth.isSignedIn;
     final signInRoute = ParsedRoute('/login', '/login', {}, {});
     // from sign in page
-    print(from.pathTemplate);
-    print(from.path);
     if (!signedIn && from.pathTemplate == '/about') {
       return from;
     }
@@ -93,7 +94,6 @@ class _DyadState extends State<Dyad> {
         return from;
       }
     } else if (signedIn && from == signInRoute) {
-      print("hello we are now to feed");
       return ParsedRoute('/feed', '/feed', {}, {});
     }
     return from;
