@@ -17,7 +17,7 @@ class Message {
     );
   }
 
-  Map<String, dynamic> toMap() => <String, dynamic>{
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
         'author': author,
         'recipient': recipient,
@@ -25,7 +25,7 @@ class Message {
         'timestamp': timestamp
       };
 
-  static Message fromMap(Map<String, dynamic> json) => Message(
+  static Message fromJson(Map<String, dynamic> json) => Message(
         json['author'],
         json['recipient'],
         json['content'],

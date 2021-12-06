@@ -28,7 +28,7 @@ final groupInstance = Group()
     nickname: 'Sam',
     biography: 'music msuic msciu',
     profilePicture: NetworkImage(
-        'https://scontent-sjc3-1.cdninstagram.com/v/t51.2885-15/e35/187247982_306589957790743_74766615813586783_n.jpg?_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_cat=107&_nc_ohc=cty8Gpl_qNYAX9gQTcx&tn=Mv0ZUYUdjngGSdlw&edm=AP_V10EBAAAA&ccb=7-4&oh=21ff0d99ae2f8ae81835a980f9e465e1&oe=61ACF916&_nc_sid=4f375e 640w,https://scontent-sjc3-1.cdninstagram.com/v/t51.2885-15/e35/187247982_306589957790743_74766615813586783_n.jpg?_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_cat=107&_nc_ohc=cty8Gpl_qNYAX9gQTcx&tn=Mv0ZUYUdjngGSdlw&edm=AP_V10EBAAAA&ccb=7-4&oh=21ff0d99ae2f8ae81835a980f9e465e1&oe=61ACF916&_nc_sid=4f375e 750w,https://scontent-sjc3-1.cdninstagram.com/v/t51.2885-15/e35/187247982_306589957790743_74766615813586783_n.jpg?_nc_ht=scontent-sjc3-1.cdninstagram.com&_nc_cat=107&_nc_ohc=cty8Gpl_qNYAX9gQTcx&tn=Mv0ZUYUdjngGSdlw&edm=AP_V10EBAAAA&ccb=7-4&oh=21ff0d99ae2f8ae81835a980f9e465e1&oe=61ACF916&_nc_sid=4f375e 1080w'),
+        'https://scontent-sjc3-1.xx.fbcdn.net/v/t1.6435-9/194829152_10226669115340587_3025307937493221262_n.jpg?_nc_cat=111&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=MMTu96a2Y8AAX8pJW4E&_nc_ht=scontent-sjc3-1.xx&oh=f6306242882645b47753f1b25ad60a21&oe=61D16A39'),
   );
 
 class Group {

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:dyadapp/src/utils/user_session.dart';
 
 class DyadAuth extends ChangeNotifier {
   bool _isSignedIn = false;
@@ -15,7 +16,10 @@ class DyadAuth extends ChangeNotifier {
   Future<bool> signIn(String phone, String password) async {
     // Simulating response from server
     await Future<void>.delayed(const Duration(milliseconds: 200));
+
     _isSignedIn = true;
+    await UserSession().set("username", phone);
+
     notifyListeners();
     return _isSignedIn;
   }

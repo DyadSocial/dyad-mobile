@@ -13,7 +13,7 @@ final String columnPostsTitle = 'title';
 final String columnPostsContent = 'content';
 final String columnPostsTimestamp = 'timestamp';
 final String columnPostsAuthor = 'author';
-final String columnPostsImage = 'image;';
+final String columnPostsImage = 'image';
 
 // User Table - Column
 final String tableUsers = 'users';
@@ -24,7 +24,7 @@ final String columnUserBiography = 'biography';
 
 class DatabaseHandler {
   // Database singletons
-  DatabaseHandler._constructor();
+  DatabaseHandler._constructor() : super();
 
   static final DatabaseHandler _databaseHandler =
       DatabaseHandler._constructor();
@@ -36,40 +36,56 @@ class DatabaseHandler {
   }
 
   Future<Database> get database async {
-    return _database ??= await _initDatabase();
+    if (_database == null) {
+      _database = await _initDatabase();
+    }
+    return _database!;
+  }
+
+  Future<void> deleteDatabase() async {
+    var path = await getDatabasesPath();
+    databaseFactory.deleteDatabase(join(path, "post_database.db"));
   }
 
   Future<Database> _initDatabase() async {
+    deleteDatabase();
+    var path = await getDatabasesPath();
     var database = await openDatabase(
-      join(await getDatabasesPath(), "post_database.db"),
-      onCreate: (db, version) {
-        db.execute("CREATE TABLE $tablePosts("
-            "$columnPostsId INTEGER PRIMARY KEY AUTOINCREMENT,"
-            "$columnPostsTitle TEXT NOT NULL,"
-            "$columnPostsContent TEXT NOT NULL,"
-            "$columnPostsTimestamp TEXT NOT NULL,"
-            "$columnPostsAuthor TEXT NOT NULL,"
-            "$columnPostsImage BLOB)");
-        db.execute("CREATE TABLE $tableUsers("
-            "$columnUserUsername TEXT PRIMARY KEY,"
-            "$columnUserNickname TEXT,"
-            "$columnUserProfilePicture BLOB NOT NULL,"
-            "$columnUserBiography TEXT)");
+      join(path, "post_database.db"),
+      onCreate: (Database db, int version) async {
+        db.execute('''
+            CREATE TABLE $tablePosts(
+            $columnPostsId INTEGER PRIMARY KEY AUTOINCREMENT,
+            $columnPostsTitle TEXT NOT NULL,
+            $columnPostsContent TEXT NOT NULL,
+            $columnPostsTimestamp TEXT NOT NULL,
+            $columnPostsAuthor TEXT NOT NULL,
+            $columnPostsImage BLOB)
+            ''');
+        db.execute('''
+            CREATE TABLE $tableUsers(
+            $columnUserUsername TEXT PRIMARY KEY,
+            $columnUserNickname TEXT,
+            $columnUserProfilePicture BLOB NOT NULL,
+            $columnUserBiography TEXT)
+            ''');
       },
-      version: 1,
+      version: 7,
     );
     return database;
   }
 
   Future<User> insertUser(User user) async {
     var client = await database;
-    await client.insert(tableUsers, user.toMap());
+    await client.insert(tableUsers, user.toJson());
     return user;
   }
 
   Future<Post> insertPost(Post post) async {
     var client = await database;
-    post.id = await client.insert(tablePosts, post.toMap());
+    print("Inserting post:");
+    print(post.imageStr);
+    post.id = await client.insert(tablePosts, post.toJson());
     return post;
   }
 
@@ -85,7 +101,7 @@ class DatabaseHandler {
         where: '$columnUserUsername = ?',
         whereArgs: [username]);
     if (query.length > 0) {
-      return User.fromMap(query.first);
+      return User.fromJson(query.first);
     }
     return null;
   }
@@ -103,7 +119,7 @@ class DatabaseHandler {
         where: '$columnPostsId = ?',
         whereArgs: [id]);
     if (query.length > 0) {
-      return Post.fromMap(query.first);
+      return Post.fromJson(query.first);
     }
     return null;
   }
@@ -121,7 +137,7 @@ class DatabaseHandler {
         where: '$columnPostsAuthor = ?',
         whereArgs: [username]);
     if (query.length > 0) {
-      return [for (var post in query) Post.fromMap(post)];
+      return [for (var post in query) Post.fromJson(post)];
     }
     return null;
   }
@@ -135,30 +151,35 @@ class DatabaseHandler {
       columnUserBiography,
     ]);
     if (query.length > 0) {
-      return <User>[for (var user in query) User.fromMap(user)];
+      return <User>[for (var user in query) User.fromJson(user)];
     }
   }
 
-  Future<List<Post>?> getAllPosts() async {
+  Future<List<Post>> getAllPosts() async {
     var client = await database;
     List<Map<String, dynamic>> query = await client.query(tablePosts, columns: [
       columnPostsId,
       columnPostsTitle,
       columnPostsContent,
       columnPostsAuthor,
-      columnPostsImage
+      columnPostsImage,
+      columnPostsTimestamp
     ]);
     if (query.length > 0) {
-      return <Post>[for (var post in query) Post.fromMap(post)];
+      List<Post> posts = [];
+      query.forEach((post) {
+        posts.add(Post.fromJson(post));
+      });
+      return posts;
     }
-    return null;
+    return [];
   }
 
   Future<int> updateUser(User user) async {
     var client = await database;
     return await client.update(
       tableUsers,
-      user.toMap(),
+      user.toJson(),
       where: '$columnUserUsername = ?',
       whereArgs: [user.username],
     );
@@ -168,7 +189,7 @@ class DatabaseHandler {
     var client = await database;
     return await client.update(
       tablePosts,
-      post.toMap(),
+      post.toJson(),
       where: '$columnPostsId = ?',
       whereArgs: [post.id],
     );
