@@ -5,12 +5,14 @@ class PostBar extends StatelessWidget {
     required this.profilePicture,
     required this.author,
     required this.title,
+    required this.datetime,
     Key? key,
   }) : super(key: key);
 
   final ImageProvider<Object> profilePicture;
   final String title;
   final String author;
+  final DateTime datetime;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class PostBar extends StatelessWidget {
             ),
           ),
           Expanded(
-            flex: 6,
+            flex: 5,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,6 +49,7 @@ class PostBar extends StatelessWidget {
               ],
             ),
           ),
+          Expanded(flex: 1, child: Text(datetime.toString()))
         ],
       ),
     );

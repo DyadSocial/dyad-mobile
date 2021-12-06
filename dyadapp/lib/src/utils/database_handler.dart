@@ -48,7 +48,6 @@ class DatabaseHandler {
   }
 
   Future<Database> _initDatabase() async {
-    deleteDatabase();
     var path = await getDatabasesPath();
     var database = await openDatabase(
       join(path, "post_database.db"),

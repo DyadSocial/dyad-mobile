@@ -14,16 +14,17 @@ class FeedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    posts.sort((a, b) => -a.timestamp.compareTo(b.timestamp));
     return ListView.builder(
       itemCount: posts.length,
       itemBuilder: (context, index) => PostTile(
-        profilePicture:
-            groupInstance.getUser(posts[index].author).profilePicture,
-        image: Post.getImage(posts[index].imageStr),
-        title: posts[index].title,
-        author: posts[index].author,
-        content: posts[index].content,
-      ),
+          profilePicture:
+              groupInstance.getUser(posts[index].author).profilePicture,
+          image: Post.getImage(posts[index].imageStr),
+          title: posts[index].title,
+          author: posts[index].author,
+          content: posts[index].content,
+          datetime: posts[index].timestamp),
     );
   }
 }

@@ -7,6 +7,7 @@ class PostTile extends StatelessWidget {
     required this.title,
     required this.author,
     required this.content,
+    required this.datetime,
     this.image,
     Key? key,
   }) : super(key: key);
@@ -15,6 +16,7 @@ class PostTile extends StatelessWidget {
   final String title;
   final String author;
   final String content;
+  final DateTime datetime;
   final Image? image;
 
   @override
@@ -27,6 +29,7 @@ class PostTile extends StatelessWidget {
           title: title,
           author: author,
           profilePicture: profilePicture,
+          datetime: datetime,
         ),
         Container(
           decoration: BoxDecoration(
