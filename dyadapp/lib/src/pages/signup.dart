@@ -1,4 +1,5 @@
 //NEED TO IMPLEMENT -> Navigate to feed after signed up + password confirmation
+import 'package:dyadapp/src/pages/post.dart';
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/pages/about.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -152,7 +153,10 @@ class _SignupScreenState extends State<SignupScreen> {
                   child: Text("Sign Up"),
                   onPressed: () {
                     Credentials(_phoneNumberController.value.text,_passwordController.value.text, _nameController.value.text, _emailController.value.text);
+                    Navigator.of(context).push<void>(MaterialPageRoute<void>(
+                    builder: (context) => PostPage()));
                     }
+                    
                 ),
               ),
             ),
