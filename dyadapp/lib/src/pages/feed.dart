@@ -62,20 +62,17 @@ class _FeedScreenState extends State<FeedScreen>
         imageStr: postForm.imageFile != null ? imgAsStr : null,
       ),
     );
-    print(postForm.imageFile);
   }
 
   _onPostNavigatorCallback(postId) async {
-    print("postId: $postId");
-
     _routeState.go('/post/$postId');
   }
 
   Future<List<Post>> _getPostData() async {
+    await Future<void>.delayed(const Duration(milliseconds: 1200));
     await DatabaseHandler().getAllPosts().then((newPosts) {
       _posts = newPosts;
     });
-    print("POST LENGTH: ${_posts.length}");
     return _posts;
   }
 

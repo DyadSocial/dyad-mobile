@@ -73,13 +73,13 @@ class _LoginScreenState extends State<LoginScreen> {
               child: TextFormField(
                 decoration: InputDecoration(
                   icon: Icon(Icons.person),
-                  labelText: 'Phone Number',
+                  labelText: 'Username',
                 ),
                 validator: (val) {
                   if (val != null && val.isNotEmpty) {
                     return null;
                   } else if (val != null && val.length != 10) {
-                    return "Invalid phone number";
+                    return "Invalid Username";
                   }
                 },
                 keyboardType: TextInputType.phone,
@@ -125,14 +125,16 @@ class _LoginScreenState extends State<LoginScreen> {
               child: TextButton(
                 child: Text('Trouble signing in?'),
                 onPressed: () {
-                   Navigator.of(context).push<void>(MaterialPageRoute<void>(builder: (context) => const HelpScreen()));
+                  Navigator.of(context).push<void>(MaterialPageRoute<void>(
+                      builder: (context) => const HelpScreen()));
                 },
               ),
             ),
             TextButton(
               child: Text('Create an account'),
               onPressed: () => {
-                 Navigator.of(context).push<void>(MaterialPageRoute<void>(builder: (context) => const SignupScreen()))
+                Navigator.of(context).push<void>(MaterialPageRoute<void>(
+                    builder: (context) => const SignupScreen()))
               },
             )
           ],
