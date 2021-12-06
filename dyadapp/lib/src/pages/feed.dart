@@ -65,6 +65,12 @@ class _FeedScreenState extends State<FeedScreen>
     print(postForm.imageFile);
   }
 
+  _onPostNavigatorCallback(postId) async {
+    print("postId: $postId");
+
+    _routeState.go('/post/$postId');
+  }
+
   Future<List<Post>> _getPostData() async {
     await DatabaseHandler().getAllPosts().then((newPosts) {
       _posts = newPosts;
@@ -135,7 +141,8 @@ class _FeedScreenState extends State<FeedScreen>
                     builder: (context, snapshot) {
                       return snapshot.hasData
                           ? FeedList(
-                              posts: snapshot.data!,
+                              _onPostNavigatorCallback,
+                              snapshot.data!,
                               onTap: _handlePostTapped,
                             )
                           : Center(child: new CircularProgressIndicator());
@@ -146,7 +153,8 @@ class _FeedScreenState extends State<FeedScreen>
                     builder: (context, snapshot) {
                       return snapshot.hasData
                           ? FeedList(
-                              posts: snapshot.data!,
+                              _onPostNavigatorCallback,
+                              snapshot.data!,
                               onTap: _handlePostTapped,
                             )
                           : Center(child: new CircularProgressIndicator());

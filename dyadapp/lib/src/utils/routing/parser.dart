@@ -15,7 +15,6 @@ class TemplateRouteParser extends RouteInformationParser<ParsedRoute> {
   final ParsedRoute initialRoute;
 
   TemplateRouteParser({
-    /// The list of allowed path templates (['/', '/users/:id'])
     required List<String> allowedPaths,
 
     /// The initial route

@@ -6,6 +6,8 @@ import 'package:dyadapp/src/data.dart';
 import 'package:dyadapp/src/pages/login.dart';
 import 'package:dyadapp/src/pages/scaffold.dart';
 import 'package:dyadapp/src/widgets/fade_transition_page.dart';
+import 'package:dyadapp/src/utils/database_handler.dart';
+import 'package:dyadapp/src/pages/post.dart';
 
 class DyadNavigator extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -40,7 +42,7 @@ class _DyadNavigatorState extends State<DyadNavigator> {
 
     Post? selectedPost;
     if (pathTemplate == '/post/:postId') {
-      // Route to postId post
+      DatabaseHandler().getPost(routeState.route.parameters['postId']);
     }
 
     User? selectedProfile;
@@ -50,6 +52,10 @@ class _DyadNavigatorState extends State<DyadNavigator> {
     return Navigator(
       key: widget.navigatorKey,
       onPopPage: (route, dynamic result) {
+        if (route.settings is Page &&
+            (route.settings as Page).key == _postDetailsKey) {
+          routeState.go('feed');
+        }
         return route.didPop(result);
       },
       pages: [
@@ -71,7 +77,15 @@ class _DyadNavigatorState extends State<DyadNavigator> {
             key: _scaffoldKey,
             child: const DyadScaffold(),
           ),
-        ]
+          if (selectedPost != null)
+            MaterialPage<void>(
+              key: _postDetailsKey,
+              child: PostScreen(
+                  groupInstance.allUsers.firstWhere(
+                      (user) => user.nickname == selectedPost.author),
+                  selectedPost),
+            ),
+        ],
       ],
     );
   }

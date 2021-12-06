@@ -27,6 +27,11 @@ class _DyadState extends State<Dyad> {
       allowedPaths: [
         '/login',
         '/feed',
+        '/post',
+        '/settings',
+        '/profile',
+        '/profile/:profileId',
+        '/post/:postId',
       ],
       guard: _guard,
       initialRoute: '/login',
@@ -65,18 +70,6 @@ class _DyadState extends State<Dyad> {
                               primarySwatch: Colors.blueGrey),
                         )
                       : ThemeData.light(),
-                  /* ThemeData(
-                    pageTransitionsTheme: const PageTransitionsTheme(
-                      builders: <TargetPlatform, PageTransitionsBuilder>{
-                        TargetPlatform.android:
-                            FadeUpwardsPageTransitionsBuilder(),
-                        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-                        TargetPlatform.linux:
-                            FadeUpwardsPageTransitionsBuilder(),
-                        TargetPlatform.windows:
-                            FadeUpwardsPageTransitionsBuilder(),
-                        
-                      }, */
                 ),
               );
             },
@@ -88,6 +81,8 @@ class _DyadState extends State<Dyad> {
     final signedIn = _auth.isSignedIn;
     final signInRoute = ParsedRoute('/login', '/login', {}, {});
     // from sign in page
+    print(from.pathTemplate);
+    print(from.path);
     if (!signedIn && from.pathTemplate == '/about') {
       return from;
     }
@@ -98,6 +93,7 @@ class _DyadState extends State<Dyad> {
         return from;
       }
     } else if (signedIn && from == signInRoute) {
+      print("hello we are now to feed");
       return ParsedRoute('/feed', '/feed', {}, {});
     }
     return from;

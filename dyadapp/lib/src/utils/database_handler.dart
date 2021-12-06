@@ -54,7 +54,7 @@ class DatabaseHandler {
       onCreate: (Database db, int version) async {
         db.execute('''
             CREATE TABLE $tablePosts(
-            $columnPostsId INTEGER PRIMARY KEY AUTOINCREMENT,
+            $columnPostsId INTEGER PRIMARY KEY,
             $columnPostsTitle TEXT NOT NULL,
             $columnPostsContent TEXT NOT NULL,
             $columnPostsTimestamp TEXT NOT NULL,
@@ -82,13 +82,11 @@ class DatabaseHandler {
 
   Future<Post> insertPost(Post post) async {
     var client = await database;
-    print("Inserting post:");
-    print(post.imageStr);
     post.id = await client.insert(tablePosts, post.toJson());
     return post;
   }
 
-  Future<User?> getUser(int username) async {
+  Future<User?> getUser(String username) async {
     var client = await database;
     List<Map<String, dynamic>> query = await client.query(tableUsers,
         columns: [
@@ -105,7 +103,8 @@ class DatabaseHandler {
     return null;
   }
 
-  Future<Post?> getPost(int id) async {
+  Future<Post?> getPost(String? id) async {
+    if (id == null) return null;
     var client = await database;
     List<Map<String, dynamic>> query = await client.query(tablePosts,
         columns: [
@@ -114,6 +113,7 @@ class DatabaseHandler {
           columnPostsContent,
           columnPostsAuthor,
           columnPostsImage,
+          columnPostsTimestamp
         ],
         where: '$columnPostsId = ?',
         whereArgs: [id]);
@@ -131,7 +131,8 @@ class DatabaseHandler {
           columnPostsTitle,
           columnPostsContent,
           columnPostsAuthor,
-          columnPostsImage
+          columnPostsImage,
+          columnPostsTimestamp
         ],
         where: '$columnPostsAuthor = ?',
         whereArgs: [username]);

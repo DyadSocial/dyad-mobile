@@ -5,16 +5,21 @@ import 'package:dyadapp/src/widgets/post_bar.dart';
 import 'package:dyadapp/src/utils/data/post.dart';
 import 'package:quiver/strings.dart';
 
-class PostPage extends StatelessWidget {
-  PostPage({Key? key,}) : super(key: key);
-  final Post thisPost = postCacheInstance.allPosts.where((post) => post.author == 'primchi').first;
+class PostScreen extends StatelessWidget {
+  final User author;
+  final Post post;
+  PostScreen(
+    this.author,
+    this.post, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Center(child: const Text('Dyad')),
-        actions: [
+        appBar: AppBar(
+          title: Center(child: const Text('Dyad')),
+          actions: [
             IconButton(
               icon: const Icon(Icons.settings),
               onPressed: () => {
@@ -22,32 +27,36 @@ class PostPage extends StatelessWidget {
                     builder: (context) => const SettingsScreen()))
               },
             ),
-        ],
-      ),
-      body: _buildPage()
-    );
+          ],
+        ),
+        body: _buildPage());
   }
 
   Widget _buildPage() {
     return Column(
       children: [
-        SizedBox(height: 10),
-        Row (
-          children: [
-            SizedBox(width: 10),
-            CircleAvatar(radius: 20),
-            SizedBox(width: 10),
-            Text(thisPost.title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          ]
+        PostBar(
+          author.profilePicture,
+          author.username,
+          post.title,
+          post.timestamp,
         ),
-        Padding (
-          padding: const EdgeInsets.only(),
-          child: Text(thisPost.author, style: const TextStyle(fontSize: 12)),
-        )
-        //Text(thisPost.author, style: const TextStyle(fontSize:14)
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: Text(post.content, style: TextStyle(fontSize: 16)),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(),
+            ),
+          ),
+          child: Visibility(
+            visible: post.imageStr != null,
+            child: Post.getImage(post.imageStr) ?? Text(""),
+          ),
+        ),
       ],
     );
   }
 }
-
-
