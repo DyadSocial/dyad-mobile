@@ -9,14 +9,14 @@ class User {
 
   User(this.username, this.nickname, this.biography, this.profilePicture);
 
-  Map<String, dynamic> toMap() => <String, dynamic>{
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'username': username,
         'nickname': nickname,
         'profilePicture': profilePicture,
         'biography': biography,
       };
 
-  static User fromMap(Map<String, dynamic> json) => User(
+  static User fromJson(Map<String, dynamic> json) => User(
         json['username'],
         json['nickname'],
         json['profilePicture'],

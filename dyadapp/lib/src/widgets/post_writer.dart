@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:path_provider/path_provider.dart';
 
 class PostForm {
   final String title;
@@ -106,16 +107,22 @@ class _PostWriterState extends State<PostWriter> {
                       maxLines: 10,
                     ),
                   ),
-                  Visibility(
-                    visible: _imageFile != null,
-                    child: _imageFile != null
-                        ? Image.file(
-                            _imageFile!,
-                            fit: BoxFit.contain,
-                            height: 250,
-                            width: 250,
-                          )
-                        : Container(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Visibility(
+                      visible: _imageFile != null,
+                      child: _imageFile != null
+                          ? TextButton(
+                              onPressed: () => _imageCropper(),
+                              child: Image.file(
+                                _imageFile!,
+                                fit: BoxFit.contain,
+                                height: 250,
+                                width: 250,
+                              ),
+                            )
+                          : Container(),
+                    ),
                   ),
                   Container(
                     height: 36,
@@ -139,6 +146,14 @@ class _PostWriterState extends State<PostWriter> {
                         IconButton(
                           icon: Icon(Icons.collections),
                           onPressed: () => _imagePicker(ImageSource.gallery),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.broken_image),
+                          color: this._imageFile != null
+                              ? Color(0xFF000000)
+                              : Color(0xFF777777),
+                          onPressed: () =>
+                              this._imageFile != null ? _removeImage() : {},
                         ),
                         IconButton(
                           icon: Icon(Icons.crop),

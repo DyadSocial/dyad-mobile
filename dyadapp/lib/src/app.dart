@@ -60,7 +60,10 @@ class _DyadState extends State<Dyad> {
                   routerDelegate: _routerDelegate,
                   routeInformationParser: _routeParser,
                   theme: themeNotifier.isDark
-                      ? ThemeData.dark()
+                      ? ThemeData.from(
+                          colorScheme: ColorScheme.fromSwatch(
+                              primarySwatch: Colors.blueGrey),
+                        )
                       : ThemeData.light(),
                   /* ThemeData(
                     pageTransitionsTheme: const PageTransitionsTheme(

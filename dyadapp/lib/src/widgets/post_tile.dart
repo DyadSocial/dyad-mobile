@@ -28,12 +28,21 @@ class PostTile extends StatelessWidget {
           author: author,
           profilePicture: profilePicture,
         ),
-        Center(
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(),
+            ),
+          ),
+          child: Center(
             child: image ??
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 8),
                   child: Text(content),
-                )),
+                ),
+          ),
+        ),
       ],
     );
   }

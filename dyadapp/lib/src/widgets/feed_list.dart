@@ -19,7 +19,7 @@ class FeedList extends StatelessWidget {
       itemBuilder: (context, index) => PostTile(
         profilePicture:
             groupInstance.getUser(posts[index].author).profilePicture,
-        image: posts[index].image,
+        image: Post.getImage(posts[index].imageStr),
         title: posts[index].title,
         author: posts[index].author,
         content: posts[index].content,

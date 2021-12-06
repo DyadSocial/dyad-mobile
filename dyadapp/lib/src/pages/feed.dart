@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'package:dyadapp/src/data.dart';
@@ -5,6 +7,9 @@ import 'package:dyadapp/src/routing.dart';
 import 'package:dyadapp/src/widgets/feed_list.dart';
 import 'package:dyadapp/src/pages/settings.dart';
 import 'package:dyadapp/src/widgets/post_writer.dart';
+import 'package:dyadapp/src/utils/database_handler.dart';
+import 'package:dyadapp/src/utils/user_session.dart';
+import 'package:path_provider/path_provider.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({
@@ -19,6 +24,7 @@ class _FeedScreenState extends State<FeedScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late bool _postWriterActive;
+  List<Post> _posts = [];
 
   @override
   void initState() {
@@ -41,6 +47,30 @@ class _FeedScreenState extends State<FeedScreen>
     setState(() {
       _postWriterActive = false;
     });
+  }
+
+  onWritePostCallback(postForm) async {
+    String? imgAsStr = null;
+    if (postForm.imageFile != null)
+      imgAsStr = base64Encode(postForm.imageFile.readAsBytesSync());
+    DatabaseHandler().insertPost(
+      Post(
+        postForm.title,
+        postForm.content,
+        await UserSession().get("username"),
+        DateTime.now(),
+        imageStr: postForm.imageFile != null ? imgAsStr : null,
+      ),
+    );
+    print(postForm.imageFile);
+  }
+
+  Future<List<Post>> _getPostData() async {
+    await DatabaseHandler().getAllPosts().then((newPosts) {
+      _posts = newPosts;
+    });
+    print("POST LENGTH: ${_posts.length}");
+    return _posts;
   }
 
   @override
@@ -88,11 +118,7 @@ class _FeedScreenState extends State<FeedScreen>
               flex: 0,
               child: Visibility(
                 visible: _postWriterActive,
-                child: PostWriter((postForm) async {
-                  print("${postForm.title}");
-                  print("${postForm.content}");
-                  print("${postForm.imageFile}");
-                }, postWriterCloseCallback),
+                child: PostWriter(onWritePostCallback, postWriterCloseCallback),
               ),
             ),
             Expanded(
@@ -100,14 +126,31 @@ class _FeedScreenState extends State<FeedScreen>
               child: TabBarView(
                 controller: _tabController,
                 children: <Widget>[
-                  FeedList(
+/*                   FeedList(
                     posts: postCacheInstance.allPosts,
                     onTap: _handlePostTapped,
+                  ), */
+                  FutureBuilder<List<Post>>(
+                    future: _getPostData(),
+                    builder: (context, snapshot) {
+                      return snapshot.hasData
+                          ? FeedList(
+                              posts: snapshot.data!,
+                              onTap: _handlePostTapped,
+                            )
+                          : Center(child: new CircularProgressIndicator());
+                    },
                   ),
-                  FeedList(
-                    // TODO: change to postCacheInstance.trustedPosts
-                    posts: postCacheInstance.allPosts,
-                    onTap: _handlePostTapped,
+                  FutureBuilder<List<Post>>(
+                    future: _getPostData(),
+                    builder: (context, snapshot) {
+                      return snapshot.hasData
+                          ? FeedList(
+                              posts: snapshot.data!,
+                              onTap: _handlePostTapped,
+                            )
+                          : Center(child: new CircularProgressIndicator());
+                    },
                   ),
                 ],
               ),
