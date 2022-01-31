@@ -1,6 +1,6 @@
 # dyad-mobile
 
-## Setup (Windows)
+## Setup (Windows & WSL2)
 
 1. Have a working device/emulator on host.
 2. Make sure WSL, Docker Desktop and VS Code is installed.
