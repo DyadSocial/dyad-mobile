@@ -33,9 +33,6 @@ dependencies:
   image_cropper:
   image_picker:
   timeago:
-  # Hardware
-  flutter_blue: 0.8.0
-  geolocator: ^7.7.1
   # Network
   http:
   # Data
