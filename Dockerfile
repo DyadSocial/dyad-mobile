@@ -1,3 +1,4 @@
+# Referencced from matsp/docker-flutter
 # Ubuntu Official Image
 FROM ubuntu:20.04
 
@@ -26,9 +27,10 @@ ENV ANDROID_TOOLS_URL="https://dl.google.com/android/repository/commandlinetools
 ENV ANDROID_VERSION="28"
 ENV ANDROID_BUILD_TOOLS_VERSION="29.0.3"
 ENV ANDROID_ARCHITECTURE="x86_64"
-ENV ANDROID_SDK_ROOT="home/$USER/Android"
+ENV ANDROID_SDK_ROOT="/home/$USER/Android"
 ENV FLUTTER_HOME="/home/$USER/flutter"
-ENV PATH="$ANDROID_SDK_ROOT/cmdline-tools/tools/bin:$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/platforms:$FLUTTER_HOME/bin:$PATH"
+ENV REPOS="/home/$USER/repos"
+ENV PATH="$ANDROID_SDK_ROOT/cmdline-tools/tools/bin:$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/platforms:$FLUTTER_HOME/bin:$REPOS/protoc/bin:$REPOS/protoc:$REPOS/protoc_plugin/protobuf.dart-protoc-plugin-19.2.0-1/protoc_plugin/bin:$PATH:/home/$USER/flutter/.pub-cache/bin"
 RUN mkdir -p $ANDROID_SDK_ROOT \
   && mkdir -p /home/$USER/.android \
   && touch /home/$USER/.android/repositories.cfg \
@@ -46,35 +48,28 @@ RUN mkdir -p $ANDROID_SDK_ROOT \
 
 # Install Flutter
 ENV FLUTTER_CHANNEL="stable"
-ENV FLUTTER_VERSION="2.8.1"
+ENV FLUTTER_VERSION="2.2.1"
 ENV FLUTTER_URL="https://storage.googleapis.com/flutter_infra_release/releases/$FLUTTER_CHANNEL/linux/flutter_linux_$FLUTTER_VERSION-$FLUTTER_CHANNEL.tar.xz"
-ENV FLUTTER_WEB_PORT="8090"
-ENV FLUTTER_DEBUG_PORT="42000"
-ENV FLUTTER_EMULATOR_NAME="flutter_emulator"
 RUN curl -o flutter.tar.xz $FLUTTER_URL \
-  && tar-xvf flutter.tar.xz -C /home/$USER
-RUN mkdir -p $FLUTTER_HOME \
-  && tar -xvf flutter.tar.xz -C /home/$USER \
-  && ls /home/$USER/flutter \
-  && flutter config --no-analytics \
-  && flutter precache \
+  && mkdir -p $FLUTTER_HOME \
+  && tar -xvf flutter.tar.xz -C /home/$USER
+
+RUN flutter config --android-sdk $ANDROID_SDK_ROOT\
+  && flutter config --no-analytics --enable-web \
   && yes "y" | flutter doctor --android-licenses \
   && flutter doctor \
-  && flutter emulators --create \
   && flutter update-packages
 
 # Install protoc binary and protoc_plugin for dart
 ENV PROTOC_URL="https://github.com/protocolbuffers/protobuf/releases/download/v3.19.4/protoc-3.19.4-linux-x86_64.zip"
 ENV PROTOC_PLUGIN_URL="https://github.com/google/protobuf.dart/archive/refs/tags/protoc_plugin-19.2.0+1.zip"
-RUN mkdir -p /home/$USER/repos/ \
-  && wget $PROTOC_URL -o /home/$USER/repos/protoc.zip \
-  && wget $PROTOC_PLUGIN_URL -o /home/$USER/repos/protoc_plugin.zip \
+RUN mkdir -p /home/$USER/repos/protoc \
+  && mkdir -p /home/$USER/repos/protoc_plugin \
+  && wget $PROTOC_URL -O /home/$USER/repos/protoc.zip \
+  && wget $PROTOC_PLUGIN_URL -O /home/$USER/repos/protoc_plugin.zip \
   && unzip /home/$USER/repos/protoc.zip -d /home/$USER/repos/protoc \
-  && unzip /home/$USER/repos/protoc_plugin.zip -d /home/$USER/repos/ \
-  && mv /home/$USER/repos/protoc/bin/* /usr/bin \
-  && mv /home/$USER/repos/protoc/include /usr/bin \
-  && mv /home/$USER/repos/protoc_plugin/protobuf.dart-protoc-plugin-19.2.0-1/protoc_plugin/bin/* /usr/bin \
-  && flutter run pub global activate protoc_plugin
+  && unzip /home/$USER/repos/protoc_plugin.zip -d /home/$USER/repos/protoc_plugin 
+  # flutter run pub global activate protoc_plugin # run in project root dir
 
 #COPY entrypoint.sh /usr/local/bin/
 #COPY chown.sh /usr/local/bin
