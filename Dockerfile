@@ -27,6 +27,7 @@ ENV ANDROID_VERSION="28"
 ENV ANDROID_BUILD_TOOLS_VERSION="29.0.3"
 ENV ANDROID_ARCHITECTURE="x86_64"
 ENV ANDROID_SDK_ROOT="home/$USER/Android"
+ENV FLUTTER_HOME="/home/$USER/flutter"
 ENV PATH="$ANDROID_SDK_ROOT/cmdline-tools/tools/bin:$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/platforms:$FLUTTER_HOME/bin:$PATH"
 RUN mkdir -p $ANDROID_SDK_ROOT \
   && mkdir -p /home/$USER/.android \
@@ -47,7 +48,6 @@ RUN mkdir -p $ANDROID_SDK_ROOT \
 ENV FLUTTER_CHANNEL="stable"
 ENV FLUTTER_VERSION="2.8.1"
 ENV FLUTTER_URL="https://storage.googleapis.com/flutter_infra_release/releases/$FLUTTER_CHANNEL/linux/flutter_linux_$FLUTTER_VERSION-$FLUTTER_CHANNEL.tar.xz"
-ENV FLUTTER_HOME="/home/$USER/flutter"
 ENV FLUTTER_WEB_PORT="8090"
 ENV FLUTTER_DEBUG_PORT="42000"
 ENV FLUTTER_EMULATOR_NAME="flutter_emulator"
