@@ -1,12 +1,7 @@
 syntax = "proto3";
-package messages;
 
 import "google/protobuf/timestamp.proto";
-
-message Content {
-    string text = 1;
-    bytes image = 2;
-}
+import "content.proto";
 
 message Message {
     int32 id = 1;

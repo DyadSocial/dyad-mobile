@@ -1,0 +1,6 @@
+syntax="proto3";
+
+message Content {
+    string text = 1;
+    bytes image = 2;
+}
