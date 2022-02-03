@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "content.proto";
+
+message Post {
+    int32 id = 1;
+    string author = 2;
+    Content content = 3;
+    google.protobuf.Timestamp last_updated = 4;
+    google.protobuf.Timestamp created = 5;
+}
+
+message Feed {
+    repeated string recipients = 1;
+    repeated Post posts = 2;
+    google.protobuf.Timestamp last_updated = 3;
+}
