@@ -5,6 +5,8 @@ import 'package:dyadapp/src/routing.dart';
 import 'package:dyadapp/src/widgets/fade_transition_page.dart';
 import 'package:dyadapp/src/data.dart';
 import 'package:dyadapp/src/pages/feed.dart';
+import 'package:dyadapp/src/pages/inbox.dart';
+import 'package:quiver/collection.dart';
 /*
 Class DyadScaffold
 Description: Stateless widget with build() creating a navigation bar
@@ -46,8 +48,11 @@ class DyadScaffold extends StatelessWidget {
   }
 
   int _getSelectedIndex(String pathTemplate) {
-    if (pathTemplate.startsWith('/feed')) return 0;
-    return 0;
+    if (pathTemplate.startsWith('/feed')) {
+      return 0;
+    } else {
+      return 1;
+    }
   }
 }
 
@@ -74,8 +79,8 @@ class DyadScaffoldBody extends StatelessWidget {
         // Prevent Navigator from building with non-defined path
         else
           FadeTransitionPage<void>(
-            key: const ValueKey('empty'),
-            child: Container(),
+            key: const ValueKey('inbox'),
+            child: InboxPage(),
           ),
       ],
     );

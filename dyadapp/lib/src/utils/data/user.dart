@@ -7,7 +7,12 @@ class User {
   final String biography;
   List<int> posts = [];
 
-  User(this.username, this.nickname, this.biography, this.profilePicture);
+  User(
+    this.username,
+    this.nickname,
+    this.biography,
+    this.profilePicture,
+  );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'username': username,

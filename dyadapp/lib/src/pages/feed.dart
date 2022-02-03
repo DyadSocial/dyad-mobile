@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dyadapp/src/pages/inbox.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dyadapp/src/data.dart';
@@ -95,7 +96,8 @@ class _FeedScreenState extends State<FeedScreen>
               icon: const Icon(Icons.settings),
               onPressed: () => {
                 Navigator.of(context).push<void>(MaterialPageRoute<void>(
-                    builder: (context) => const SettingsScreen()))
+                    builder: (context) =>
+                        const SettingsScreen())) //Changed temporarily for inbox screen from SettingsScreen()
               },
               tooltip: 'About Dyad',
             ),
@@ -174,6 +176,11 @@ class _FeedScreenState extends State<FeedScreen>
   void _handleTabIndexChanged() {
     switch (_tabController.index) {
       case 0:
+        _routeState.go('/feed/all');
+        break;
+      case 1:
+        _routeState.go('/inbox');
+        break;
       default:
         _routeState.go('/feed/all');
         break;
