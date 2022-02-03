@@ -1,0 +1,23 @@
+syntax = "proto3";
+package messages;
+
+import "google/protobuf/timestamp.proto";
+
+message Content {
+    string text = 1;
+    bytes image = 2;
+}
+
+message Message {
+    int32 id = 1;
+    string author = 2;
+    Content content = 3;
+    google.protobuf.Timestamp last_updated = 4;
+    google.protobuf.Timestamp created = 5;
+}
+
+message Chat {
+    repeated string recipients = 1;
+    repeated Message messages = 2;
+    google.protobuf.Timestamp last_updated = 3;
+}
