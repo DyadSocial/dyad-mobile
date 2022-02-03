@@ -71,7 +71,6 @@ RUN mkdir -p /home/$USER/repos/protoc \
   && unzip /home/$USER/repos/protoc_plugin.zip -d /home/$USER/repos/protoc_plugin 
   # flutter run pub global activate protoc_plugin # run in project root dir
 
-#COPY entrypoint.sh /usr/local/bin/
-#COPY chown.sh /usr/local/bin
-#COPY flutter-android-emulator.sh /usr/local/bin/flutter-android-emulator
-#ENTRYPOINT [ "/usr/local/bin/entrypoint" ]
+WORKDIR "/workspaces/dyad-mobile/dyadapp"
+RUN flutter pub global activate protoc_plugin
+ENV PATH="/home/$USER/.pub-cache/bin:${PATH}"
