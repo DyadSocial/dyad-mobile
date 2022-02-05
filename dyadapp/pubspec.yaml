@@ -42,6 +42,7 @@ dependencies:
   provider:
   shared_preferences:
   intl: ^0.17.0
+  protobuf: ^2.0.1
 
 dev_dependencies:
   flutter_test:
