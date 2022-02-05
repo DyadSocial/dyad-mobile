@@ -1,5 +1,5 @@
-import 'dart:ffi';
 import 'dart:io';
+import 'package:test/test.dart';
 
 import 'package:dyadapp/src/utils/data/protos/content.pb.dart';
 import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
@@ -37,4 +37,86 @@ Post addPost(int id, String author, Content content, Timestamp last_updated,
   return post;
 }
 
-void main() {}
+void main() {
+  final int testID = 1;
+  final String testAuthor = "local";
+  final String testText = "Hello World!";
+  final List<int> testImage = [0, 1, 2, 3, 4];
+
+  late Timestamp testTimestamp;
+  late Content testContent;
+  late Message testMessage;
+  late Post testPost;
+
+  setUp(() async {
+    testTimestamp = await Timestamp.fromDateTime(DateTime.now());
+    testContent = await addContent(testText, testImage);
+    testMessage = await addMessage(
+        testID, testAuthor, testContent, testTimestamp, testTimestamp);
+    testPost = await addPost(
+        testID, testAuthor, testContent, testTimestamp, testTimestamp);
+  });
+
+  group('Content protobuf', () {
+    test('.text', () {
+      expect(testContent.text, equals(testText));
+    });
+    test('.image', () {
+      expect(testContent.image, equals(testImage));
+    });
+    test('.writeToBuffer()/.readFromBuffer()', () async {
+      File file = File('content.pb');
+      await file.writeAsBytes(testContent.writeToBuffer());
+      expect(new Content.fromBuffer(File('content.pb').readAsBytesSync()),
+          testContent);
+      file.delete();
+    });
+  });
+  group('Message protobuf', () {
+    test('.id', () {
+      expect(testMessage.id, equals(testID));
+    });
+    test('.author', () {
+      expect(testMessage.author, equals(testAuthor));
+    });
+    test('.content protobuf', () {
+      expect(testMessage.content, equals(testContent));
+    });
+    test('.lastUpdated', () {
+      expect(testMessage.lastUpdated, equals(testTimestamp));
+    });
+    test('.created', () {
+      expect(testMessage.created, equals(testTimestamp));
+    });
+    test('.writeToBuffer()/.readFromBuffer()', () async {
+      File file = File('message.pb');
+      await file.writeAsBytes(testMessage.writeToBuffer());
+      expect(new Message.fromBuffer(File('message.pb').readAsBytesSync()),
+          testMessage);
+      file.delete();
+    });
+  });
+  group('Post protobuf', () {
+    test('.id', () {
+      expect(testPost.id, equals(testID));
+    });
+    test('.author', () {
+      expect(testPost.author, equals(testAuthor));
+    });
+    test('.content', () {
+      expect(testPost.content, equals(testContent));
+    });
+    test('.lastUpdated', () {
+      expect(testPost.lastUpdated, equals(testTimestamp));
+    });
+    test('.created', () {
+      expect(testPost.created, equals(testTimestamp));
+    });
+    test('.writeToBuffer()/.readFromBuffer()', () async {
+      File file = File('post.pb');
+      await file.writeAsBytes(testPost.writeToBuffer());
+      expect(new Post.fromBuffer(File('post.pb').readAsBytesSync()), testPost);
+      file.delete();
+    });
+  });
+}
