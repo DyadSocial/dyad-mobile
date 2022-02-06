@@ -37,16 +37,33 @@ Post addPost(int id, String author, Content content, Timestamp last_updated,
   return post;
 }
 
+Chat addChat(
+    List<String> recipients, List<Message> messages, Timestamp last_updated) {
+  Chat chat = Chat(
+      recipients: recipients, messages: messages, lastUpdated: last_updated);
+  return chat;
+}
+
+Feed addFeed(
+    List<String> recipients, List<Post> posts, Timestamp last_updated) {
+  Feed feed =
+      Feed(recipients: recipients, posts: posts, lastUpdated: last_updated);
+  return feed;
+}
+
 void main() {
   final int testID = 1;
-  final String testAuthor = "local";
-  final String testText = "Hello World!";
+  final String testAuthor = "testAuthor";
+  final String testText =
+      "This is a test post. We are writing to see if it will save into a file of bytes and load back into a byte stream.";
   final List<int> testImage = [0, 1, 2, 3, 4];
 
   late Timestamp testTimestamp;
   late Content testContent;
   late Message testMessage;
   late Post testPost;
+  late Chat testChat;
+  late Feed testFeed;
 
   setUp(() async {
     testTimestamp = await Timestamp.fromDateTime(DateTime.now());
@@ -55,6 +72,10 @@ void main() {
         testID, testAuthor, testContent, testTimestamp, testTimestamp);
     testPost = await addPost(
         testID, testAuthor, testContent, testTimestamp, testTimestamp);
+    testChat = await addChat(
+        ["Vincent", "Tido"], [testMessage, testMessage], testTimestamp);
+    testFeed =
+        await addFeed(["Vincent", "Tido"], [testPost, testPost], testTimestamp);
   });
 
   group('Content protobuf', () {
@@ -117,6 +138,16 @@ void main() {
       await file.writeAsBytes(testPost.writeToBuffer());
       expect(new Post.fromBuffer(File('post.pb').readAsBytesSync()), testPost);
       file.delete();
+    });
+  });
+  group('Chat protobuf', () {
+    test('.messages', () {
+      expect(testChat.messages, [testMessage, testMessage]);
+    });
+  });
+  group('Feed protobuf', () {
+    test('.posts', () {
+      expect(testFeed.posts, [testPost, testPost]);
     });
   });
 }
