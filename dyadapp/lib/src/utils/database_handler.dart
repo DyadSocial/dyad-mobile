@@ -4,6 +4,8 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
 import 'package:dyadapp/src/utils/data/protos/posts.pb.dart';
+import 'package:dyadapp/src/utils/data/protos/content.pb.dart';
+import 'package:dyadapp/src/utils/data/protos/google/protobuf/timestamp.pb.dart';
 
 // Singleton Database for app
 class DatabaseHandler {
@@ -145,5 +147,19 @@ class DatabaseHandler {
       where: 'id = ?',
       whereArgs: [message.id],
     );
+  }
+
+  FutureOr<void> insertChat(Chat chat) async {
+    final db = await _helperInstance.database;
+    await db.insert('chats', {
+      'recpients': chat.recipients,
+      'data': chat.messages,
+      'lastUpdated': chat.lastUpdated
+    });
+  }
+
+  FutureOr<List<Chat>> chats() async {
+    final db = await _helperInstance.database;
+    final List<Map<String, dynamic>> maps = await db.query('chats');
   }
 }
