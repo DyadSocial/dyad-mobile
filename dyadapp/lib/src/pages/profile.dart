@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/data.dart';
 import 'package:dyadapp/src/pages/settings.dart';
-import 'package:dyadapp/src/widgets/post_bar.dart';
-import 'package:dyadapp/src/utils/data/post.dart';
-import 'package:quiver/strings.dart';
 
 class ProfileScreen extends StatelessWidget {
   final User user;

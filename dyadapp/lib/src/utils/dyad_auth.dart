@@ -13,12 +13,12 @@ class DyadAuth extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> signIn(String phone, String password) async {
+  Future<bool> signIn(String username, String password) async {
     // Simulating response from server
     await Future<void>.delayed(const Duration(milliseconds: 200));
 
     _isSignedIn = true;
-    await UserSession().set("username", phone);
+    await UserSession().set("username", username);
 
     notifyListeners();
     return _isSignedIn;

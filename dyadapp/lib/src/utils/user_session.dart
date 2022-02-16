@@ -46,5 +46,7 @@ class UserSession {
     }
 
     this._sessionContainer.putIfAbsent(key, () => value);
+    print(key);
+    print(value);
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/widgets/post_tile.dart';
 import 'package:dyadapp/src/data.dart';
@@ -16,19 +18,38 @@ class FeedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    posts.sort((a, b) => -a.timestamp.compareTo(b.timestamp));
+    // Sort chronologically
+    posts.sort((a, b) {
+      if (a.lastUpdated.seconds < b.lastUpdated.seconds) {
+        return 1;
+      } else if (a.lastUpdated.seconds == b.lastUpdated.seconds) {
+        return 0;
+      } else {
+        return -1;
+      }
+    });
+    print(posts);
     return ListView.builder(
       itemCount: posts.length,
-      itemBuilder: (context, index) => PostTile(
+      itemBuilder: (context, index) {
+        print(posts[index].author);
+
+        return PostTile(
           postNavigatorCallback: postNavigatorCallback,
           postId: posts[index].id,
-          profilePicture:
-              groupInstance.getUser(posts[index].author).profilePicture,
-          image: Post.getImage(posts[index].imageStr),
+          profilePicture: groupInstance.allUsers
+              .firstWhere((user) => user.username == posts[index].author)
+              .profilePicture,
+          image: posts[index].content.hasImage()
+              ? Image.file(File(posts[index].content.image))
+              : null,
           title: posts[index].title,
           author: posts[index].author,
-          content: posts[index].content,
-          datetime: posts[index].timestamp),
+          content: posts[index].content.text,
+          datetime: DateTime.fromMicrosecondsSinceEpoch(
+              posts[index].created.nanos * 1000),
+        );
+      },
     );
   }
 }

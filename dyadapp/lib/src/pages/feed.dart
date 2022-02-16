@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:dyadapp/src/pages/inbox.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dyadapp/src/data.dart';
@@ -11,6 +11,7 @@ import 'package:dyadapp/src/widgets/post_writer.dart';
 import 'package:dyadapp/src/utils/database_handler.dart';
 import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:quiver/core.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({
@@ -50,19 +51,37 @@ class _FeedScreenState extends State<FeedScreen>
     });
   }
 
+  Future<String> getFilePath(String hash) async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String documentsDirectoryPath = documentsDirectory.path;
+    return '$documentsDirectoryPath/$hash';
+  }
+
   onWritePostCallback(postForm) async {
-    String? imgAsStr = null;
-    if (postForm.imageFile != null)
-      imgAsStr = base64Encode(postForm.imageFile.readAsBytesSync());
-    DatabaseHandler().insertPost(
-      Post(
-        postForm.title,
-        postForm.content,
-        await UserSession().get("username"),
-        DateTime.now(),
-        imageStr: postForm.imageFile != null ? imgAsStr : null,
-      ),
-    );
+    var currentTime = DateTime.now();
+    var postToAdd = Post(
+        title: postForm.title,
+        content: Content(
+          text: postForm.content,
+        ),
+        author: await UserSession().get("username"),
+        created: Timestamp.fromDateTime(currentTime),
+        lastUpdated: Timestamp.fromDateTime(currentTime));
+
+    int newPostID = await DatabaseHandler().insertPost(postToAdd);
+    if (postForm.imageFile != null) {
+      // Get Path
+      final imageFilePath = await getFilePath(
+          hash3(newPostID, postToAdd.author, currentTime.millisecondsSinceEpoch)
+              .toString());
+      File imageFile = File(imageFilePath);
+      print(imageFile.path);
+      // Write image to file
+      imageFile.writeAsBytes((postForm.imageFile as File).readAsBytesSync());
+      // Update Post entry with file path
+      postToAdd.content.image = imageFilePath;
+      await DatabaseHandler().updatePost(newPostID, postToAdd);
+    }
   }
 
   _onPostNavigatorCallback(postId) async {
@@ -71,7 +90,7 @@ class _FeedScreenState extends State<FeedScreen>
 
   Future<List<Post>> _getPostData() async {
     await Future<void>.delayed(const Duration(milliseconds: 1200));
-    await DatabaseHandler().getAllPosts().then((newPosts) {
+    await DatabaseHandler().posts().then((newPosts) {
       _posts = newPosts;
     });
     return _posts;

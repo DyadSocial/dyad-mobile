@@ -6,10 +6,13 @@ import '../routing.dart';
 
 // Login Info Class
 class Credentials {
-  final String phoneNumber;
-  final String password;
+  late String phoneNumber;
+  late String password;
 
-  Credentials(this.phoneNumber, this.password);
+  Credentials(phoneNumber, password) {
+    this.phoneNumber = phoneNumber;
+    this.password = password;
+  }
 }
 
 // Login Widget
@@ -82,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     return "Invalid Username";
                   }
                 },
-                keyboardType: TextInputType.phone,
+                keyboardType: TextInputType.text,
                 controller: _phoneNumberController,
               ),
             ),

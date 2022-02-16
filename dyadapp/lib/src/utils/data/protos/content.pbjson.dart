@@ -13,9 +13,12 @@ const Content$json = const {
   '1': 'Content',
   '2': const [
     const {'1': 'text', '3': 1, '4': 1, '5': 9, '10': 'text'},
-    const {'1': 'image', '3': 2, '4': 1, '5': 12, '10': 'image'},
+    const {'1': 'image', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'image', '17': true},
+  ],
+  '8': const [
+    const {'1': '_image'},
   ],
 };
 
 /// Descriptor for `Content`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List contentDescriptor = $convert.base64Decode('CgdDb250ZW50EhIKBHRleHQYASABKAlSBHRleHQSFAoFaW1hZ2UYAiABKAxSBWltYWdl');
+final $typed_data.Uint8List contentDescriptor = $convert.base64Decode('CgdDb250ZW50EhIKBHRleHQYASABKAlSBHRleHQSGQoFaW1hZ2UYAiABKAlIAFIFaW1hZ2WIAQFCCAoGX2ltYWdl');

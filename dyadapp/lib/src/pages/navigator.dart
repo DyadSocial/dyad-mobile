@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:dyadapp/src/utils/dyad_auth.dart';
@@ -8,6 +10,8 @@ import 'package:dyadapp/src/pages/scaffold.dart';
 import 'package:dyadapp/src/widgets/fade_transition_page.dart';
 import 'package:dyadapp/src/utils/database_handler.dart';
 import 'package:dyadapp/src/pages/post.dart';
+
+import 'feed.dart';
 
 class DyadNavigator extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -24,10 +28,11 @@ class DyadNavigator extends StatefulWidget {
 class _DyadNavigatorState extends State<DyadNavigator> {
   final _signInKey = const ValueKey('Sign in');
   final _scaffoldKey = const ValueKey<String>('App scaffold');
-  final _aboutKey = const ValueKey<String>('About key');
-  final _messageKey = const ValueKey<String>('Message details screen');
+  final _feedKey = const ValueKey<String>('Feed key');
+  //final _aboutKey = const ValueKey<String>('About key');
+  //final _messageKey = const ValueKey<String>('Message details screen');
   final _postDetailsKey = const ValueKey<String>('Post details screen');
-  final _profileDetailsKey = const ValueKey<String>('Profile details screen');
+  //final _profileDetailsKey = const ValueKey<String>('Profile details screen');
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +40,18 @@ class _DyadNavigatorState extends State<DyadNavigator> {
     final authState = DyadAuthScope.of(context);
     final pathTemplate = routeState.route.pathTemplate;
 
-    Message? selectedMessage;
+    //Message? selectedMessage;
     if (pathTemplate == '/message/:messageId') {
       // Route to messageId message
     }
 
-    Post? selectedPost;
+    Future<Post?>? selectedPost;
     if (pathTemplate == '/post/:postId') {
-      DatabaseHandler().getPost(routeState.route.parameters['postId']);
+      selectedPost =
+          DatabaseHandler().getPost(routeState.route.parameters['postId']);
     }
 
-    User? selectedProfile;
+    //User? selectedProfile;
     if (pathTemplate == '/profile/:userId') {
       // Route to userId profile
     }
@@ -64,6 +70,7 @@ class _DyadNavigatorState extends State<DyadNavigator> {
             key: _signInKey,
             child: LoginScreen(
               onSignIn: (credentials) async {
+                print(credentials.phoneNumber);
                 var signedIn = await authState.signIn(
                     credentials.phoneNumber, credentials.password);
                 if (signedIn) {
@@ -74,17 +81,9 @@ class _DyadNavigatorState extends State<DyadNavigator> {
           )
         else ...[
           FadeTransitionPage<void>(
-            key: _scaffoldKey,
-            child: const DyadScaffold(),
-          ),
-          if (selectedPost != null)
-            MaterialPage<void>(
-              key: _postDetailsKey,
-              child: PostScreen(
-                  groupInstance.allUsers.firstWhere(
-                      (user) => user.nickname == selectedPost.author),
-                  selectedPost),
-            ),
+            key: _feedKey,
+            child: FeedScreen(),
+          )
         ],
       ],
     );

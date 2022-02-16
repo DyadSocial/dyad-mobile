@@ -4,8 +4,6 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
 import 'package:dyadapp/src/utils/data/protos/posts.pb.dart';
-import 'package:dyadapp/src/utils/data/protos/content.pb.dart';
-import 'package:dyadapp/src/utils/data/protos/google/protobuf/timestamp.pb.dart';
 
 // Singleton Database for app
 class DatabaseHandler {
@@ -27,10 +25,17 @@ class DatabaseHandler {
       path,
       version: 1,
       onCreate: _onCreate,
+      onOpen: _onOpen,
     );
   }
 
-  FutureOr<void> _onCreate(Database db, int version) async {
+  FutureOr<void> _onOpen(Database db) async {
+    await db.execute('''
+      DELETE FROM posts
+    ''');
+  }
+
+  Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE posts(
         id INTEGER PRIMARY KEY,
@@ -61,44 +66,60 @@ class DatabaseHandler {
     ''');
   }
 
-  FutureOr<Database> get database async {
+  Future<Database> get database async {
     if (_database != null) return _database!;
     _database = await _initDatabase();
     return _database!;
   }
 
-  FutureOr<void> insertPost(Post post) async {
+  Future<int> insertPost(Post post) async {
     final db = await _helperInstance.database;
-    await db.insert(
+    int id = await db.insert(
       'posts',
       {
-        "id": post.id,
         "author": post.author,
         "data": post.writeToBuffer(),
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    return id;
   }
 
-  FutureOr<List<Post>> posts() async {
+  Future<List<Post>> posts() async {
     final db = await _helperInstance.database;
     final List<Map<String, dynamic>> maps = await db.query('posts');
-    // Convert binary data stored in database into protobuf object
     return List.generate(
         maps.length, (idx) => Post.fromBuffer(maps[idx]['data']));
   }
 
-  FutureOr<void> updatePost(Post post) async {
+  Future<Post?> getPost(String? queryId) async {
+    if (queryId == null) return null;
+    final db = await _helperInstance.database;
+    final List<Map<String, dynamic>> maps =
+        await db.query('posts', where: 'id = ?', whereArgs: [queryId]);
+    return maps.isNotEmpty ? Post.fromBuffer(maps[0]['data']) : null;
+  }
+
+  Future<List<Post>> getAuthorPosts(String? author) async {
+    if (author == null) return [];
+    final db = await _helperInstance.database;
+    final List<Map<String, dynamic>> maps =
+        await db.query('posts', where: 'author = ?', whereArgs: [author]);
+    return List.generate(
+        maps.length, (idx) => Post.fromBuffer(maps[idx]['data']));
+  }
+
+  Future<void> updatePost(int id, Post post) async {
     final db = await _helperInstance.database;
     await db.update(
       'posts',
       {'id': post.id, 'author': post.author, 'data': post.writeToBuffer()},
       where: 'id = ?',
-      whereArgs: [post.id],
+      whereArgs: [id],
     );
   }
 
-  FutureOr<void> deletePost(Post post) async {
+  Future<void> deletePost(Post post) async {
     final db = await _helperInstance.database;
     await db.delete(
       'posts',
@@ -107,7 +128,7 @@ class DatabaseHandler {
     );
   }
 
-  FutureOr<void> insertMessage(Message message) async {
+  Future<void> insertMessage(Message message) async {
     final db = await _helperInstance.database;
     await db.insert(
         'messages',
@@ -119,14 +140,14 @@ class DatabaseHandler {
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  FutureOr<List<Message>> messages() async {
+  Future<List<Message>> messages() async {
     final db = await _helperInstance.database;
     final List<Map<String, dynamic>> maps = await db.query('posts');
     return List.generate(
         maps.length, (idx) => Message.fromBuffer(maps[idx]['data']));
   }
 
-  FutureOr<void> updateMessage(Message message) async {
+  Future<void> updateMessage(Message message) async {
     final db = await _helperInstance.database;
     await db.update(
       'messages',
@@ -140,7 +161,7 @@ class DatabaseHandler {
     );
   }
 
-  FutureOr<void> deleteMessage(Message message) async {
+  Future<void> deleteMessage(Message message) async {
     final db = await _helperInstance.database;
     await db.delete(
       'posts',
@@ -149,17 +170,12 @@ class DatabaseHandler {
     );
   }
 
-  FutureOr<void> insertChat(Chat chat) async {
+  Future<void> insertChat(Chat chat) async {
     final db = await _helperInstance.database;
     await db.insert('chats', {
       'recpients': chat.recipients,
       'data': chat.messages,
       'lastUpdated': chat.lastUpdated
     });
-  }
-
-  FutureOr<List<Chat>> chats() async {
-    final db = await _helperInstance.database;
-    final List<Map<String, dynamic>> maps = await db.query('chats');
   }
 }

@@ -1,9 +1,9 @@
+import 'dart:typed_data';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/data.dart';
 import 'package:dyadapp/src/pages/settings.dart';
 import 'package:dyadapp/src/widgets/post_bar.dart';
-import 'package:dyadapp/src/utils/data/post.dart';
-import 'package:quiver/strings.dart';
 
 class PostScreen extends StatelessWidget {
   final User author;
@@ -36,26 +36,25 @@ class PostScreen extends StatelessWidget {
     return Column(
       children: [
         PostBar(
-          author.profilePicture,
-          author.username,
-          post.title,
-          post.timestamp,
-        ),
+            author.profilePicture,
+            author.username,
+            post.title,
+            DateTime.fromMillisecondsSinceEpoch(
+                post.created.seconds ~/ 1000 as int)),
         Padding(
           padding: const EdgeInsets.all(10),
-          child: Text(post.content, style: TextStyle(fontSize: 16)),
+          child: Text(post.content.text, style: TextStyle(fontSize: 16)),
         ),
         Container(
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(),
+              ),
             ),
-          ),
-          child: Visibility(
-            visible: post.imageStr != null,
-            child: Post.getImage(post.imageStr) ?? Text(""),
-          ),
-        ),
+            child: Visibility(
+              visible: post.content.hasImage(),
+              child: Image.file(File(post.content.image)),
+            )),
       ],
     );
   }
