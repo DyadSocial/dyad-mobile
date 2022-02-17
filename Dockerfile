@@ -5,10 +5,10 @@ FROM ubuntu:20.04
 # Set ENV VARS
 
 # Prerequisites for Flutter, Android SDK, and downloading tools
-ENV JAVA_VERSION="8"
+ENV JAVA_VERSION="11"
 ENV DEBIAN_FRONTEND="noninteractive"
 RUN apt update \
-  && apt install -y --no-install-recommends curl sed git unzip xz-utils zip openjdk-8-jdk wget xz-utils ssh sudo tar
+  && apt install -y --no-install-recommends curl sed git unzip xz-utils zip openjdk-$JAVA_VERSION-jdk wget xz-utils ssh sudo tar 
 
 # New non-root user, dev
 ENV UID="1000"
