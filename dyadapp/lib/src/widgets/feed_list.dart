@@ -43,8 +43,8 @@ class FeedList extends StatelessWidget {
           title: posts[index].title,
           author: posts[index].author,
           content: posts[index].content.text,
-          datetime: DateTime.fromMicrosecondsSinceEpoch(
-              posts[index].created.nanos * 1000),
+          datetime: DateTime.fromMillisecondsSinceEpoch(
+              (posts[index].created.seconds * 1000).toInt()),
         );
       },
     );
