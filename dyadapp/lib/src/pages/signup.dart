@@ -7,12 +7,11 @@ import 'package:http/http.dart' as http;
 
 // Sign Up Info Class
 class Credentials {
-  final String phoneNumber;
+  final String userName;
   final String password;
-  final String name;
   final String email;
 
-  Credentials(this.phoneNumber, this.password, this.name, this.email);
+  Credentials(this.userName, this.password, this.email);
 }
 
 // Sign Up Widget
@@ -25,10 +24,9 @@ class SignupScreen extends StatefulWidget {
 
 // Sign Up State for Login
 class _SignupScreenState extends State<SignupScreen> {
-  final _phoneNumberController = TextEditingController();
+  final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
 
   @override
@@ -53,6 +51,16 @@ class _SignupScreenState extends State<SignupScreen> {
         MaterialPageRoute<void>(builder: (context) => const AboutScreen()));
   }
 
+ void displayDialog(BuildContext context, String title, String text) => 
+	showDialog(
+	  context: context,
+	  builder: (context) =>
+	    AlertDialog(
+	      title: Text(title),
+	      content: Text(text)
+	    ),
+	); 
+
   Widget _buildSignup() {
     return Center(
       child: SizedBox(
@@ -74,21 +82,10 @@ class _SignupScreenState extends State<SignupScreen> {
               child: TextFormField(
                 decoration: InputDecoration(
                   icon: Icon(Icons.call),
-                  labelText: 'Phone Number',
-                ),
-                keyboardType: TextInputType.phone,
-                controller: _phoneNumberController,
-              ),
-            ),
-            Container(
-              height: 80,
-              child: TextFormField(
-                decoration: InputDecoration(
-                  icon: Icon(Icons.account_circle_rounded),
-                  labelText: 'Name',
+                  labelText: 'Username',
                 ),
                 keyboardType: TextInputType.text,
-                controller: _nameController,
+                controller: _userNameController,
               ),
             ),
             Container(
@@ -144,22 +141,31 @@ class _SignupScreenState extends State<SignupScreen> {
                 height: 40,
                 child: ElevatedButton(
                   child: Text("Sign Up"),
-                  onPressed: () {
-                    var credentials = Credentials(
-                      _phoneNumberController.value.text,
-                      _passwordController.value.text,
-                      _nameController.value.text,
-                      _emailController.value.text,
-                    );
-                    APIProvider.postUserSignup(
-                      <String, String>{
-                        "username": credentials.phoneNumber,
-                        "password": credentials.password,
-                        "nickname": credentials.name,
-                        "profilepicture":
-                            'https://scontent-sjc3-1.xx.fbcdn.net/v/t1.6435-9/102380597_1514900362022644_5290959128538387371_n.jpg?_nc_cat=105&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=XX21z4bwB1cAX87haow&_nc_ht=scontent-sjc3-1.xx&oh=2f05cc1801cb3c32196dc289e7e5ce80&oe=61D0E951',
-                      },
-                    );
+                  onPressed: () async {
+                    var details = new Map<String, String>();
+                    details['username'] = _userNameController.text;
+                    details['password'] = _passwordController.text;
+
+                    if (_userNameController.text.length < 3 || _userNameController.text.length > 20)
+                    {
+                      displayDialog(context,"Invalid Username", "The username should be 3-20 characters");
+                    }
+                    else if (_passwordController.text.length < 6 || _passwordController.text.length > 20)
+                    {
+                      displayDialog(context,"Invalid Password", "The password should be 6-20 characters");
+                    }
+                    else
+                    {
+                      var response = await APIProvider.postUserSignup(details);
+                      if (response != '')
+                      {
+                       displayDialog(context,"Success", "Your account has been successfully created");
+                      }
+                      else
+                      {
+                        displayDialog(context,"Error", "Username is already taken");
+                      }
+                    }
                   },
                 ),
               ),
