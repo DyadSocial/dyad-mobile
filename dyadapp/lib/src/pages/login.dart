@@ -1,16 +1,19 @@
+import 'package:dyadapp/src/utils/user_session.dart';
+import 'package:dyadapp/src/utils/api_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/pages/about.dart';
 import 'package:dyadapp/src/pages/signup.dart';
 import 'package:dyadapp/src/pages/help.dart';
+
 import '../routing.dart';
 
 // Login Info Class
 class Credentials {
-  late String phoneNumber;
+  late String userName;
   late String password;
 
-  Credentials(phoneNumber, password) {
-    this.phoneNumber = phoneNumber;
+  Credentials(username, password) {
+    this.userName = username;
     this.password = password;
   }
 }
@@ -30,7 +33,7 @@ class LoginScreen extends StatefulWidget {
 
 // Login State for Login
 class _LoginScreenState extends State<LoginScreen> {
-  final _phoneNumberController = TextEditingController();
+  final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
 
   @override
@@ -86,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                 },
                 keyboardType: TextInputType.text,
-                controller: _phoneNumberController,
+                controller: _userNameController,
               ),
             ),
             Container(
@@ -115,10 +118,24 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: ElevatedButton(
                   child: Text("Sign In"),
                   onPressed: () async {
-                    widget.onSignIn(Credentials(
-                      _phoneNumberController.value.text,
-                      _passwordController.value.text,
-                    ));
+                    var details = new Map<String, String>();
+                    details['username'] = _userNameController.text;
+                    details['password'] = _passwordController.text;
+
+                    var JWT = await APIProvider.logIn(details);
+
+                    if (JWT != '')
+                    {
+                      await UserSession().set('access', JWT);
+                      widget.onSignIn(Credentials(details['username'], details['password']));
+                    }
+                    else
+                    {
+                      AlertDialog(
+                        title: Text("Error"),
+                        content: Text("No account was found matching that username and password")
+                      );
+                    }     
                   },
                 ),
               ),

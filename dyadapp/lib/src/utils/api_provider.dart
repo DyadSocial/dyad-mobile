@@ -1,15 +1,16 @@
 import 'dart:convert';
+import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:http/http.dart' as http;
 import 'package:dyadapp/src/data.dart';
 
 class APIProvider {
-  static final _baseURL = 'https://api.vncp.me:8000';
+  static final _baseURL = 'http://api.dyadsocial.com:8000';
   final http.Client httpClient;
   APIProvider(this.httpClient);
 
   Future<List<User>> getUserList() async {
     final response =
-        await httpClient.get(Uri.parse('$_baseURL/core/user-list/'));
+        await httpClient.get(Uri.parse('$_baseURL/core/users-list/'));
 
     if (response.statusCode == 200) {
       List<User> userList = [];
@@ -18,18 +19,31 @@ class APIProvider {
     return [];
   }
 
-  static Future<bool> postUserSignup(Map<String, String> formData) async {
+  static Future<String> postUserSignup(Map<String, String> formData) async {
     final response = await http.post(
-      Uri.parse('$_baseURL/core/create-user/'),
+      Uri.parse('$_baseURL/core/register/'),
       body: {
         "username": formData['username'],
-        "password": formData['password'],
-        "nickname": formData['nickname'],
-        "profilePicture": formData['profilepicture'],
+        "password": formData['password']
       },
     );
-    print(response.body);
+    if(response.statusCode == 200) {
+      return response.body;
+    }
+    return '';
+  }
 
-    return true;
+  static Future<String> logIn(Map <String, String> formData) async {
+    final response = await http.post(Uri.parse('$_baseURL/core/login'),
+    body: {
+        "username": formData['username'],
+        "password": formData['password'],
+      }
+    );
+
+    if(response.statusCode == 200) {
+      return response.body;
+    }
+    return '';
   }
 }

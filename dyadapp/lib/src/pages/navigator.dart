@@ -70,9 +70,9 @@ class _DyadNavigatorState extends State<DyadNavigator> {
             key: _signInKey,
             child: LoginScreen(
               onSignIn: (credentials) async {
-                print(credentials.phoneNumber);
+                print(credentials.userName);
                 var signedIn = await authState.signIn(
-                    credentials.phoneNumber, credentials.password);
+                    credentials.userName, credentials.password);
                 if (signedIn) {
                   routeState.go('/feed');
                 }
