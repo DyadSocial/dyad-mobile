@@ -58,6 +58,16 @@ class _LoginScreenState extends State<LoginScreen> {
         MaterialPageRoute<void>(builder: (context) => const AboutScreen()));
   }
 
+  void displayDialog(BuildContext context, String title, String text) => 
+	showDialog(
+	  context: context,
+	  builder: (context) =>
+	    AlertDialog(
+	      title: Text(title),
+	      content: Text(text)
+	    ),
+	); 
+
   Widget _buildLogin() {
     return Center(
       child: SizedBox(
@@ -123,6 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     details['password'] = _passwordController.text;
 
                     var JWT = await APIProvider.logIn(details);
+                    print(JWT);
 
                     if (JWT != '')
                     {
@@ -131,10 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                     else
                     {
-                      AlertDialog(
-                        title: Text("Error"),
-                        content: Text("No account was found matching that username and password")
-                      );
+                      displayDialog(context,"Error", "Incorrect Username or Password");
                     }     
                   },
                 ),

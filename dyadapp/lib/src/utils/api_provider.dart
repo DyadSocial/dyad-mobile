@@ -21,7 +21,7 @@ class APIProvider {
 
   static Future<String> postUserSignup(Map<String, String> formData) async {
     final response = await http.post(
-      Uri.parse('$_baseURL/core/register/'),
+      Uri.parse('$_baseURL/core/register'),
       body: {
         "username": formData['username'],
         "password": formData['password']
@@ -34,13 +34,13 @@ class APIProvider {
   }
 
   static Future<String> logIn(Map <String, String> formData) async {
-    final response = await http.post(Uri.parse('$_baseURL/core/login'),
+    final response = await http.post(Uri.parse('${_baseURL}/core/login/'),
     body: {
         "username": formData['username'],
         "password": formData['password'],
       }
     );
-
+    print(response.statusCode);
     if(response.statusCode == 200) {
       return response.body;
     }
