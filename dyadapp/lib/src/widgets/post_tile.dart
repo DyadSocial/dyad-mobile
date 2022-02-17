@@ -20,7 +20,7 @@ class PostTile extends StatelessWidget {
 
   final Function(int) postNavigatorCallback;
   final int postId;
-  final ImageProvider<Object> profilePicture;
+  final ImageProvider<Object>? profilePicture;
   final String title;
   final String author;
   final String content;
