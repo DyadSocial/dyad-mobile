@@ -40,7 +40,7 @@ class PostScreen extends StatelessWidget {
             author.username,
             post.title,
             DateTime.fromMillisecondsSinceEpoch(
-                post.created.seconds ~/ 1000 as int)),
+                (post.created.seconds ~/ 1000).toInt())),
         Padding(
           padding: const EdgeInsets.all(10),
           child: Text(post.content.text, style: TextStyle(fontSize: 16)),

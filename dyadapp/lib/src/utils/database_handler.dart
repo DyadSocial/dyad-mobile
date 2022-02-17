@@ -82,14 +82,18 @@ class DatabaseHandler {
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    print("Post Created with ID: $id");
     return id;
   }
 
   Future<List<Post>> posts() async {
     final db = await _helperInstance.database;
     final List<Map<String, dynamic>> maps = await db.query('posts');
-    return List.generate(
-        maps.length, (idx) => Post.fromBuffer(maps[idx]['data']));
+    return List.generate(maps.length, (idx) {
+      var post = Post.fromBuffer(maps[idx]['data']);
+      post.id = maps[idx]['id'];
+      return post;
+    });
   }
 
   Future<Post?> getPost(String? queryId) async {

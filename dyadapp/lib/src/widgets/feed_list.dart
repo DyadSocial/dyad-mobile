@@ -28,12 +28,9 @@ class FeedList extends StatelessWidget {
         return -1;
       }
     });
-    print(posts);
     return ListView.builder(
       itemCount: posts.length,
       itemBuilder: (context, index) {
-        print(posts[index].author);
-
         return PostTile(
           postNavigatorCallback: postNavigatorCallback,
           postId: posts[index].id,

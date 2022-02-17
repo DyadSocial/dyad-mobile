@@ -32,6 +32,7 @@ class PostTile extends StatelessWidget {
     return TextButton(
       onPressed: () async {
         Post? post = await DatabaseHandler().getPost(postId.toString());
+        print(post);
         if (post != null)
           Navigator.of(context).push(MaterialPageRoute<void>(
               builder: (context) => PostScreen(
