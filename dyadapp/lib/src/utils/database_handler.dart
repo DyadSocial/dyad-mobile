@@ -78,6 +78,7 @@ class DatabaseHandler {
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    print("INSERTING POST: $id");
     return id;
   }
 
@@ -110,9 +111,10 @@ class DatabaseHandler {
 
   Future<void> updatePost(int id, Post post) async {
     final db = await _helperInstance.database;
+    print("UPDATING POST: $id ==? ${post.id}");
     await db.update(
       'posts',
-      {'id': post.id, 'author': post.author, 'data': post.writeToBuffer()},
+      {'author': post.author, 'data': post.writeToBuffer()},
       where: 'id = ?',
       whereArgs: [id],
     );

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/widgets/post_tile.dart';
 import 'package:dyadapp/src/data.dart';
@@ -35,8 +36,10 @@ class FeedList extends StatelessWidget {
           postNavigatorCallback: postNavigatorCallback,
           postId: posts[index].id,
           profilePicture: groupInstance.allUsers
-              .firstWhere((user) => user.username == posts[index].author)
-              .profilePicture,
+                  .firstWhereOrNull(
+                      (user) => user.username == posts[index].author)
+                  ?.profilePicture ??
+              null,
           image: posts[index].content.hasImage()
               ? Image.file(File(posts[index].content.image))
               : null,
