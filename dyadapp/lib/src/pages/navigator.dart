@@ -80,13 +80,9 @@ class _DyadNavigatorState extends State<DyadNavigator> {
           )
         else ...[
           FadeTransitionPage<void>(
-            key: _feedKey,
-            child: DyadScaffold(),
-          ),
-          MaterialPage<void>(
-            key: _feedKey,
-            child: FeedScreen(),
-          ),
+            key: _scaffoldKey,
+            child: const DyadScaffold(),
+          )
         ],
       ],
     );
