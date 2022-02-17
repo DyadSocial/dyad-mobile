@@ -6,6 +6,8 @@ import 'package:dyadapp/src/pages/signup.dart';
 import 'package:dyadapp/src/pages/help.dart';
 
 import '../routing.dart';
+import '../utils/auth_token.dart';
+import '../utils/dyad_auth.dart';
 
 // Login Info Class
 class Credentials {
@@ -36,6 +38,24 @@ class _LoginScreenState extends State<LoginScreen> {
   final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  void rerouteLoggedIn() async {
+    await Future.delayed(Duration.zero, () async {
+      if (await AuthToken.getStatus() == UserStatus.loggedIn) {
+        final routeState = RouteStateScope.of(context);
+        final authState = DyadAuthScope.of(context);
+        authState.isSignedIn = true;
+        routeState.go('/feed');
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Check if user is logged in
+    rerouteLoggedIn();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,15 +78,12 @@ class _LoginScreenState extends State<LoginScreen> {
         MaterialPageRoute<void>(builder: (context) => const AboutScreen()));
   }
 
-  void displayDialog(BuildContext context, String title, String text) => 
-	showDialog(
-	  context: context,
-	  builder: (context) =>
-	    AlertDialog(
-	      title: Text(title),
-	      content: Text(text)
-	    ),
-	); 
+  void displayDialog(BuildContext context, String title, String text) =>
+      showDialog(
+        context: context,
+        builder: (context) =>
+            AlertDialog(title: Text(title), content: Text(text)),
+      );
 
   Widget _buildLogin() {
     return Center(
@@ -128,22 +145,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: ElevatedButton(
                   child: Text("Sign In"),
                   onPressed: () async {
-                    var details = new Map<String, String>();
-                    details['username'] = _userNameController.text;
-                    details['password'] = _passwordController.text;
-
-                    var JWT = await APIProvider.logIn(details);
-                    print(JWT);
-
-                    if (JWT != '')
-                    {
-                      await UserSession().set('access', JWT);
-                      widget.onSignIn(Credentials(details['username'], details['password']));
-                    }
-                    else
-                    {
-                      displayDialog(context,"Error", "Incorrect Username or Password");
-                    }     
+                    widget.onSignIn(Credentials(
+                      _userNameController.value.text,
+                      _passwordController.value.text,
+                    ));
+                    //displayDialog(
+                    //  context, "Error", "Incorrect Username or Password");
                   },
                 ),
               ),

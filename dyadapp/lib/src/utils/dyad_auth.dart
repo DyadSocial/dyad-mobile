@@ -1,25 +1,36 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:dyadapp/src/utils/user_session.dart';
 
+import 'api_provider.dart';
+import 'auth_token.dart';
+
 class DyadAuth extends ChangeNotifier {
   bool _isSignedIn = false;
   bool get isSignedIn => _isSignedIn;
+  void set isSignedIn(bool signedIn) {
+    this._isSignedIn = signedIn;
+  }
 
   Future<void> signOut() async {
     // Simulating response from server
     await Future<void>.delayed(const Duration(milliseconds: 200));
+    AuthToken.logout();
     _isSignedIn = false;
     notifyListeners();
   }
 
   Future<bool> signIn(String username, String password) async {
-    // Simulating response from server
-    await Future<void>.delayed(const Duration(milliseconds: 200));
-
-    _isSignedIn = true;
-    await UserSession().set("username", username);
-
+    var resp =
+        await APIProvider.logIn({'username': username, 'password': password});
+    if (resp['status'] == 200) {
+      _isSignedIn = true;
+      await UserSession().set("username", username);
+      AuthToken.storeToken(jsonDecode(resp['body'])['jwt']);
+      print(resp['body']);
+    }
     notifyListeners();
     return _isSignedIn;
   }

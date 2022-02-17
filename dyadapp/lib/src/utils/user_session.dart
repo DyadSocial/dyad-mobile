@@ -22,6 +22,11 @@ class UserSession {
     }
   }
 
+  Future remove(key) async {
+    await _initSharedPrefs();
+    this._sharedPrefs.remove(key);
+  }
+
   Future set(key, value) async {
     await _initSharedPrefs();
 
@@ -46,7 +51,5 @@ class UserSession {
     }
 
     this._sessionContainer.putIfAbsent(key, () => value);
-    print(key);
-    print(value);
   }
 }

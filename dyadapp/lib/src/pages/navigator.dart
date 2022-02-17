@@ -10,6 +10,7 @@ import 'package:dyadapp/src/pages/login.dart';
 import 'package:dyadapp/src/widgets/fade_transition_page.dart';
 import 'package:dyadapp/src/utils/database_handler.dart';
 
+import '../utils/auth_token.dart';
 import 'feed.dart';
 
 class DyadNavigator extends StatefulWidget {
@@ -69,7 +70,7 @@ class _DyadNavigatorState extends State<DyadNavigator> {
             key: _signInKey,
             child: LoginScreen(
               onSignIn: (credentials) async {
-                print(credentials.userName);
+                AuthToken.getStatus();
                 var signedIn = await authState.signIn(
                     credentials.userName, credentials.password);
                 if (signedIn) {
