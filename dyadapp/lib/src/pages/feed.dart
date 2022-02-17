@@ -135,53 +135,55 @@ class _FeedScreenState extends State<FeedScreen>
             ],
           ), */
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 0,
-              child: Visibility(
-                visible: _postWriterActive,
-                child: PostWriter(onWritePostCallback, postWriterCloseCallback),
-              ),
-            ),
-            Expanded(
-              flex: 5,
-              child: TabBarView(
-                controller: _tabController,
-                children: <Widget>[
-/*                   FeedList(
-                    posts: postCacheInstance.allPosts,
-                    onTap: _handlePostTapped,
-                  ), */
-                  FutureBuilder<List<Post>>(
-                    future: _getPostData(),
-                    builder: (context, snapshot) {
-                      return snapshot.hasData
-                          ? FeedList(
-                              _onPostNavigatorCallback,
-                              snapshot.data!,
-                              onTap: _handlePostTapped,
-                            )
-                          : Center(child: new CircularProgressIndicator());
-                    },
+        body: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 0, maxHeight: 1000),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Visibility(
+                  visible: _postWriterActive,
+                  child:
+                      PostWriter(onWritePostCallback, postWriterCloseCallback),
+                ),
+                Container(
+                  child: Expanded(
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: <Widget>[
+                        FutureBuilder<List<Post>>(
+                          future: _getPostData(),
+                          builder: (context, snapshot) {
+                            return snapshot.hasData
+                                ? FeedList(
+                                    _onPostNavigatorCallback,
+                                    snapshot.data!,
+                                    onTap: _handlePostTapped,
+                                  )
+                                : Center(
+                                    child: new CircularProgressIndicator());
+                          },
+                        ),
+                        FutureBuilder<List<Post>>(
+                          future: _getPostData(),
+                          builder: (context, snapshot) {
+                            return snapshot.hasData
+                                ? FeedList(
+                                    _onPostNavigatorCallback,
+                                    snapshot.data!,
+                                    onTap: _handlePostTapped,
+                                  )
+                                : Center(
+                                    child: new CircularProgressIndicator());
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                  FutureBuilder<List<Post>>(
-                    future: _getPostData(),
-                    builder: (context, snapshot) {
-                      return snapshot.hasData
-                          ? FeedList(
-                              _onPostNavigatorCallback,
-                              snapshot.data!,
-                              onTap: _handlePostTapped,
-                            )
-                          : Center(child: new CircularProgressIndicator());
-                    },
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       );
 
