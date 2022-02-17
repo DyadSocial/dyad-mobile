@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -28,8 +30,10 @@ class PostBar extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: CircleAvatar(
-                backgroundImage: profilePicture,
-                backgroundColor: Colors.blueGrey,
+                foregroundImage: profilePicture,
+                backgroundColor: Colors.white70,
+                foregroundColor: Colors.black12,
+                child: Text(author.substring(0, min(4, author.length))),
               ),
             ),
           ),
