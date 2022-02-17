@@ -29,11 +29,7 @@ class DatabaseHandler {
     );
   }
 
-  FutureOr<void> _onOpen(Database db) async {
-    await db.execute('''
-      DELETE FROM posts
-    ''');
-  }
+  FutureOr<void> _onOpen(Database db) async {}
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
@@ -82,7 +78,6 @@ class DatabaseHandler {
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    print("Post Created with ID: $id");
     return id;
   }
 
