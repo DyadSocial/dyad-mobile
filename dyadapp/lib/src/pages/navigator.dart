@@ -1,15 +1,14 @@
 import 'dart:async';
 
+import 'package:dyadapp/src/pages/scaffold.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dyadapp/src/utils/dyad_auth.dart';
 import 'package:dyadapp/src/routing.dart';
 import 'package:dyadapp/src/data.dart';
 import 'package:dyadapp/src/pages/login.dart';
-import 'package:dyadapp/src/pages/scaffold.dart';
 import 'package:dyadapp/src/widgets/fade_transition_page.dart';
 import 'package:dyadapp/src/utils/database_handler.dart';
-import 'package:dyadapp/src/pages/post.dart';
 
 import 'feed.dart';
 
@@ -82,8 +81,12 @@ class _DyadNavigatorState extends State<DyadNavigator> {
         else ...[
           FadeTransitionPage<void>(
             key: _feedKey,
+            child: DyadScaffold(),
+          ),
+          MaterialPage<void>(
+            key: _feedKey,
             child: FeedScreen(),
-          )
+          ),
         ],
       ],
     );

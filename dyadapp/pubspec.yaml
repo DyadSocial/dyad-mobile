@@ -43,6 +43,8 @@ dependencies:
   shared_preferences:
   intl: ^0.17.0
   protobuf: ^2.0.1
+  flutter_nearby_connections: ^1.1.1
+  device_info_plus: ^3.2.2
 
 dev_dependencies:
   test:
