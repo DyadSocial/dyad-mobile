@@ -4,6 +4,10 @@ import 'package:dyadapp/src/routing.dart';
 import 'package:dyadapp/src/pages/post.dart';
 import 'package:dyadapp/src/utils/database_handler.dart';
 import 'package:dyadapp/src/data.dart';
+import 'package:provider/provider.dart';
+
+import '../utils/theme_model.dart';
+import '../utils/theme_preferences.dart';
 
 class PostTile extends StatelessWidget {
   const PostTile({
@@ -29,49 +33,74 @@ class PostTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () async {
-        Post? post = await DatabaseHandler().getPost(postId.toString());
-        print(post);
-        if (post != null)
-          Navigator.of(context).push(MaterialPageRoute<void>(
-              builder: (context) => PostScreen(
-                  groupInstance.allUsers
-                      .firstWhere((user) => user.username == author),
-                  post)));
-      },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          PostBar(
-            profilePicture,
-            author,
-            title,
-            datetime,
-          ),
-          Container(
+    final ThemeModel _themeModel = ThemeModelScope.of(context);
+    return Consumer(builder: (context, ThemeModel themeNotifier, child) {
+      return TextButton(
+          onPressed: () async {
+            Post? post = await DatabaseHandler().getPost(postId.toString());
+            print(post);
+            if (post != null)
+              Navigator.of(context).push(MaterialPageRoute<void>(
+                  builder: (context) => PostScreen(
+                      groupInstance.allUsers
+                          .firstWhere((user) => user.username == author),
+                      post)));
+          },
+          child: Container(
             decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(),
-              ),
+                color: themeNotifier.isDark
+                    ? Color(0xFF4C566A)
+                    : Color(0xFFFFFFFF),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20.0),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                      offset: const Offset(0, 7),
+                      blurRadius: 5.0,
+                      spreadRadius: 2.0,
+                      color: themeNotifier.isDark
+                          ? Color(0xCA2E3440)
+                          : Color(0xAA475D68))
+                ]),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                PostBar(
+                  profilePicture,
+                  author,
+                  title,
+                  datetime,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20.0),
+                    child: image ??
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 10, right: 10, bottom: 8),
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                bottom: 20, left: 20, right: 20),
+                            child: Text(
+                              content,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: themeNotifier.isDark
+                                    ? Color(0xFFE5E9F0)
+                                    : Color(0xFF6A808F),
+                              ),
+                            ),
+                          ),
+                        ),
+                  ),
+                ),
+              ],
             ),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: image ??
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(left: 10, right: 10, bottom: 8),
-                      child: Text(content,
-                          style: TextStyle(
-                              fontSize: 15, color: Color(0xFF2E3440))),
-                    ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+          ));
+    });
   }
 }

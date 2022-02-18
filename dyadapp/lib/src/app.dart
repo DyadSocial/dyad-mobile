@@ -16,6 +16,7 @@ class Dyad extends StatefulWidget {
 
 class _DyadState extends State<Dyad> {
   final _auth = DyadAuth();
+  final _themeModel = ThemeModel();
   final _navigatorKey = GlobalKey<NavigatorState>();
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
@@ -58,25 +59,45 @@ class _DyadState extends State<Dyad> {
         create: (_) => ThemeModel(),
         child: RouteStateScope(
           notifier: _routeState,
-          child: Consumer(
-            builder: (context, ThemeModel themeNotifier, child) {
-              return DyadAuthScope(
-                notifier: _auth,
-                child: MaterialApp.router(
-                  routerDelegate: _routerDelegate,
-                  routeInformationParser: _routeParser,
-                  theme: themeNotifier.isDark
-                      ? ThemeData.from(
-                          colorScheme: ColorScheme.fromSwatch(
-                              primarySwatch: Colors.blueGrey),
-                        )
-                      : ThemeData.from(
-                          colorScheme: ColorScheme.fromSwatch(
-                              primarySwatch: Colors.grey),
-                        ),
-                ),
-              );
-            },
+          child: ThemeModelScope(
+            notifier: _themeModel,
+            child: Consumer(
+              builder: (context, ThemeModel themeNotifier, child) {
+                return DyadAuthScope(
+                  notifier: _auth,
+                  child: MaterialApp.router(
+                      routerDelegate: _routerDelegate,
+                      routeInformationParser: _routeParser,
+                      theme: themeNotifier.isDark
+                          ? ThemeData.from(
+                              colorScheme: ColorScheme(
+                                  brightness: Brightness.dark,
+                                  background: Color(0xFF3B4252),
+                                  onBackground: Color(0xFFE5E9F0),
+                                  primary: Color(0xFF88C0D0),
+                                  onPrimary: Color(0xFF2E3440),
+                                  error: Color(0xFFBF616A),
+                                  onError: Color(0xFFECEFF4),
+                                  secondary: Color(0xFF81A1C1),
+                                  onSecondary: Color(0xFF2E3440),
+                                  surface: Color(0xFF5E81AC),
+                                  onSurface: Color(0xFFECEFF4)))
+                          : ThemeData.from(
+                              colorScheme: ColorScheme(
+                                  brightness: Brightness.light,
+                                  background: Color(0xFFE3F2FC),
+                                  onBackground: Color(0xFF5C566A),
+                                  primary: Color(0xFF88C0D0),
+                                  onPrimary: Color(0xFF2E3440),
+                                  error: Color(0xFFBF616A),
+                                  onError: Color(0xFFECEFF4),
+                                  secondary: Color(0xFF8FBCBB),
+                                  onSecondary: Color(0xFF3440),
+                                  surface: Color(0xFF81A1C1),
+                                  onSurface: Color(0xFFECEFF4)))),
+                );
+              },
+            ),
           ),
         ),
       );

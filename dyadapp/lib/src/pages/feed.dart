@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -33,7 +32,7 @@ class _FeedScreenState extends State<FeedScreen>
     super.initState();
     _postWriterActive = false;
     _tabController = TabController(
-      initialIndex: 1,
+      initialIndex: 0,
       length: 2,
       vsync: this,
     )..addListener(_handleTabIndexChanged);
@@ -96,6 +95,13 @@ class _FeedScreenState extends State<FeedScreen>
     return _posts;
   }
 
+  Future<List<Post>> _getSelfPostData() async {
+    _getPostData();
+    final currentUser = await UserSession().get("username");
+    print(currentUser);
+    return _posts.where((post) => post.author == currentUser).toList();
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
@@ -121,7 +127,7 @@ class _FeedScreenState extends State<FeedScreen>
               tooltip: 'About Dyad',
             ),
           ],
-/*           bottom: TabBar(
+          bottom: TabBar(
             controller: _tabController,
             tabs: const <Widget>[
               Tab(
@@ -133,11 +139,11 @@ class _FeedScreenState extends State<FeedScreen>
                 icon: Icon(Icons.favorite),
               ),
             ],
-          ), */
+          ),
         ),
         body: SingleChildScrollView(
           child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: 0, maxHeight: 1000),
+            constraints: BoxConstraints(minHeight: 100, maxHeight: 1000),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -165,7 +171,7 @@ class _FeedScreenState extends State<FeedScreen>
                           },
                         ),
                         FutureBuilder<List<Post>>(
-                          future: _getPostData(),
+                          future: _getSelfPostData(),
                           builder: (context, snapshot) {
                             return snapshot.hasData
                                 ? FeedList(
@@ -200,6 +206,9 @@ class _FeedScreenState extends State<FeedScreen>
         _routeState.go('/feed/all');
         break;
       case 1:
+        _routeState.go('/feed');
+        break;
+      case 2:
         _routeState.go('/inbox');
         break;
       default:

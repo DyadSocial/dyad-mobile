@@ -24,3 +24,14 @@ class ThemeModel extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+class ThemeModelScope extends InheritedNotifier<ThemeModel> {
+  const ThemeModelScope({
+    required ThemeModel notifier,
+    required Widget child,
+    Key? key,
+  }) : super(key: key, notifier: notifier, child: child);
+
+  static ThemeModel of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<ThemeModelScope>()!.notifier!;
+}

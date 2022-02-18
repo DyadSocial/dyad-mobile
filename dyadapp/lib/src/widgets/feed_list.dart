@@ -29,9 +29,13 @@ class FeedList extends StatelessWidget {
         return -1;
       }
     });
-    return ListView.builder(
-      itemCount: posts.length,
+    return ListView.separated(
+      separatorBuilder: (context, index) => SizedBox(height: 11),
+      itemCount: posts.length + 2,
       itemBuilder: (context, index) {
+        if (index == 0) return SizedBox(height: 15);
+        if (index == posts.length + 1) return SizedBox(height: 300);
+        index = index - 1;
         return PostTile(
           postNavigatorCallback: postNavigatorCallback,
           postId: posts[index].id,

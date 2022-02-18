@@ -12,6 +12,7 @@ import 'package:dyadapp/src/utils/database_handler.dart';
 
 import '../utils/auth_token.dart';
 import 'feed.dart';
+import 'inbox.dart';
 
 class DyadNavigator extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -29,6 +30,7 @@ class _DyadNavigatorState extends State<DyadNavigator> {
   final _signInKey = const ValueKey('Sign in');
   final _scaffoldKey = const ValueKey<String>('App scaffold');
   final _feedKey = const ValueKey<String>('Feed key');
+  final _inboxKey = const ValueKey<String>('Inbox key');
   //final _aboutKey = const ValueKey<String>('About key');
   //final _messageKey = const ValueKey<String>('Message details screen');
   final _postDetailsKey = const ValueKey<String>('Post details screen');
