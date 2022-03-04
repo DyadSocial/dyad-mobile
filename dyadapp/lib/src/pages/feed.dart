@@ -56,6 +56,11 @@ class _FeedScreenState extends State<FeedScreen>
     return '$documentsDirectoryPath/$hash';
   }
 
+  Future<void> _onFeedRefreshCallback() async {
+    // setState posts
+    print("Refreshing Feed..");
+  }
+
   onWritePostCallback(postForm) async {
     var currentTime = DateTime.now();
     var postToAdd = Post(
@@ -153,36 +158,41 @@ class _FeedScreenState extends State<FeedScreen>
                 ),
                 Container(
                   child: Expanded(
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: <Widget>[
-                        FutureBuilder<List<Post>>(
-                          future: _getPostData(),
-                          builder: (context, snapshot) {
-                            return snapshot.hasData
-                                ? FeedList(
-                                    _onPostNavigatorCallback,
-                                    snapshot.data!,
-                                    onTap: _handlePostTapped,
-                                  )
-                                : Center(
-                                    child: new CircularProgressIndicator());
-                          },
-                        ),
-                        FutureBuilder<List<Post>>(
-                          future: _getSelfPostData(),
-                          builder: (context, snapshot) {
-                            return snapshot.hasData
-                                ? FeedList(
-                                    _onPostNavigatorCallback,
-                                    snapshot.data!,
-                                    onTap: _handlePostTapped,
-                                  )
-                                : Center(
-                                    child: new CircularProgressIndicator());
-                          },
-                        ),
-                      ],
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 50),
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: <Widget>[
+                          FutureBuilder<List<Post>>(
+                            future: _getPostData(),
+                            builder: (context, snapshot) {
+                              return snapshot.hasData
+                                  ? FeedList(
+                                      _onFeedRefreshCallback,
+                                      _onPostNavigatorCallback,
+                                      snapshot.data!,
+                                      onTap: _handlePostTapped,
+                                    )
+                                  : Center(
+                                      child: new CircularProgressIndicator());
+                            },
+                          ),
+                          FutureBuilder<List<Post>>(
+                            future: _getSelfPostData(),
+                            builder: (context, snapshot) {
+                              return snapshot.hasData
+                                  ? FeedList(
+                                      _onFeedRefreshCallback,
+                                      _onPostNavigatorCallback,
+                                      snapshot.data!,
+                                      onTap: _handlePostTapped,
+                                    )
+                                  : Center(
+                                      child: new CircularProgressIndicator());
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

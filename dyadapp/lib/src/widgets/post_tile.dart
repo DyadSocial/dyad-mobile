@@ -76,7 +76,9 @@ class PostTile extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20.0),
+                    borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(20.0),
+                        bottomLeft: Radius.circular(20.0)),
                     child: image ??
                         Padding(
                           padding: const EdgeInsets.only(
