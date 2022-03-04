@@ -8,14 +8,12 @@ import 'package:dyadapp/src/utils/data/protos/posts.pb.dart';
 import 'package:dyadapp/src/utils/data/protos/google/protobuf/timestamp.pb.dart';
 import 'package:flutter/material.dart';
 
-/* Image are no longer stored directly in Content protobuf
 Content addContent(String input, [List<int>? image]) {
   Content content = Content();
   content.text = input;
-  if (image != null) content.image = image;
+  if (image != null) content.image = image as String;
   return content;
 }
-*/
 
 Message addMessage(int id, String author, Content content,
     Timestamp last_updated, Timestamp created) {

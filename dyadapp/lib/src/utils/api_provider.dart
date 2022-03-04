@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:dyadapp/src/data.dart';
 
 class APIProvider {
-  static final _baseURL = 'http://api.dyadsocial.com:8000';
+  static final _baseURL = 'https://api.dyadsocial.com';
   final http.Client httpClient;
   APIProvider(this.httpClient);
 
