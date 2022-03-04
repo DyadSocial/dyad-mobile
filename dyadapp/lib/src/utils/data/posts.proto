@@ -12,8 +12,31 @@ message Post {
     string title = 6;
 }
 
+// Send the last posts for a response with more posts
+message PostQuery {
+    int32 id = 1;
+    string author = 2;
+    google.protobuf.Timestamp last_updated = 3;
+    google.protobuf.Timestamp created = 4;
+    int32 count = 5;
+}
+
+message PostUploadAck {
+    int32 id = 1;
+    google.protobuf.Timestamp saved_time = 2;
+}
+
+service PostsSync {
+    rpc refreshPosts(PostQuery) returns (stream Post);
+    rpc queryPosts(PostQuery) returns (stream Post);
+    rpc uploadPosts(stream Post) returns (stream PostUploadAck);
+}
+
+
+// Defines a single user's feed
 message Feed {
-    repeated string recipients = 1;
+    repeated string authors = 4;
+    reserved 1; //repeated string recipients = 1;
     repeated Post posts = 2;
     google.protobuf.Timestamp last_updated = 3;
 }

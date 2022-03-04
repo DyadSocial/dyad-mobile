@@ -39,7 +39,8 @@ class grpcClient {
   }
 
   Future<void> runUploadImage(Uint8List imageBytes) async {
-    final Ack ack = await stub.uploadImage(_byteChunker(imageBytes));
+    final Ack ack =
+        await stub.uploadImage(_byteChunker(imageBytes), options: Meta);
     print('Upload Status: ${ack.success}');
     print('Received Image Size: ${ack.imageSize}');
   }

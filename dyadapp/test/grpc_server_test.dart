@@ -14,6 +14,7 @@ class ImageService extends ImagesServiceBase {
     await for (ImageChunk chunk in req) {
       if (!timer.isRunning) timer.start();
       var chunkOffset = 0;
+      // Static allocation for 2 MB, dynamically copying image costs 93% of time
       for (int i = pos; i + 32768 < 2097152; i += 32768) {
         image[i] = chunk.imageData[chunkOffset++];
       }

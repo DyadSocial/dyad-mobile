@@ -8,28 +8,77 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+import 'google/protobuf/timestamp.pbjson.dart' as $0;
+
 @$core.Deprecated('Use imageChunkDescriptor instead')
 const ImageChunk$json = const {
   '1': 'ImageChunk',
   '2': const [
     const {'1': 'imageData', '3': 1, '4': 1, '5': 12, '9': 0, '10': 'imageData'},
-    const {'1': 'auth', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'auth'},
+    const {'1': 'size', '3': 3, '4': 1, '5': 3, '9': 0, '10': 'size'},
   ],
   '8': const [
     const {'1': 'MetadataOrBytes'},
   ],
+  '9': const [
+    const {'1': 2, '2': 3},
+  ],
 };
 
 /// Descriptor for `ImageChunk`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List imageChunkDescriptor = $convert.base64Decode('CgpJbWFnZUNodW5rEh4KCWltYWdlRGF0YRgBIAEoDEgAUglpbWFnZURhdGESFAoEYXV0aBgCIAEoCUgAUgRhdXRoQhEKD01ldGFkYXRhT3JCeXRlcw==');
+final $typed_data.Uint8List imageChunkDescriptor = $convert.base64Decode('CgpJbWFnZUNodW5rEh4KCWltYWdlRGF0YRgBIAEoDEgAUglpbWFnZURhdGESFAoEc2l6ZRgDIAEoA0gAUgRzaXplQhEKD01ldGFkYXRhT3JCeXRlc0oECAIQAw==');
+@$core.Deprecated('Use metadataDescriptor instead')
+const Metadata$json = const {
+  '1': 'Metadata',
+  '2': const [
+    const {'1': 'size', '3': 1, '4': 1, '5': 3, '10': 'size'},
+    const {'1': 'id', '3': 2, '4': 1, '5': 5, '10': 'id'},
+    const {'1': 'author', '3': 3, '4': 1, '5': 9, '10': 'author'},
+    const {'1': 'created', '3': 4, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'created'},
+  ],
+};
+
+/// Descriptor for `Metadata`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List metadataDescriptor = $convert.base64Decode('CghNZXRhZGF0YRISCgRzaXplGAEgASgDUgRzaXplEg4KAmlkGAIgASgFUgJpZBIWCgZhdXRob3IYAyABKAlSBmF1dGhvchI0CgdjcmVhdGVkGAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIHY3JlYXRlZA==');
 @$core.Deprecated('Use ackDescriptor instead')
 const Ack$json = const {
   '1': 'Ack',
   '2': const [
     const {'1': 'imageSize', '3': 1, '4': 1, '5': 9, '10': 'imageSize'},
     const {'1': 'success', '3': 2, '4': 1, '5': 8, '10': 'success'},
+    const {'1': 'ImageURL', '3': 3, '4': 1, '5': 9, '10': 'ImageURL'},
   ],
 };
 
 /// Descriptor for `Ack`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List ackDescriptor = $convert.base64Decode('CgNBY2sSHAoJaW1hZ2VTaXplGAEgASgJUglpbWFnZVNpemUSGAoHc3VjY2VzcxgCIAEoCFIHc3VjY2Vzcw==');
+final $typed_data.Uint8List ackDescriptor = $convert.base64Decode('CgNBY2sSHAoJaW1hZ2VTaXplGAEgASgJUglpbWFnZVNpemUSGAoHc3VjY2VzcxgCIAEoCFIHc3VjY2VzcxIaCghJbWFnZVVSTBgDIAEoCVIISW1hZ2VVUkw=');
+@$core.Deprecated('Use imageQueryDescriptor instead')
+const ImageQuery$json = const {
+  '1': 'ImageQuery',
+  '2': const [
+    const {'1': 'author', '3': 1, '4': 1, '5': 5, '10': 'author'},
+    const {'1': 'id', '3': 2, '4': 1, '5': 5, '10': 'id'},
+    const {'1': 'created', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'created'},
+  ],
+};
+
+/// Descriptor for `ImageQuery`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List imageQueryDescriptor = $convert.base64Decode('CgpJbWFnZVF1ZXJ5EhYKBmF1dGhvchgBIAEoBVIGYXV0aG9yEg4KAmlkGAIgASgFUgJpZBI0CgdjcmVhdGVkGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIHY3JlYXRlZA==');
+const $core.Map<$core.String, $core.dynamic> ImagesServiceBase$json = const {
+  '1': 'Images',
+  '2': const [
+    const {'1': 'UploadImage', '2': '.ImageChunk', '3': '.Ack', '5': true},
+    const {'1': 'PullImage', '2': '.ImageQuery', '3': '.ImageChunk', '6': true},
+  ],
+};
+
+@$core.Deprecated('Use imagesServiceDescriptor instead')
+const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>> ImagesServiceBase$messageJson = const {
+  '.ImageChunk': ImageChunk$json,
+  '.Ack': Ack$json,
+  '.ImageQuery': ImageQuery$json,
+  '.google.protobuf.Timestamp': $0.Timestamp$json,
+};
+
+/// Descriptor for `Images`. Decode as a `google.protobuf.ServiceDescriptorProto`.
+final $typed_data.Uint8List imagesServiceDescriptor = $convert.base64Decode('CgZJbWFnZXMSIgoLVXBsb2FkSW1hZ2USCy5JbWFnZUNodW5rGgQuQWNrKAESJwoJUHVsbEltYWdlEgsuSW1hZ2VRdWVyeRoLLkltYWdlQ2h1bmswAQ==');

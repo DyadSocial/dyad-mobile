@@ -5,6 +5,7 @@
 // @dart = 2.12
 // ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
 
+import 'dart:async' as $async;
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
@@ -135,29 +136,199 @@ class Post extends $pb.GeneratedMessage {
   void clearTitle() => clearField(6);
 }
 
+class PostQuery extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'PostQuery', createEmptyInstance: create)
+    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'author')
+    ..aOM<$1.Timestamp>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastUpdated', subBuilder: $1.Timestamp.create)
+    ..aOM<$1.Timestamp>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created', subBuilder: $1.Timestamp.create)
+    ..a<$core.int>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'count', $pb.PbFieldType.O3)
+    ..hasRequiredFields = false
+  ;
+
+  PostQuery._() : super();
+  factory PostQuery({
+    $core.int? id,
+    $core.String? author,
+    $1.Timestamp? lastUpdated,
+    $1.Timestamp? created,
+    $core.int? count,
+  }) {
+    final _result = create();
+    if (id != null) {
+      _result.id = id;
+    }
+    if (author != null) {
+      _result.author = author;
+    }
+    if (lastUpdated != null) {
+      _result.lastUpdated = lastUpdated;
+    }
+    if (created != null) {
+      _result.created = created;
+    }
+    if (count != null) {
+      _result.count = count;
+    }
+    return _result;
+  }
+  factory PostQuery.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory PostQuery.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  PostQuery clone() => PostQuery()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  PostQuery copyWith(void Function(PostQuery) updates) => super.copyWith((message) => updates(message as PostQuery)) as PostQuery; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static PostQuery create() => PostQuery._();
+  PostQuery createEmptyInstance() => create();
+  static $pb.PbList<PostQuery> createRepeated() => $pb.PbList<PostQuery>();
+  @$core.pragma('dart2js:noInline')
+  static PostQuery getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PostQuery>(create);
+  static PostQuery? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int v) { $_setSignedInt32(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get author => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set author($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasAuthor() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAuthor() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $1.Timestamp get lastUpdated => $_getN(2);
+  @$pb.TagNumber(3)
+  set lastUpdated($1.Timestamp v) { setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasLastUpdated() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearLastUpdated() => clearField(3);
+  @$pb.TagNumber(3)
+  $1.Timestamp ensureLastUpdated() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $1.Timestamp get created => $_getN(3);
+  @$pb.TagNumber(4)
+  set created($1.Timestamp v) { setField(4, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasCreated() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearCreated() => clearField(4);
+  @$pb.TagNumber(4)
+  $1.Timestamp ensureCreated() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $core.int get count => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set count($core.int v) { $_setSignedInt32(4, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasCount() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearCount() => clearField(5);
+}
+
+class PostUploadAck extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'PostUploadAck', createEmptyInstance: create)
+    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
+    ..aOM<$1.Timestamp>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'savedTime', subBuilder: $1.Timestamp.create)
+    ..hasRequiredFields = false
+  ;
+
+  PostUploadAck._() : super();
+  factory PostUploadAck({
+    $core.int? id,
+    $1.Timestamp? savedTime,
+  }) {
+    final _result = create();
+    if (id != null) {
+      _result.id = id;
+    }
+    if (savedTime != null) {
+      _result.savedTime = savedTime;
+    }
+    return _result;
+  }
+  factory PostUploadAck.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory PostUploadAck.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  PostUploadAck clone() => PostUploadAck()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  PostUploadAck copyWith(void Function(PostUploadAck) updates) => super.copyWith((message) => updates(message as PostUploadAck)) as PostUploadAck; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static PostUploadAck create() => PostUploadAck._();
+  PostUploadAck createEmptyInstance() => create();
+  static $pb.PbList<PostUploadAck> createRepeated() => $pb.PbList<PostUploadAck>();
+  @$core.pragma('dart2js:noInline')
+  static PostUploadAck getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PostUploadAck>(create);
+  static PostUploadAck? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int v) { $_setSignedInt32(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $1.Timestamp get savedTime => $_getN(1);
+  @$pb.TagNumber(2)
+  set savedTime($1.Timestamp v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasSavedTime() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSavedTime() => clearField(2);
+  @$pb.TagNumber(2)
+  $1.Timestamp ensureSavedTime() => $_ensure(1);
+}
+
 class Feed extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Feed', createEmptyInstance: create)
-    ..pPS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'recipients')
     ..pc<Post>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'posts', $pb.PbFieldType.PM, subBuilder: Post.create)
     ..aOM<$1.Timestamp>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastUpdated', subBuilder: $1.Timestamp.create)
+    ..pPS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'authors')
     ..hasRequiredFields = false
   ;
 
   Feed._() : super();
   factory Feed({
-    $core.Iterable<$core.String>? recipients,
     $core.Iterable<Post>? posts,
     $1.Timestamp? lastUpdated,
+    $core.Iterable<$core.String>? authors,
   }) {
     final _result = create();
-    if (recipients != null) {
-      _result.recipients.addAll(recipients);
-    }
     if (posts != null) {
       _result.posts.addAll(posts);
     }
     if (lastUpdated != null) {
       _result.lastUpdated = lastUpdated;
+    }
+    if (authors != null) {
+      _result.authors.addAll(authors);
     }
     return _result;
   }
@@ -182,21 +353,39 @@ class Feed extends $pb.GeneratedMessage {
   static Feed getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Feed>(create);
   static Feed? _defaultInstance;
 
-  @$pb.TagNumber(1)
-  $core.List<$core.String> get recipients => $_getList(0);
-
   @$pb.TagNumber(2)
-  $core.List<Post> get posts => $_getList(1);
+  $core.List<Post> get posts => $_getList(0);
 
   @$pb.TagNumber(3)
-  $1.Timestamp get lastUpdated => $_getN(2);
+  $1.Timestamp get lastUpdated => $_getN(1);
   @$pb.TagNumber(3)
   set lastUpdated($1.Timestamp v) { setField(3, v); }
   @$pb.TagNumber(3)
-  $core.bool hasLastUpdated() => $_has(2);
+  $core.bool hasLastUpdated() => $_has(1);
   @$pb.TagNumber(3)
   void clearLastUpdated() => clearField(3);
   @$pb.TagNumber(3)
-  $1.Timestamp ensureLastUpdated() => $_ensure(2);
+  $1.Timestamp ensureLastUpdated() => $_ensure(1);
+
+  @$pb.TagNumber(4)
+  $core.List<$core.String> get authors => $_getList(2);
+}
+
+class PostsSyncApi {
+  $pb.RpcClient _client;
+  PostsSyncApi(this._client);
+
+  $async.Future<Post> refreshPosts($pb.ClientContext? ctx, PostQuery request) {
+    var emptyResponse = Post();
+    return _client.invoke<Post>(ctx, 'PostsSync', 'refreshPosts', request, emptyResponse);
+  }
+  $async.Future<Post> queryPosts($pb.ClientContext? ctx, PostQuery request) {
+    var emptyResponse = Post();
+    return _client.invoke<Post>(ctx, 'PostsSync', 'queryPosts', request, emptyResponse);
+  }
+  $async.Future<PostUploadAck> uploadPosts($pb.ClientContext? ctx, Post request) {
+    var emptyResponse = PostUploadAck();
+    return _client.invoke<PostUploadAck>(ctx, 'PostsSync', 'uploadPosts', request, emptyResponse);
+  }
 }
 
