@@ -1,0 +1,19 @@
+syntax="proto3";
+
+message ImageChunk{
+  oneof MetadataOrBytes {
+    bytes imageData = 1;
+    string auth = 2;
+  }
+}
+
+message Ack{
+  string imageSize = 1;
+  bool success = 2;
+}
+
+service Images {
+  // Client-To-Server RPC. Client sends stream to server and an 
+  // acknowledgement is received once the image is finished uploading
+  rpc UploadImage(stream ImageChunk) returns (Ack);
+}

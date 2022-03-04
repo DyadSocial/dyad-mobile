@@ -34,6 +34,7 @@ dependencies:
   image_picker:
   timeago:
   # Network
+  grpc: ^3.0.2
   http:
   # Data
   sqflite:
