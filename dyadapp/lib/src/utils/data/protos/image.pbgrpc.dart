@@ -18,6 +18,10 @@ class ImagesClient extends $grpc.Client {
       '/Images/UploadImage',
       ($0.ImageChunk value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.Ack.fromBuffer(value));
+  static final _$pullImage = $grpc.ClientMethod<$0.ImageQuery, $0.ImageChunk>(
+      '/Images/PullImage',
+      ($0.ImageQuery value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.ImageChunk.fromBuffer(value));
 
   ImagesClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -28,6 +32,13 @@ class ImagesClient extends $grpc.Client {
       {$grpc.CallOptions? options}) {
     return $createStreamingCall(_$uploadImage, request, options: options)
         .single;
+  }
+
+  $grpc.ResponseStream<$0.ImageChunk> pullImage($0.ImageQuery request,
+      {$grpc.CallOptions? options}) {
+    return $createStreamingCall(
+        _$pullImage, $async.Stream.fromIterable([request]),
+        options: options);
   }
 }
 
@@ -42,8 +53,22 @@ abstract class ImagesServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.ImageChunk.fromBuffer(value),
         ($0.Ack value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ImageQuery, $0.ImageChunk>(
+        'PullImage',
+        pullImage_Pre,
+        false,
+        true,
+        ($core.List<$core.int> value) => $0.ImageQuery.fromBuffer(value),
+        ($0.ImageChunk value) => value.writeToBuffer()));
+  }
+
+  $async.Stream<$0.ImageChunk> pullImage_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.ImageQuery> request) async* {
+    yield* pullImage(call, await request);
   }
 
   $async.Future<$0.Ack> uploadImage(
       $grpc.ServiceCall call, $async.Stream<$0.ImageChunk> request);
+  $async.Stream<$0.ImageChunk> pullImage(
+      $grpc.ServiceCall call, $0.ImageQuery request);
 }

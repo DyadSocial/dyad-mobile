@@ -8,8 +8,6 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
-import 'google/protobuf/timestamp.pbjson.dart' as $0;
-
 @$core.Deprecated('Use imageChunkDescriptor instead')
 const ImageChunk$json = const {
   '1': 'ImageChunk',
@@ -64,21 +62,3 @@ const ImageQuery$json = const {
 
 /// Descriptor for `ImageQuery`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List imageQueryDescriptor = $convert.base64Decode('CgpJbWFnZVF1ZXJ5EhYKBmF1dGhvchgBIAEoBVIGYXV0aG9yEg4KAmlkGAIgASgFUgJpZBI0CgdjcmVhdGVkGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIHY3JlYXRlZA==');
-const $core.Map<$core.String, $core.dynamic> ImagesServiceBase$json = const {
-  '1': 'Images',
-  '2': const [
-    const {'1': 'UploadImage', '2': '.ImageChunk', '3': '.Ack', '5': true},
-    const {'1': 'PullImage', '2': '.ImageQuery', '3': '.ImageChunk', '6': true},
-  ],
-};
-
-@$core.Deprecated('Use imagesServiceDescriptor instead')
-const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>> ImagesServiceBase$messageJson = const {
-  '.ImageChunk': ImageChunk$json,
-  '.Ack': Ack$json,
-  '.ImageQuery': ImageQuery$json,
-  '.google.protobuf.Timestamp': $0.Timestamp$json,
-};
-
-/// Descriptor for `Images`. Decode as a `google.protobuf.ServiceDescriptorProto`.
-final $typed_data.Uint8List imagesServiceDescriptor = $convert.base64Decode('CgZJbWFnZXMSIgoLVXBsb2FkSW1hZ2USCy5JbWFnZUNodW5rGgQuQWNrKAESJwoJUHVsbEltYWdlEgsuSW1hZ2VRdWVyeRoLLkltYWdlQ2h1bmswAQ==');

@@ -5,13 +5,12 @@
 // @dart = 2.12
 // ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
 
-import 'dart:async' as $async;
 import 'dart:core' as $core;
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'google/protobuf/timestamp.pb.dart' as $0;
+import 'google/protobuf/timestamp.pb.dart' as $1;
 
 enum ImageChunk_MetadataOrBytes {
   imageData, 
@@ -94,7 +93,7 @@ class Metadata extends $pb.GeneratedMessage {
     ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'size')
     ..a<$core.int>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
     ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'author')
-    ..aOM<$0.Timestamp>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created', subBuilder: $0.Timestamp.create)
+    ..aOM<$1.Timestamp>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created', subBuilder: $1.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -103,7 +102,7 @@ class Metadata extends $pb.GeneratedMessage {
     $fixnum.Int64? size,
     $core.int? id,
     $core.String? author,
-    $0.Timestamp? created,
+    $1.Timestamp? created,
   }) {
     final _result = create();
     if (size != null) {
@@ -169,15 +168,15 @@ class Metadata extends $pb.GeneratedMessage {
   void clearAuthor() => clearField(3);
 
   @$pb.TagNumber(4)
-  $0.Timestamp get created => $_getN(3);
+  $1.Timestamp get created => $_getN(3);
   @$pb.TagNumber(4)
-  set created($0.Timestamp v) { setField(4, v); }
+  set created($1.Timestamp v) { setField(4, v); }
   @$pb.TagNumber(4)
   $core.bool hasCreated() => $_has(3);
   @$pb.TagNumber(4)
   void clearCreated() => clearField(4);
   @$pb.TagNumber(4)
-  $0.Timestamp ensureCreated() => $_ensure(3);
+  $1.Timestamp ensureCreated() => $_ensure(3);
 }
 
 class Ack extends $pb.GeneratedMessage {
@@ -259,7 +258,7 @@ class ImageQuery extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ImageQuery', createEmptyInstance: create)
     ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'author', $pb.PbFieldType.O3)
     ..a<$core.int>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
-    ..aOM<$0.Timestamp>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created', subBuilder: $0.Timestamp.create)
+    ..aOM<$1.Timestamp>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created', subBuilder: $1.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -267,7 +266,7 @@ class ImageQuery extends $pb.GeneratedMessage {
   factory ImageQuery({
     $core.int? author,
     $core.int? id,
-    $0.Timestamp? created,
+    $1.Timestamp? created,
   }) {
     final _result = create();
     if (author != null) {
@@ -321,28 +320,14 @@ class ImageQuery extends $pb.GeneratedMessage {
   void clearId() => clearField(2);
 
   @$pb.TagNumber(3)
-  $0.Timestamp get created => $_getN(2);
+  $1.Timestamp get created => $_getN(2);
   @$pb.TagNumber(3)
-  set created($0.Timestamp v) { setField(3, v); }
+  set created($1.Timestamp v) { setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasCreated() => $_has(2);
   @$pb.TagNumber(3)
   void clearCreated() => clearField(3);
   @$pb.TagNumber(3)
-  $0.Timestamp ensureCreated() => $_ensure(2);
-}
-
-class ImagesApi {
-  $pb.RpcClient _client;
-  ImagesApi(this._client);
-
-  $async.Future<Ack> uploadImage($pb.ClientContext? ctx, ImageChunk request) {
-    var emptyResponse = Ack();
-    return _client.invoke<Ack>(ctx, 'Images', 'UploadImage', request, emptyResponse);
-  }
-  $async.Future<ImageChunk> pullImage($pb.ClientContext? ctx, ImageQuery request) {
-    var emptyResponse = ImageChunk();
-    return _client.invoke<ImageChunk>(ctx, 'Images', 'PullImage', request, emptyResponse);
-  }
+  $1.Timestamp ensureCreated() => $_ensure(2);
 }
 

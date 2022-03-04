@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:grpc/grpc.dart';
 import 'package:dyadapp/src/utils/data/protos/image.pbgrpc.dart';
+import 'package:dyadapp/src/utils/data/protos/posts.pbgrpc.dart';
 
 const CHUNK_SIZE = 32 * 1024; //(32Kb)
 
@@ -11,11 +12,10 @@ class grpcClient {
   late ClientChannel channel;
 
   grpcClient() {
-    channel = ClientChannel(
-      '127.0.0.1',
-      port: 8080,
-      options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
-    );
+    final channelCredentials = new ChannelCredentials.secure();
+    final channelOptions = new ChannelOptions(credentials: channelCredentials);
+    channel = ClientChannel('data.dyadsocial.com', options: channelOptions);
+
     stub = ImagesClient(channel,
         options: CallOptions(timeout: Duration(seconds: 120)));
   }

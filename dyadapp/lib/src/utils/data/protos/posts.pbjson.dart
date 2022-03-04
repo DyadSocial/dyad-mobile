@@ -8,9 +8,6 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
-import 'google/protobuf/timestamp.pbjson.dart' as $1;
-import 'content.pbjson.dart' as $0;
-
 @$core.Deprecated('Use postDescriptor instead')
 const Post$json = const {
   '1': 'Post',
@@ -66,23 +63,3 @@ const Feed$json = const {
 
 /// Descriptor for `Feed`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List feedDescriptor = $convert.base64Decode('CgRGZWVkEhgKB2F1dGhvcnMYBCADKAlSB2F1dGhvcnMSGwoFcG9zdHMYAiADKAsyBS5Qb3N0UgVwb3N0cxI9CgxsYXN0X3VwZGF0ZWQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgtsYXN0VXBkYXRlZEoECAEQAg==');
-const $core.Map<$core.String, $core.dynamic> PostsSyncServiceBase$json = const {
-  '1': 'PostsSync',
-  '2': const [
-    const {'1': 'refreshPosts', '2': '.PostQuery', '3': '.Post', '6': true},
-    const {'1': 'queryPosts', '2': '.PostQuery', '3': '.Post', '6': true},
-    const {'1': 'uploadPosts', '2': '.Post', '3': '.PostUploadAck', '5': true, '6': true},
-  ],
-};
-
-@$core.Deprecated('Use postsSyncServiceDescriptor instead')
-const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>> PostsSyncServiceBase$messageJson = const {
-  '.PostQuery': PostQuery$json,
-  '.google.protobuf.Timestamp': $1.Timestamp$json,
-  '.Post': Post$json,
-  '.Content': $0.Content$json,
-  '.PostUploadAck': PostUploadAck$json,
-};
-
-/// Descriptor for `PostsSync`. Decode as a `google.protobuf.ServiceDescriptorProto`.
-final $typed_data.Uint8List postsSyncServiceDescriptor = $convert.base64Decode('CglQb3N0c1N5bmMSIwoMcmVmcmVzaFBvc3RzEgouUG9zdFF1ZXJ5GgUuUG9zdDABEiEKCnF1ZXJ5UG9zdHMSCi5Qb3N0UXVlcnkaBS5Qb3N0MAESKAoLdXBsb2FkUG9zdHMSBS5Qb3N0Gg4uUG9zdFVwbG9hZEFjaygBMAE=');
