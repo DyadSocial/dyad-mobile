@@ -49,7 +49,7 @@ class DyadScaffold extends StatelessWidget {
 
   int _getSelectedIndex(String pathTemplate) {
     if (pathTemplate == '/feed/all') return 0;
-    if (pathTemplate == '/feed/self') return 1;
+    if (pathTemplate == '/inbox') return 1;
     return 0;
   }
 }

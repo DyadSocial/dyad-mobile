@@ -88,7 +88,6 @@ class _FeedScreenState extends State<FeedScreen>
   }
 
   Future<List<Post>> _getPostData() async {
-    await Future<void>.delayed(const Duration(milliseconds: 1200));
     await DatabaseHandler().posts().then((newPosts) {
       _posts = newPosts;
     });
@@ -204,12 +203,15 @@ class _FeedScreenState extends State<FeedScreen>
     switch (_tabController.index) {
       case 0:
         _routeState.go('/feed/all');
+        print('going feed/all');
         break;
       case 1:
         _routeState.go('/feed');
+        print('going feed');
         break;
       case 2:
         _routeState.go('/inbox');
+        print('going inbox');
         break;
       default:
         _routeState.go('/feed/all');
