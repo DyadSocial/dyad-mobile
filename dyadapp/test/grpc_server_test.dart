@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:fixnum/fixnum.dart';
 import 'package:grpc/grpc.dart' as grpc;
 import 'package:dyadapp/src/utils/data/protos/image.pbgrpc.dart';
 
@@ -9,14 +10,14 @@ class ImageService extends ImagesServiceBase {
     print('Received Request for ImageUpload');
     var chunkCount = 0;
     final timer = Stopwatch();
-    Uint8List image = Uint8List(2097152);
+    int size = int.parse(call.clientMetadata!["size"]!);
+    Uint8List image = Uint8List(size);
     int pos = 0;
     await for (ImageChunk chunk in req) {
       if (!timer.isRunning) timer.start();
-      var chunkOffset = 0;
       // Static allocation for 2 MB, dynamically copying image costs 93% of time
-      for (int i = pos; i + 32768 < 2097152; i += 32768) {
-        image[i] = chunk.imageData[chunkOffset++];
+      for (int i = 0; i < chunk.imageData.length; i++) {
+        image[pos++] = chunk.imageData[i];
       }
       chunkCount++;
     }
@@ -26,6 +27,32 @@ class ImageService extends ImagesServiceBase {
     return Ack()
       ..success = true
       ..imageSize = image.lengthInBytes.toString() + "B";
+  }
+
+  @override
+  Stream<ImageChunk> pullImage(grpc.ServiceCall call, ImageQuery query) async* {
+    Stream<ImageChunk> _byteChunker(Uint8List bytes) async* {
+      int pos = 0;
+      int chunkOffset;
+      while (pos < bytes.lengthInBytes) {
+        chunkOffset = pos + 32768;
+        if (chunkOffset < bytes.lengthInBytes) {
+          yield ImageChunk(imageData: bytes.sublist(pos, chunkOffset));
+        } else {
+          yield ImageChunk(imageData: bytes.sublist(pos, bytes.lengthInBytes));
+        }
+        pos += 32768;
+      }
+    }
+
+    print("Received Request for ImagePull");
+    var image = Uint8List(3145728);
+    yield ImageChunk(size: (Int64(3145728)));
+    int chunkNum = 0;
+    await for (ImageChunk chunk in _byteChunker(image)) {
+      print(chunkNum++);
+      yield chunk;
+    }
   }
 }
 
