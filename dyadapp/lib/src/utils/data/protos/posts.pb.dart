@@ -12,6 +12,75 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'content.pb.dart' as $1;
 import 'google/protobuf/timestamp.pb.dart' as $2;
 
+class Group extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Group', createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'gid')
+    ..a<$core.int>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'memberCount', $pb.PbFieldType.O3)
+    ..pc<User>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'members', $pb.PbFieldType.PM, subBuilder: User.create)
+    ..hasRequiredFields = false
+  ;
+
+  Group._() : super();
+  factory Group({
+    $core.String? gid,
+    $core.int? memberCount,
+    $core.Iterable<User>? members,
+  }) {
+    final _result = create();
+    if (gid != null) {
+      _result.gid = gid;
+    }
+    if (memberCount != null) {
+      _result.memberCount = memberCount;
+    }
+    if (members != null) {
+      _result.members.addAll(members);
+    }
+    return _result;
+  }
+  factory Group.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Group.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  Group clone() => Group()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  Group copyWith(void Function(Group) updates) => super.copyWith((message) => updates(message as Group)) as Group; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Group create() => Group._();
+  Group createEmptyInstance() => create();
+  static $pb.PbList<Group> createRepeated() => $pb.PbList<Group>();
+  @$core.pragma('dart2js:noInline')
+  static Group getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Group>(create);
+  static Group? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get gid => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set gid($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasGid() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearGid() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get memberCount => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set memberCount($core.int v) { $_setSignedInt32(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasMemberCount() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMemberCount() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.List<User> get members => $_getList(2);
+}
+
 class Post extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Post', createEmptyInstance: create)
     ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
@@ -141,7 +210,7 @@ class PostQuery extends $pb.GeneratedMessage {
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'author')
     ..aOM<$2.Timestamp>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastUpdated', subBuilder: $2.Timestamp.create)
     ..aOM<$2.Timestamp>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created', subBuilder: $2.Timestamp.create)
-    ..a<$core.int>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'count', $pb.PbFieldType.O3)
+    ..aOM<Group>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'group', subBuilder: Group.create)
     ..hasRequiredFields = false
   ;
 
@@ -151,7 +220,7 @@ class PostQuery extends $pb.GeneratedMessage {
     $core.String? author,
     $2.Timestamp? lastUpdated,
     $2.Timestamp? created,
-    $core.int? count,
+    Group? group,
   }) {
     final _result = create();
     if (id != null) {
@@ -166,8 +235,8 @@ class PostQuery extends $pb.GeneratedMessage {
     if (created != null) {
       _result.created = created;
     }
-    if (count != null) {
-      _result.count = count;
+    if (group != null) {
+      _result.group = group;
     }
     return _result;
   }
@@ -232,14 +301,16 @@ class PostQuery extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $2.Timestamp ensureCreated() => $_ensure(3);
 
-  @$pb.TagNumber(5)
-  $core.int get count => $_getIZ(4);
-  @$pb.TagNumber(5)
-  set count($core.int v) { $_setSignedInt32(4, v); }
-  @$pb.TagNumber(5)
-  $core.bool hasCount() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearCount() => clearField(5);
+  @$pb.TagNumber(6)
+  Group get group => $_getN(4);
+  @$pb.TagNumber(6)
+  set group(Group v) { setField(6, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasGroup() => $_has(4);
+  @$pb.TagNumber(6)
+  void clearGroup() => clearField(6);
+  @$pb.TagNumber(6)
+  Group ensureGroup() => $_ensure(4);
 }
 
 class PostUploadAck extends $pb.GeneratedMessage {
@@ -305,68 +376,64 @@ class PostUploadAck extends $pb.GeneratedMessage {
   $2.Timestamp ensureSavedTime() => $_ensure(1);
 }
 
-class Feed extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Feed', createEmptyInstance: create)
-    ..pc<Post>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'posts', $pb.PbFieldType.PM, subBuilder: Post.create)
-    ..aOM<$2.Timestamp>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastUpdated', subBuilder: $2.Timestamp.create)
-    ..pPS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'authors')
+class User extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'User', createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'username')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'hwid')
     ..hasRequiredFields = false
   ;
 
-  Feed._() : super();
-  factory Feed({
-    $core.Iterable<Post>? posts,
-    $2.Timestamp? lastUpdated,
-    $core.Iterable<$core.String>? authors,
+  User._() : super();
+  factory User({
+    $core.String? username,
+    $core.String? hwid,
   }) {
     final _result = create();
-    if (posts != null) {
-      _result.posts.addAll(posts);
+    if (username != null) {
+      _result.username = username;
     }
-    if (lastUpdated != null) {
-      _result.lastUpdated = lastUpdated;
-    }
-    if (authors != null) {
-      _result.authors.addAll(authors);
+    if (hwid != null) {
+      _result.hwid = hwid;
     }
     return _result;
   }
-  factory Feed.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Feed.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory User.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory User.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  Feed clone() => Feed()..mergeFromMessage(this);
+  User clone() => User()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  Feed copyWith(void Function(Feed) updates) => super.copyWith((message) => updates(message as Feed)) as Feed; // ignore: deprecated_member_use
+  User copyWith(void Function(User) updates) => super.copyWith((message) => updates(message as User)) as User; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static Feed create() => Feed._();
-  Feed createEmptyInstance() => create();
-  static $pb.PbList<Feed> createRepeated() => $pb.PbList<Feed>();
+  static User create() => User._();
+  User createEmptyInstance() => create();
+  static $pb.PbList<User> createRepeated() => $pb.PbList<User>();
   @$core.pragma('dart2js:noInline')
-  static Feed getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Feed>(create);
-  static Feed? _defaultInstance;
+  static User getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<User>(create);
+  static User? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get username => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set username($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasUsername() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUsername() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.List<Post> get posts => $_getList(0);
-
-  @$pb.TagNumber(3)
-  $2.Timestamp get lastUpdated => $_getN(1);
-  @$pb.TagNumber(3)
-  set lastUpdated($2.Timestamp v) { setField(3, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasLastUpdated() => $_has(1);
-  @$pb.TagNumber(3)
-  void clearLastUpdated() => clearField(3);
-  @$pb.TagNumber(3)
-  $2.Timestamp ensureLastUpdated() => $_ensure(1);
-
-  @$pb.TagNumber(4)
-  $core.List<$core.String> get authors => $_getList(2);
+  $core.String get hwid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set hwid($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasHwid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearHwid() => clearField(2);
 }
 

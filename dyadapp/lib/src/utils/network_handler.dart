@@ -15,7 +15,7 @@ class grpcClient {
   grpcClient() {
     final channelCredentials = new ChannelCredentials.insecure();
     final channelOptions = new ChannelOptions(credentials: channelCredentials);
-    channel = ClientChannel('127.0.0.1', port: 8080, options: channelOptions);
+    channel = ClientChannel('127.0.0.1', port: 5442, options: channelOptions);
 
     stub = ImagesClient(channel,
         options: CallOptions(timeout: Duration(seconds: 120)));
@@ -26,9 +26,9 @@ class grpcClient {
     int endOffset = pos + CHUNK_SIZE;
     while (pos < bytes.lengthInBytes) {
       if (endOffset < bytes.lengthInBytes) {
-        yield ImageChunk(imageData: bytes.sublist(pos, pos + CHUNK_SIZE));
+        yield ImageChunk(imagedata: bytes.sublist(pos, pos + CHUNK_SIZE));
       } else {
-        yield ImageChunk(imageData: bytes.sublist(pos, bytes.lengthInBytes));
+        yield ImageChunk(imagedata: bytes.sublist(pos, bytes.lengthInBytes));
       }
       pos += CHUNK_SIZE;
       endOffset = pos + CHUNK_SIZE;
@@ -38,8 +38,11 @@ class grpcClient {
   Future<Map<String, dynamic>> runUploadImage(Uint8List imageBytes) async {
     final Ack ack = await stub.uploadImage(
       _byteChunker(imageBytes),
-      options:
-          CallOptions(metadata: {"size": imageBytes.lengthInBytes.toString()}),
+      options: CallOptions(metadata: {
+        "size": imageBytes.lengthInBytes.toString(),
+        "username": "vncp",
+        "id": "abc123"
+      }),
     );
     return ack.writeToJsonMap();
   }
@@ -52,8 +55,8 @@ class grpcClient {
         print(chunk.size);
         imageBytes = Uint8List(chunk.size.toInt());
       } else {
-        for (int i = 0; i < chunk.imageData.length; i++) {
-          imageBytes[pos++] = chunk.imageData[i];
+        for (int i = 0; i < chunk.imagedata.length; i++) {
+          imageBytes[pos++] = chunk.imagedata[i];
         }
       }
     }
@@ -67,15 +70,18 @@ Future<void> main(List<String> args) async {
     print("Usage `dart network_handler.dart <ImageSize(bytes)>");
   }
   final client = grpcClient();
-  final Uint8List image = Uint8List(int.parse(args[0]));
+  Uint8List image = Uint8List(int.parse(args[0]));
   final random = Random(1337);
   for (int i = 0; i < image.length; i++) {
     image[i] = random.nextInt(254);
   }
+  image = Uint8List.fromList([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
   await client.runUploadImage(image);
 
   final query = ImageQuery(
-      author: 24, id: 124, created: Timestamp.fromDateTime(DateTime.now()));
+      author: "vncp",
+      id: "abc123",
+      created: Timestamp.fromDateTime(DateTime.now()));
   await client.runPullImage(query);
   print("Done");
   exit(0);

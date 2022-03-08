@@ -15,6 +15,30 @@ import 'posts.pbjson.dart';
 
 export 'posts.pb.dart';
 
+abstract class GroupSyncServiceBase extends $pb.GeneratedService {
+  $async.Future<$2.Group> addUserToGroup($pb.ServerContext ctx, $2.User request);
+  $async.Future<$2.Group> delUserFromGroup($pb.ServerContext ctx, $2.User request);
+
+  $pb.GeneratedMessage createRequest($core.String method) {
+    switch (method) {
+      case 'addUserToGroup': return $2.User();
+      case 'delUserFromGroup': return $2.User();
+      default: throw $core.ArgumentError('Unknown method: $method');
+    }
+  }
+
+  $async.Future<$pb.GeneratedMessage> handleCall($pb.ServerContext ctx, $core.String method, $pb.GeneratedMessage request) {
+    switch (method) {
+      case 'addUserToGroup': return this.addUserToGroup(ctx, request as $2.User);
+      case 'delUserFromGroup': return this.delUserFromGroup(ctx, request as $2.User);
+      default: throw $core.ArgumentError('Unknown method: $method');
+    }
+  }
+
+  $core.Map<$core.String, $core.dynamic> get $json => GroupSyncServiceBase$json;
+  $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>> get $messageJson => GroupSyncServiceBase$messageJson;
+}
+
 abstract class PostsSyncServiceBase extends $pb.GeneratedService {
   $async.Future<$2.Post> refreshPosts($pb.ServerContext ctx, $2.PostQuery request);
   $async.Future<$2.Post> queryPosts($pb.ServerContext ctx, $2.PostQuery request);

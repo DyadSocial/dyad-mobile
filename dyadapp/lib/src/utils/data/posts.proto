@@ -3,6 +3,12 @@ syntax = "proto3";
 import "google/protobuf/timestamp.proto";
 import "content.proto";
 
+message Group {
+    string gid = 1;
+    int32 member_count = 2;
+    repeated User members = 3;
+}
+
 message Post {
     int32 id = 1;
     string author = 2;
@@ -18,7 +24,7 @@ message PostQuery {
     string author = 2;
     google.protobuf.Timestamp last_updated = 3;
     google.protobuf.Timestamp created = 4;
-    int32 count = 5;
+    Group group = 6;
 }
 
 message PostUploadAck {
@@ -26,17 +32,18 @@ message PostUploadAck {
     google.protobuf.Timestamp saved_time = 2;
 }
 
+message User {
+    string username = 1;
+    string hwid = 2;
+}
+
+service GroupSync{
+    rpc addUserToGroup(User) returns (Group);
+    rpc delUserFromGroup(User) returns (Group);
+}
+
 service PostsSync {
     rpc refreshPosts(PostQuery) returns (stream Post);
     rpc queryPosts(PostQuery) returns (stream Post);
     rpc uploadPosts(stream Post) returns (stream PostUploadAck);
-}
-
-
-// Defines a single user's feed
-message Feed {
-    repeated string authors = 4;
-    reserved 1; //repeated string recipients = 1;
-    repeated Post posts = 2;
-    google.protobuf.Timestamp last_updated = 3;
 }

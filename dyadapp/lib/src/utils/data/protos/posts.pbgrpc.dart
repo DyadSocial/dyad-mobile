@@ -13,6 +13,68 @@ import 'package:grpc/service_api.dart' as $grpc;
 import 'posts.pb.dart' as $0;
 export 'posts.pb.dart';
 
+class GroupSyncClient extends $grpc.Client {
+  static final _$addUserToGroup = $grpc.ClientMethod<$0.User, $0.Group>(
+      '/GroupSync/addUserToGroup',
+      ($0.User value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Group.fromBuffer(value));
+  static final _$delUserFromGroup = $grpc.ClientMethod<$0.User, $0.Group>(
+      '/GroupSync/delUserFromGroup',
+      ($0.User value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Group.fromBuffer(value));
+
+  GroupSyncClient($grpc.ClientChannel channel,
+      {$grpc.CallOptions? options,
+      $core.Iterable<$grpc.ClientInterceptor>? interceptors})
+      : super(channel, options: options, interceptors: interceptors);
+
+  $grpc.ResponseFuture<$0.Group> addUserToGroup($0.User request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$addUserToGroup, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Group> delUserFromGroup($0.User request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$delUserFromGroup, request, options: options);
+  }
+}
+
+abstract class GroupSyncServiceBase extends $grpc.Service {
+  $core.String get $name => 'GroupSync';
+
+  GroupSyncServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.User, $0.Group>(
+        'addUserToGroup',
+        addUserToGroup_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.User.fromBuffer(value),
+        ($0.Group value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.User, $0.Group>(
+        'delUserFromGroup',
+        delUserFromGroup_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.User.fromBuffer(value),
+        ($0.Group value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$0.Group> addUserToGroup_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.User> request) async {
+    return addUserToGroup(call, await request);
+  }
+
+  $async.Future<$0.Group> delUserFromGroup_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.User> request) async {
+    return delUserFromGroup(call, await request);
+  }
+
+  $async.Future<$0.Group> addUserToGroup(
+      $grpc.ServiceCall call, $0.User request);
+  $async.Future<$0.Group> delUserFromGroup(
+      $grpc.ServiceCall call, $0.User request);
+}
+
 class PostsSyncClient extends $grpc.Client {
   static final _$refreshPosts = $grpc.ClientMethod<$0.PostQuery, $0.Post>(
       '/PostsSync/refreshPosts',

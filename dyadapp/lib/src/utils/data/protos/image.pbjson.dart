@@ -12,7 +12,7 @@ import 'dart:typed_data' as $typed_data;
 const ImageChunk$json = const {
   '1': 'ImageChunk',
   '2': const [
-    const {'1': 'imageData', '3': 1, '4': 1, '5': 12, '9': 0, '10': 'imageData'},
+    const {'1': 'imagedata', '3': 1, '4': 1, '5': 12, '9': 0, '10': 'imagedata'},
     const {'1': 'size', '3': 3, '4': 1, '5': 3, '9': 0, '10': 'size'},
   ],
   '8': const [
@@ -24,7 +24,7 @@ const ImageChunk$json = const {
 };
 
 /// Descriptor for `ImageChunk`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List imageChunkDescriptor = $convert.base64Decode('CgpJbWFnZUNodW5rEh4KCWltYWdlRGF0YRgBIAEoDEgAUglpbWFnZURhdGESFAoEc2l6ZRgDIAEoA0gAUgRzaXplQhEKD01ldGFkYXRhT3JCeXRlc0oECAIQAw==');
+final $typed_data.Uint8List imageChunkDescriptor = $convert.base64Decode('CgpJbWFnZUNodW5rEh4KCWltYWdlZGF0YRgBIAEoDEgAUglpbWFnZWRhdGESFAoEc2l6ZRgDIAEoA0gAUgRzaXplQhEKD01ldGFkYXRhT3JCeXRlc0oECAIQAw==');
 @$core.Deprecated('Use metadataDescriptor instead')
 const Metadata$json = const {
   '1': 'Metadata',
@@ -42,23 +42,23 @@ final $typed_data.Uint8List metadataDescriptor = $convert.base64Decode('CghNZXRh
 const Ack$json = const {
   '1': 'Ack',
   '2': const [
-    const {'1': 'imageSize', '3': 1, '4': 1, '5': 9, '10': 'imageSize'},
+    const {'1': 'imagesize', '3': 1, '4': 1, '5': 9, '10': 'imagesize'},
     const {'1': 'success', '3': 2, '4': 1, '5': 8, '10': 'success'},
-    const {'1': 'ImageURL', '3': 3, '4': 1, '5': 9, '10': 'ImageURL'},
+    const {'1': 'imageurl', '3': 3, '4': 1, '5': 9, '10': 'imageurl'},
   ],
 };
 
 /// Descriptor for `Ack`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List ackDescriptor = $convert.base64Decode('CgNBY2sSHAoJaW1hZ2VTaXplGAEgASgJUglpbWFnZVNpemUSGAoHc3VjY2VzcxgCIAEoCFIHc3VjY2VzcxIaCghJbWFnZVVSTBgDIAEoCVIISW1hZ2VVUkw=');
+final $typed_data.Uint8List ackDescriptor = $convert.base64Decode('CgNBY2sSHAoJaW1hZ2VzaXplGAEgASgJUglpbWFnZXNpemUSGAoHc3VjY2VzcxgCIAEoCFIHc3VjY2VzcxIaCghpbWFnZXVybBgDIAEoCVIIaW1hZ2V1cmw=');
 @$core.Deprecated('Use imageQueryDescriptor instead')
 const ImageQuery$json = const {
   '1': 'ImageQuery',
   '2': const [
-    const {'1': 'author', '3': 1, '4': 1, '5': 5, '10': 'author'},
-    const {'1': 'id', '3': 2, '4': 1, '5': 5, '10': 'id'},
+    const {'1': 'author', '3': 1, '4': 1, '5': 9, '10': 'author'},
+    const {'1': 'id', '3': 2, '4': 1, '5': 9, '10': 'id'},
     const {'1': 'created', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'created'},
   ],
 };
 
 /// Descriptor for `ImageQuery`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List imageQueryDescriptor = $convert.base64Decode('CgpJbWFnZVF1ZXJ5EhYKBmF1dGhvchgBIAEoBVIGYXV0aG9yEg4KAmlkGAIgASgFUgJpZBI0CgdjcmVhdGVkGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIHY3JlYXRlZA==');
+final $typed_data.Uint8List imageQueryDescriptor = $convert.base64Decode('CgpJbWFnZVF1ZXJ5EhYKBmF1dGhvchgBIAEoCVIGYXV0aG9yEg4KAmlkGAIgASgJUgJpZBI0CgdjcmVhdGVkGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIHY3JlYXRlZA==');

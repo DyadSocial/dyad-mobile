@@ -13,32 +13,32 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'google/protobuf/timestamp.pb.dart' as $1;
 
 enum ImageChunk_MetadataOrBytes {
-  imageData, 
+  imagedata, 
   size, 
   notSet
 }
 
 class ImageChunk extends $pb.GeneratedMessage {
   static const $core.Map<$core.int, ImageChunk_MetadataOrBytes> _ImageChunk_MetadataOrBytesByTag = {
-    1 : ImageChunk_MetadataOrBytes.imageData,
+    1 : ImageChunk_MetadataOrBytes.imagedata,
     3 : ImageChunk_MetadataOrBytes.size,
     0 : ImageChunk_MetadataOrBytes.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ImageChunk', createEmptyInstance: create)
     ..oo(0, [1, 3])
-    ..a<$core.List<$core.int>>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'imageData', $pb.PbFieldType.OY, protoName: 'imageData')
+    ..a<$core.List<$core.int>>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'imagedata', $pb.PbFieldType.OY)
     ..aInt64(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'size')
     ..hasRequiredFields = false
   ;
 
   ImageChunk._() : super();
   factory ImageChunk({
-    $core.List<$core.int>? imageData,
+    $core.List<$core.int>? imagedata,
     $fixnum.Int64? size,
   }) {
     final _result = create();
-    if (imageData != null) {
-      _result.imageData = imageData;
+    if (imagedata != null) {
+      _result.imagedata = imagedata;
     }
     if (size != null) {
       _result.size = size;
@@ -70,13 +70,13 @@ class ImageChunk extends $pb.GeneratedMessage {
   void clearMetadataOrBytes() => clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
-  $core.List<$core.int> get imageData => $_getN(0);
+  $core.List<$core.int> get imagedata => $_getN(0);
   @$pb.TagNumber(1)
-  set imageData($core.List<$core.int> v) { $_setBytes(0, v); }
+  set imagedata($core.List<$core.int> v) { $_setBytes(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasImageData() => $_has(0);
+  $core.bool hasImagedata() => $_has(0);
   @$pb.TagNumber(1)
-  void clearImageData() => clearField(1);
+  void clearImagedata() => clearField(1);
 
   @$pb.TagNumber(3)
   $fixnum.Int64 get size => $_getI64(1);
@@ -181,27 +181,27 @@ class Metadata extends $pb.GeneratedMessage {
 
 class Ack extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Ack', createEmptyInstance: create)
-    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'imageSize', protoName: 'imageSize')
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'imagesize')
     ..aOB(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'success')
-    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'ImageURL', protoName: 'ImageURL')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'imageurl')
     ..hasRequiredFields = false
   ;
 
   Ack._() : super();
   factory Ack({
-    $core.String? imageSize,
+    $core.String? imagesize,
     $core.bool? success,
-    $core.String? imageURL,
+    $core.String? imageurl,
   }) {
     final _result = create();
-    if (imageSize != null) {
-      _result.imageSize = imageSize;
+    if (imagesize != null) {
+      _result.imagesize = imagesize;
     }
     if (success != null) {
       _result.success = success;
     }
-    if (imageURL != null) {
-      _result.imageURL = imageURL;
+    if (imageurl != null) {
+      _result.imageurl = imageurl;
     }
     return _result;
   }
@@ -227,13 +227,13 @@ class Ack extends $pb.GeneratedMessage {
   static Ack? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get imageSize => $_getSZ(0);
+  $core.String get imagesize => $_getSZ(0);
   @$pb.TagNumber(1)
-  set imageSize($core.String v) { $_setString(0, v); }
+  set imagesize($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasImageSize() => $_has(0);
+  $core.bool hasImagesize() => $_has(0);
   @$pb.TagNumber(1)
-  void clearImageSize() => clearField(1);
+  void clearImagesize() => clearField(1);
 
   @$pb.TagNumber(2)
   $core.bool get success => $_getBF(1);
@@ -245,27 +245,27 @@ class Ack extends $pb.GeneratedMessage {
   void clearSuccess() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get imageURL => $_getSZ(2);
+  $core.String get imageurl => $_getSZ(2);
   @$pb.TagNumber(3)
-  set imageURL($core.String v) { $_setString(2, v); }
+  set imageurl($core.String v) { $_setString(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasImageURL() => $_has(2);
+  $core.bool hasImageurl() => $_has(2);
   @$pb.TagNumber(3)
-  void clearImageURL() => clearField(3);
+  void clearImageurl() => clearField(3);
 }
 
 class ImageQuery extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ImageQuery', createEmptyInstance: create)
-    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'author', $pb.PbFieldType.O3)
-    ..a<$core.int>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'author')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
     ..aOM<$1.Timestamp>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created', subBuilder: $1.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
   ImageQuery._() : super();
   factory ImageQuery({
-    $core.int? author,
-    $core.int? id,
+    $core.String? author,
+    $core.String? id,
     $1.Timestamp? created,
   }) {
     final _result = create();
@@ -302,18 +302,18 @@ class ImageQuery extends $pb.GeneratedMessage {
   static ImageQuery? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get author => $_getIZ(0);
+  $core.String get author => $_getSZ(0);
   @$pb.TagNumber(1)
-  set author($core.int v) { $_setSignedInt32(0, v); }
+  set author($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasAuthor() => $_has(0);
   @$pb.TagNumber(1)
   void clearAuthor() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.int get id => $_getIZ(1);
+  $core.String get id => $_getSZ(1);
   @$pb.TagNumber(2)
-  set id($core.int v) { $_setSignedInt32(1, v); }
+  set id($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
   $core.bool hasId() => $_has(1);
   @$pb.TagNumber(2)

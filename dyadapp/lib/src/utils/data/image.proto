@@ -5,7 +5,7 @@ import "google/protobuf/timestamp.proto";
 message ImageChunk{
   reserved 2;
   oneof MetadataOrBytes {
-    bytes imageData = 1;
+    bytes imagedata = 1;
     int64 size = 3;
   }
 }
@@ -18,14 +18,14 @@ message Metadata {
 }
 
 message Ack {
-  string imageSize = 1;
+  string imagesize = 1;
   bool success = 2;
-  string ImageURL = 3;
+  string imageurl = 3;
 }
 
 message ImageQuery {
-  int32 author = 1;
-  int32 id = 2;
+  string author = 1;
+  string id = 2;
   google.protobuf.Timestamp created = 3;
 }
 

@@ -8,6 +8,18 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+@$core.Deprecated('Use groupDescriptor instead')
+const Group$json = const {
+  '1': 'Group',
+  '2': const [
+    const {'1': 'gid', '3': 1, '4': 1, '5': 9, '10': 'gid'},
+    const {'1': 'member_count', '3': 2, '4': 1, '5': 5, '10': 'memberCount'},
+    const {'1': 'members', '3': 3, '4': 3, '5': 11, '6': '.User', '10': 'members'},
+  ],
+};
+
+/// Descriptor for `Group`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List groupDescriptor = $convert.base64Decode('CgVHcm91cBIQCgNnaWQYASABKAlSA2dpZBIhCgxtZW1iZXJfY291bnQYAiABKAVSC21lbWJlckNvdW50Eh8KB21lbWJlcnMYAyADKAsyBS5Vc2VyUgdtZW1iZXJz');
 @$core.Deprecated('Use postDescriptor instead')
 const Post$json = const {
   '1': 'Post',
@@ -31,12 +43,12 @@ const PostQuery$json = const {
     const {'1': 'author', '3': 2, '4': 1, '5': 9, '10': 'author'},
     const {'1': 'last_updated', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'lastUpdated'},
     const {'1': 'created', '3': 4, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'created'},
-    const {'1': 'count', '3': 5, '4': 1, '5': 5, '10': 'count'},
+    const {'1': 'group', '3': 6, '4': 1, '5': 11, '6': '.Group', '10': 'group'},
   ],
 };
 
 /// Descriptor for `PostQuery`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List postQueryDescriptor = $convert.base64Decode('CglQb3N0UXVlcnkSDgoCaWQYASABKAVSAmlkEhYKBmF1dGhvchgCIAEoCVIGYXV0aG9yEj0KDGxhc3RfdXBkYXRlZBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSC2xhc3RVcGRhdGVkEjQKB2NyZWF0ZWQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgdjcmVhdGVkEhQKBWNvdW50GAUgASgFUgVjb3VudA==');
+final $typed_data.Uint8List postQueryDescriptor = $convert.base64Decode('CglQb3N0UXVlcnkSDgoCaWQYASABKAVSAmlkEhYKBmF1dGhvchgCIAEoCVIGYXV0aG9yEj0KDGxhc3RfdXBkYXRlZBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSC2xhc3RVcGRhdGVkEjQKB2NyZWF0ZWQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgdjcmVhdGVkEhwKBWdyb3VwGAYgASgLMgYuR3JvdXBSBWdyb3Vw');
 @$core.Deprecated('Use postUploadAckDescriptor instead')
 const PostUploadAck$json = const {
   '1': 'PostUploadAck',
@@ -48,18 +60,14 @@ const PostUploadAck$json = const {
 
 /// Descriptor for `PostUploadAck`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List postUploadAckDescriptor = $convert.base64Decode('Cg1Qb3N0VXBsb2FkQWNrEg4KAmlkGAEgASgFUgJpZBI5CgpzYXZlZF90aW1lGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJc2F2ZWRUaW1l');
-@$core.Deprecated('Use feedDescriptor instead')
-const Feed$json = const {
-  '1': 'Feed',
+@$core.Deprecated('Use userDescriptor instead')
+const User$json = const {
+  '1': 'User',
   '2': const [
-    const {'1': 'authors', '3': 4, '4': 3, '5': 9, '10': 'authors'},
-    const {'1': 'posts', '3': 2, '4': 3, '5': 11, '6': '.Post', '10': 'posts'},
-    const {'1': 'last_updated', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'lastUpdated'},
-  ],
-  '9': const [
-    const {'1': 1, '2': 2},
+    const {'1': 'username', '3': 1, '4': 1, '5': 9, '10': 'username'},
+    const {'1': 'hwid', '3': 2, '4': 1, '5': 9, '10': 'hwid'},
   ],
 };
 
-/// Descriptor for `Feed`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List feedDescriptor = $convert.base64Decode('CgRGZWVkEhgKB2F1dGhvcnMYBCADKAlSB2F1dGhvcnMSGwoFcG9zdHMYAiADKAsyBS5Qb3N0UgVwb3N0cxI9CgxsYXN0X3VwZGF0ZWQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgtsYXN0VXBkYXRlZEoECAEQAg==');
+/// Descriptor for `User`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List userDescriptor = $convert.base64Decode('CgRVc2VyEhoKCHVzZXJuYW1lGAEgASgJUgh1c2VybmFtZRISCgRod2lkGAIgASgJUgRod2lk');
