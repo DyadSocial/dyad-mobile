@@ -12,11 +12,7 @@ import 'dart:typed_data' as $typed_data;
 const ImageChunk$json = const {
   '1': 'ImageChunk',
   '2': const [
-    const {'1': 'imagedata', '3': 1, '4': 1, '5': 12, '9': 0, '10': 'imagedata'},
-    const {'1': 'size', '3': 3, '4': 1, '5': 3, '9': 0, '10': 'size'},
-  ],
-  '8': const [
-    const {'1': 'MetadataOrBytes'},
+    const {'1': 'imagedata', '3': 1, '4': 1, '5': 9, '10': 'imagedata'},
   ],
   '9': const [
     const {'1': 2, '2': 3},
@@ -24,7 +20,7 @@ const ImageChunk$json = const {
 };
 
 /// Descriptor for `ImageChunk`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List imageChunkDescriptor = $convert.base64Decode('CgpJbWFnZUNodW5rEh4KCWltYWdlZGF0YRgBIAEoDEgAUglpbWFnZWRhdGESFAoEc2l6ZRgDIAEoA0gAUgRzaXplQhEKD01ldGFkYXRhT3JCeXRlc0oECAIQAw==');
+final $typed_data.Uint8List imageChunkDescriptor = $convert.base64Decode('CgpJbWFnZUNodW5rEhwKCWltYWdlZGF0YRgBIAEoCVIJaW1hZ2VkYXRhSgQIAhAD');
 @$core.Deprecated('Use metadataDescriptor instead')
 const Metadata$json = const {
   '1': 'Metadata',
