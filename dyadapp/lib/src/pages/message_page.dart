@@ -15,26 +15,7 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
-  List<Message> messagesVtoJ = [
-    Message(
-      users[0],
-      users[1],
-      "hey, it's vincent :)",
-      DateTime(2022, 1, 23),
-    ),
-    Message(
-      users[1],
-      users[0],
-      "hey vincent, how are you doing!",
-      DateTime(2022, 1, 23),
-    ),
-    Message(
-      users[0],
-      users[1],
-      "good, thanks jake !",
-      DateTime(2022, 1, 23),
-    ),
-  ];
+  List<Message> messagesVtoJ = [];
 
   @override
   Widget build(BuildContext context) {
