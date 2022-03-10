@@ -36,12 +36,14 @@ class grpcClient {
     print("Out: $bytes");
     while (pos < bytes.length) {
       if (endOffset < bytes.length) {
+        print("Chunk: ${bytes.substring(pos, pos + CHUNK_SIZE)}");
         yield ImageChunk(
             imagedata: bytes.substring(pos, pos + CHUNK_SIZE),
             id: id,
             username: username,
             imagesize: bytes.length);
       } else {
+        print("Chunk: ${bytes.substring(pos, bytes.length)}");
         yield ImageChunk(
             imagedata: bytes.substring(pos, bytes.length),
             id: id,
@@ -56,7 +58,8 @@ class grpcClient {
   Future<Map<String, dynamic>> runUploadImage(
       Uint8List image, String username, String id) async {
     String imageBytes = base64.encode(image);
-    final Ack ack = await imagesStub.uploadImage(_byteChunker(imageBytes));
+    final Ack ack =
+        await imagesStub.uploadImage(_byteChunker(imageBytes, username, id));
     return ack.writeToJsonMap();
   }
 
@@ -68,8 +71,8 @@ class grpcClient {
     );
     String imageBytes = "";
     await for (ImageChunk chunk in imagesStub.pullImage(query)) {
-      if (imageBytes.length == 0) imageBytes.padRight(chunk.imagesize, ' ');
-      imageBytes = imageBytes + chunk.imagedata;
+      print("Chunk: ${chunk.imagedata}");
+      imageBytes += chunk.imagedata;
     }
     return base64.decode(imageBytes);
   }
@@ -108,8 +111,10 @@ Future<void> main(List<String> args) async {
   for (int i = 0; i < size; i++) {
     image = Uint8List.fromList([...image, (i % 10)]);
   }
+  print("Uploading..");
   await client.runUploadImage(image, "infuhnit", "abc123");
 
+  print("Pulling..");
   await client.runPullImage("infuhnit", "abc123");
   print("Done");
   exit(0);
