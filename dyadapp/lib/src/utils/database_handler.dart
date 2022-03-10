@@ -213,4 +213,14 @@ Future<void> updateChat(Chat chat) async {
       whereArgs: [chat.id],
     );
   }
+
+Future<Chat?> getChat(String? queryId) async {
+  if (queryId == null) return null;
+  final db = await _helperInstance.database;
+  final List<Map<String, dynamic>> maps =
+        await db.query('chats', where: 'id = ?', whereArgs: [queryId]);
+  
+    return maps.isNotEmpty ? Chat.fromBuffer(maps[0]['data']) : null;
+ }
+ 
 }
