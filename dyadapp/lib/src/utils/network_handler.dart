@@ -67,6 +67,7 @@ class grpcClient {
     );
     String imageBytes = "";
     await for (ImageChunk chunk in imagesStub.pullImage(query)) {
+      if (imageBytes.length == 0) imageBytes.padRight(chunk.imagesize, ' ');
       imageBytes = imageBytes + chunk.imagedata;
     }
     return base64.decode(imageBytes);
