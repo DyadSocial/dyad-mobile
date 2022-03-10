@@ -33,6 +33,7 @@ class _PostWriterState extends State<PostWriter> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
+  final ImageCropper _cropper = ImageCropper();
   File? _imageFile;
 
   @override
@@ -55,7 +56,7 @@ class _PostWriterState extends State<PostWriter> {
   }
 
   Future<void> _imageCropper() async {
-    File? cropped = await ImageCropper.cropImage(
+    File? cropped = await _cropper.cropImage(
       sourcePath: _imageFile!.path,
       aspectRatioPresets: [
         CropAspectRatioPreset.original,

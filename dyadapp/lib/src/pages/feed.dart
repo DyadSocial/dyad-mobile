@@ -9,6 +9,7 @@ import 'package:dyadapp/src/pages/settings.dart';
 import 'package:dyadapp/src/widgets/post_writer.dart';
 import 'package:dyadapp/src/utils/database_handler.dart';
 import 'package:dyadapp/src/utils/user_session.dart';
+import 'package:dyadapp/src/utils/data/protos/content.pb.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quiver/core.dart';
 

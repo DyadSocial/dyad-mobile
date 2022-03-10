@@ -3,11 +3,13 @@ syntax = "proto3";
 import "google/protobuf/timestamp.proto";
 import "content.proto";
 
+/*
 message Group {
     string gid = 1;
     int32 member_count = 2;
     repeated User members = 3;
 }
+*/
 
 message Post {
     int32 id = 1;
@@ -19,6 +21,7 @@ message Post {
 }
 
 // Send the last posts for a response with more posts
+/*
 message PostQuery {
     int32 id = 1;
     string author = 2;
@@ -26,24 +29,32 @@ message PostQuery {
     google.protobuf.Timestamp created = 4;
     Group group = 6;
 }
+*/
 
+/*
 message PostUploadAck {
     int32 id = 1;
     google.protobuf.Timestamp saved_time = 2;
 }
+*/
 
+/*
 message User {
     string username = 1;
     string hwid = 2;
 }
-
+*/
+/*
 service GroupSync{
     rpc addUserToGroup(User) returns (Group);
     rpc delUserFromGroup(User) returns (Group);
 }
+ */
 
+/*
 service PostsSync {
     rpc refreshPosts(PostQuery) returns (stream Post);
     rpc queryPosts(PostQuery) returns (stream Post);
     rpc uploadPosts(stream Post) returns (stream PostUploadAck);
 }
+ */
