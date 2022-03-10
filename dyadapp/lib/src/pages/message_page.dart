@@ -42,13 +42,18 @@ class _MessagePageState extends State<MessagePage> {
                 SizedBox(
                   width: 2,
                 ),
-                CircleAvatar(
-                  backgroundColor: Colors.white70,
-                  foregroundImage: widget.profilePicture,
-                  foregroundColor: Colors.black12,
-                  maxRadius: 20,
-                  child: Text(widget.nickname.substring(0, min(4, widget.nickname.length))),
-                ),
+                FutureBuilder <ImageProvider?>(
+                    future: widget.profilePicture,
+                    builder: (BuildContext context, AsyncSnapshot<ImageProvider?> image) {
+                        return CircleAvatar(
+                            backgroundImage: image.data,
+                            foregroundColor: Colors.black12,
+                            backgroundColor: Colors.white70,
+                            maxRadius: 30,
+                            child: Text(widget.nickname.substring(0, min(4, widget.nickname.length)))
+                          );
+                      }
+                    ),
                 SizedBox(
                   width: 12,
                 ),
