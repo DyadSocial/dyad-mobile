@@ -4,7 +4,7 @@ import 'package:dyadapp/src/pages/message_page.dart';
 class MessageList extends StatefulWidget {
   String name;
   String text;
-  final ImageProvider<Object> profilePicture;
+  Future<ImageProvider<Object>?> profilePicture;
   String time;
   bool isMessageRead;
   MessageList(

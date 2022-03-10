@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dyadapp/src/pages/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +9,7 @@ import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
 import 'package:dyadapp/src/utils/database_handler.dart';
 import 'package:dyadapp/src/utils/network_handler.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:dyadapp/src/utils/user_session.dart';
 
 
 class InboxPage extends StatefulWidget {
@@ -46,11 +49,16 @@ class _InboxPageState extends State<InboxPage>
 
   //TO DO: Helper function for profile picture
     //Image provider = (Image.memory(await runPullProfileImage(message[index].author))).image;
-  getProfilePictures() async {
-    for (var chat
+  Future<ImageProvider<Object>?> getProfilePicture(Chat chat) async {
+    String current_user = await UserSession().get("username");
+    for (var recipient in chat.recipients)
     {
-      profilePictures.add((Image.memory(await grpcClient().runPullImage(chat.recipients))).image);
+      if (recipient != current_user)
+      {
+        return ((Image.memory(await grpcClient().runPullImage(recipient, "profile_picture"))).image);
+      }
     }
+    return null;
   }
 
   @override
@@ -151,7 +159,7 @@ class _InboxPageState extends State<InboxPage>
                       name: _messages[index].author,
                       text: _messages[index].content,
                       //TO DO: 
-                      profilePicture: profilePictures[index],
+                      profilePicture: getProfilePicture(_chats[index]),
                       time: timeago.format(DateTime.fromMillisecondsSinceEpoch((_messages[index].created.seconds * 1000).toInt()), locale: 'en_short'),
                       isMessageRead: (index == 0 || index == 3) ? true : false,
                     );

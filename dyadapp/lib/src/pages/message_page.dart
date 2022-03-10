@@ -1,10 +1,11 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/utils/data/message.dart';
 import 'package:dyadapp/src/utils/data/test_message.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class MessagePage extends StatefulWidget {
-  final ImageProvider<Object> profilePicture;
+  Future<ImageProvider<Object>?> profilePicture;
   String nickname;
 
   MessagePage({Key? key, required this.profilePicture, required this.nickname})
@@ -42,8 +43,11 @@ class _MessagePageState extends State<MessagePage> {
                   width: 2,
                 ),
                 CircleAvatar(
-                  backgroundImage: widget.profilePicture,
+                  backgroundColor: Colors.white70,
+                  foregroundImage: widget.profilePicture,
+                  foregroundColor: Colors.black12,
                   maxRadius: 20,
+                  child: Text(widget.nickname.substring(0, min(4, widget.nickname.length))),
                 ),
                 SizedBox(
                   width: 12,
