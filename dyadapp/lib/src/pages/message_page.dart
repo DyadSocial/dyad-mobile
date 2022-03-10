@@ -1,10 +1,11 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/utils/data/message.dart';
 import 'package:dyadapp/src/utils/data/test_message.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class MessagePage extends StatefulWidget {
-  final ImageProvider<Object> profilePicture;
+  Future<ImageProvider<Object>?> profilePicture;
   String nickname;
 
   MessagePage({Key? key, required this.profilePicture, required this.nickname})
@@ -15,26 +16,7 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
-  List<Message> messagesVtoJ = [
-    Message(
-      users[0],
-      users[1],
-      "hey, it's vincent :)",
-      DateTime(2022, 1, 23),
-    ),
-    Message(
-      users[1],
-      users[0],
-      "hey vincent, how are you doing!",
-      DateTime(2022, 1, 23),
-    ),
-    Message(
-      users[0],
-      users[1],
-      "good, thanks jake !",
-      DateTime(2022, 1, 23),
-    ),
-  ];
+  List<Message> _messages = [];
 
   @override
   Widget build(BuildContext context) {
@@ -61,8 +43,11 @@ class _MessagePageState extends State<MessagePage> {
                   width: 2,
                 ),
                 CircleAvatar(
-                  backgroundImage: widget.profilePicture,
+                  backgroundColor: Colors.white70,
+                  foregroundImage: widget.profilePicture,
+                  foregroundColor: Colors.black12,
                   maxRadius: 20,
+                  child: Text(widget.nickname.substring(0, min(4, widget.nickname.length))),
                 ),
                 SizedBox(
                   width: 12,
@@ -162,29 +147,29 @@ class _MessagePageState extends State<MessagePage> {
 
   buildMessages(String sender) {
     return ListView.builder(
-      itemCount: messagesVtoJ.length,
+      itemCount: _messages.length,
       shrinkWrap: true,
       padding: EdgeInsets.only(top: 10, bottom: 10),
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        if (messagesVtoJ[index].author.username == sender ||
-            messagesVtoJ[index].recipient.username == sender) {
+        if (_messages[index].author.username == sender ||
+            _messages[index].recipient.username == sender) {
           return Container(
             padding: EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
             child: Align(
-              alignment: (messagesVtoJ[index].author.username == widget.nickname
+              alignment: (_messages[index].author.username == widget.nickname
                   ? Alignment.topLeft
                   : Alignment.topRight),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: (messagesVtoJ[index].author.username == widget.nickname
+                  color: (_messages[index].author.username == widget.nickname
                       ? Colors.grey.shade200
                       : Colors.blue[200]),
                 ),
                 padding: EdgeInsets.all(16),
                 child: Text(
-                  messagesVtoJ[index].content,
+                  _messages[index].content,
                   style: TextStyle(fontSize: 15),
                 ),
               ),

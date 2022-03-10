@@ -1,6 +1,0 @@
-syntax="proto3";
-
-message Content {
-    string text = 1;
-    optional string image = 2;
-}

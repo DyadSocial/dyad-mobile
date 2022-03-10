@@ -1,18 +1,20 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
-import "content.proto";
 
 message Message {
-    int32 id = 1;
+    string id = 1;
     string author = 2;
-    Content content = 3;
+    string content = 3;
     google.protobuf.Timestamp last_updated = 4;
     google.protobuf.Timestamp created = 5;
+    bool image = 6;
 }
 
 message Chat {
     repeated string recipients = 1;
     repeated Message messages = 2;
     google.protobuf.Timestamp last_updated = 3;
+    string id = 4;
+    string owner = 5;
 }

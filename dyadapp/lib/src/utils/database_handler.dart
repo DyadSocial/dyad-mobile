@@ -57,7 +57,8 @@ class DatabaseHandler {
       CREATE TABLE chats(
         recipients TEXT,
         data BLOB,
-        lastUpdated TEXT
+        lastUpdated TEXT,
+        id INTEGER PRIMARY KEY
       )
     ''');
   }
@@ -171,6 +172,16 @@ class DatabaseHandler {
     );
   }
 
+Future<List<Chat>> chats() async {
+    final db = await _helperInstance.database;
+    final List<Map<String, dynamic>> maps = await db.query('chats');
+    return List.generate(maps.length, (idx) {
+      var chat = Chat.fromBuffer(maps[idx]['data']);
+      chat.id = maps[idx]['id'];
+      return chat;
+    });
+  }
+
   Future<void> insertChat(Chat chat) async {
     final db = await _helperInstance.database;
     await db.insert('chats', {
@@ -179,4 +190,37 @@ class DatabaseHandler {
       'lastUpdated': chat.lastUpdated
     });
   }
+
+  Future<void> deleteChat(Chat chat) async {
+    final db = await _helperInstance.database;
+    await db.delete(
+      'chats',
+      where: 'id = ?',
+      whereArgs: [chat.id],
+    );
+  }
+
+Future<void> updateChat(Chat chat) async {
+    final db = await _helperInstance.database;
+    await db.update(
+      'chats',
+      {
+        'id': chat.id,
+        'author': chat.recipients,
+        'data': chat.writeToBuffer(),
+        'lastUpdated': chat.lastUpdated
+      },      where: 'id = ?',
+      whereArgs: [chat.id],
+    );
+  }
+
+Future<Chat?> getChat(String? queryId) async {
+  if (queryId == null) return null;
+  final db = await _helperInstance.database;
+  final List<Map<String, dynamic>> maps =
+        await db.query('chats', where: 'id = ?', whereArgs: [queryId]);
+  
+    return maps.isNotEmpty ? Chat.fromBuffer(maps[0]['data']) : null;
+ }
+ 
 }

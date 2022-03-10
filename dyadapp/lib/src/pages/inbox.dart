@@ -1,40 +1,69 @@
+import 'dart:async';
+
 import 'package:dyadapp/src/pages/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:dyadapp/src/widgets/message_list.dart';
-import 'package:dyadapp/src/utils/data/message.dart';
 import 'package:dyadapp/src/utils/data/test_message.dart';
+import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
+import 'package:dyadapp/src/utils/database_handler.dart';
+import 'package:dyadapp/src/utils/network_handler.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:dyadapp/src/utils/user_session.dart';
+
 
 class InboxPage extends StatefulWidget {
-  const InboxPage({Key? key}) : super(key: key);
+ 
+  InboxPage({Key? key}): super(key: key);
 
   @override
   _InboxPageState createState() => _InboxPageState();
 }
 
-class _InboxPageState extends State<InboxPage> {
+class _InboxPageState extends State<InboxPage> 
+    with SingleTickerProviderStateMixin {
+  List<Chat> _chats = [];
+  List<Message> _messages =[];
+  List <ImageProvider> profilePictures = [];
+
+  @override
+  void initState() {
+    super.initState();
+    for (var chat in _chats)
+    {
+      if (chat.messages.length > 0) {
+        _messages.add(chat.messages[0]);
+      }
+      else {
+        _messages.add(Message(id: "", author: "", content: ""));
+      }
+    }
+  }
+
+  Future<List<Chat>> _getChatData() async {
+    await DatabaseHandler().chats().then((newChats) {
+      _chats = newChats;
+    });
+    return _chats;
+  }
+
+  //TO DO: Helper function for profile picture
+    //Image provider = (Image.memory(await runPullProfileImage(message[index].author))).image;
+  Future<ImageProvider<Object>?> getProfilePicture(Chat chat) async {
+    String current_user = await UserSession().get("username");
+    for (var recipient in chat.recipients)
+    {
+      if (recipient != current_user)
+      {
+        return ((Image.memory(await grpcClient().runPullImage(recipient, "profile_picture"))).image);
+      }
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Message> messages = [
-      Message(
-        users[0],
-        users[1],
-        "hey, it's vincent :)",
-        DateTime(2022, 1, 23),
-      ),
-      Message(
-        users[2],
-        users[1],
-        "prim here! what's good :)",
-        DateTime(2022, 1, 29),
-      ),
-      Message(
-        users[3],
-        users[1],
-        "GOOBY GROOVES YES! :)",
-        DateTime(2022, 2, 2),
-      ),
-    ];
+    
     return Scaffold(
       appBar: AppBar(
         title: Center(child: const Text('Dyad')),
@@ -121,16 +150,17 @@ class _InboxPageState extends State<InboxPage> {
                   ),
                 ),
                 ListView.builder(
-                  itemCount: messages.length,
+                  itemCount: _messages.length,
                   shrinkWrap: true,
                   padding: EdgeInsets.only(top: 16),
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return MessageList(
-                      name: messages[index].author.username,
-                      text: messages[index].content,
-                      profilePicture: messages[index].author.profilePicture,
-                      time: DateFormat.MEd().format(messages[index].timestamp),
+                      name: _messages[index].author,
+                      text: _messages[index].content,
+                      //TO DO: 
+                      profilePicture: getProfilePicture(_chats[index]),
+                      time: timeago.format(DateTime.fromMillisecondsSinceEpoch((_messages[index].created.seconds * 1000).toInt()), locale: 'en_short'),
                       isMessageRead: (index == 0 || index == 3) ? true : false,
                     );
                   },
