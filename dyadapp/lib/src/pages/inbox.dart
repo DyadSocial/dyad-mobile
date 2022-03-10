@@ -5,8 +5,9 @@ import 'package:dyadapp/src/widgets/message_list.dart';
 import 'package:dyadapp/src/utils/data/test_message.dart';
 import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
 import 'package:dyadapp/src/utils/database_handler.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:dyadapp/src/utils/network_handler.dart';
+import 'package:timeago/timeago.dart' as timeago;
+
 
 class InboxPage extends StatefulWidget {
  
@@ -46,9 +47,9 @@ class _InboxPageState extends State<InboxPage>
   //TO DO: Helper function for profile picture
     //Image provider = (Image.memory(await runPullProfileImage(message[index].author))).image;
   getProfilePictures() async {
-    for (var chat in _chats)
+    for (var chat
     {
-      profilePictures.add((Image.memory(await runPullProfileImage(chat.recipients))).image);
+      profilePictures.add((Image.memory(await grpcClient().runPullImage(chat.recipients))).image);
     }
   }
 

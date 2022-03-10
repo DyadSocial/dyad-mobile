@@ -12,36 +12,24 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'google/protobuf/timestamp.pb.dart' as $1;
 
-enum ImageChunk_MetadataOrBytes {
-  imagedata, 
-  size, 
-  notSet
-}
-
 class ImageChunk extends $pb.GeneratedMessage {
-  static const $core.Map<$core.int, ImageChunk_MetadataOrBytes> _ImageChunk_MetadataOrBytesByTag = {
-    1 : ImageChunk_MetadataOrBytes.imagedata,
-    3 : ImageChunk_MetadataOrBytes.size,
-    0 : ImageChunk_MetadataOrBytes.notSet
-  };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ImageChunk', createEmptyInstance: create)
-    ..oo(0, [1, 3])
-    ..a<$core.List<$core.int>>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'imagedata', $pb.PbFieldType.OY)
-    ..aInt64(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'size')
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'imagedata')
+    ..a<$core.int>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'imagesize', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
   ImageChunk._() : super();
   factory ImageChunk({
-    $core.List<$core.int>? imagedata,
-    $fixnum.Int64? size,
+    $core.String? imagedata,
+    $core.int? imagesize,
   }) {
     final _result = create();
     if (imagedata != null) {
       _result.imagedata = imagedata;
     }
-    if (size != null) {
-      _result.size = size;
+    if (imagesize != null) {
+      _result.imagesize = imagesize;
     }
     return _result;
   }
@@ -66,26 +54,23 @@ class ImageChunk extends $pb.GeneratedMessage {
   static ImageChunk getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ImageChunk>(create);
   static ImageChunk? _defaultInstance;
 
-  ImageChunk_MetadataOrBytes whichMetadataOrBytes() => _ImageChunk_MetadataOrBytesByTag[$_whichOneof(0)]!;
-  void clearMetadataOrBytes() => clearField($_whichOneof(0));
-
   @$pb.TagNumber(1)
-  $core.List<$core.int> get imagedata => $_getN(0);
+  $core.String get imagedata => $_getSZ(0);
   @$pb.TagNumber(1)
-  set imagedata($core.List<$core.int> v) { $_setBytes(0, v); }
+  set imagedata($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasImagedata() => $_has(0);
   @$pb.TagNumber(1)
   void clearImagedata() => clearField(1);
 
   @$pb.TagNumber(3)
-  $fixnum.Int64 get size => $_getI64(1);
+  $core.int get imagesize => $_getIZ(1);
   @$pb.TagNumber(3)
-  set size($fixnum.Int64 v) { $_setInt64(1, v); }
+  set imagesize($core.int v) { $_setSignedInt32(1, v); }
   @$pb.TagNumber(3)
-  $core.bool hasSize() => $_has(1);
+  $core.bool hasImagesize() => $_has(1);
   @$pb.TagNumber(3)
-  void clearSize() => clearField(3);
+  void clearImagesize() => clearField(3);
 }
 
 class Metadata extends $pb.GeneratedMessage {

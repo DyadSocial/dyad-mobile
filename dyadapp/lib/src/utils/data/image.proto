@@ -4,10 +4,8 @@ import "google/protobuf/timestamp.proto";
 
 message ImageChunk{
   reserved 2;
-  oneof MetadataOrBytes {
-    bytes imagedata = 1;
-    int64 size = 3;
-  }
+  string imagedata = 1;
+  int32 imagesize = 3;
 }
 
 message Metadata {

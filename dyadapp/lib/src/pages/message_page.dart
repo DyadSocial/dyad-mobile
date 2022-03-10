@@ -15,7 +15,7 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
-  List<Message> messagesVtoJ = [];
+  List<Message> _messages = [];
 
   @override
   Widget build(BuildContext context) {
@@ -143,29 +143,29 @@ class _MessagePageState extends State<MessagePage> {
 
   buildMessages(String sender) {
     return ListView.builder(
-      itemCount: messagesVtoJ.length,
+      itemCount: _messages.length,
       shrinkWrap: true,
       padding: EdgeInsets.only(top: 10, bottom: 10),
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        if (messagesVtoJ[index].author.username == sender ||
-            messagesVtoJ[index].recipient.username == sender) {
+        if (_messages[index].author.username == sender ||
+            _messages[index].recipient.username == sender) {
           return Container(
             padding: EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
             child: Align(
-              alignment: (messagesVtoJ[index].author.username == widget.nickname
+              alignment: (_messages[index].author.username == widget.nickname
                   ? Alignment.topLeft
                   : Alignment.topRight),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: (messagesVtoJ[index].author.username == widget.nickname
+                  color: (_messages[index].author.username == widget.nickname
                       ? Colors.grey.shade200
                       : Colors.blue[200]),
                 ),
                 padding: EdgeInsets.all(16),
                 child: Text(
-                  messagesVtoJ[index].content,
+                  _messages[index].content,
                   style: TextStyle(fontSize: 15),
                 ),
               ),
