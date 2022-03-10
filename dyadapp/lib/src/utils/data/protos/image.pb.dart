@@ -15,16 +15,21 @@ import 'google/protobuf/timestamp.pb.dart' as $1;
 class ImageChunk extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ImageChunk', createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'imagedata')
+    ..a<$core.int>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'imagesize', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
   ImageChunk._() : super();
   factory ImageChunk({
     $core.String? imagedata,
+    $core.int? imagesize,
   }) {
     final _result = create();
     if (imagedata != null) {
       _result.imagedata = imagedata;
+    }
+    if (imagesize != null) {
+      _result.imagesize = imagesize;
     }
     return _result;
   }
@@ -57,6 +62,15 @@ class ImageChunk extends $pb.GeneratedMessage {
   $core.bool hasImagedata() => $_has(0);
   @$pb.TagNumber(1)
   void clearImagedata() => clearField(1);
+
+  @$pb.TagNumber(3)
+  $core.int get imagesize => $_getIZ(1);
+  @$pb.TagNumber(3)
+  set imagesize($core.int v) { $_setSignedInt32(1, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasImagesize() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearImagesize() => clearField(3);
 }
 
 class Metadata extends $pb.GeneratedMessage {

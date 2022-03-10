@@ -1,7 +1,6 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
-import "content.proto";
 
 message Group {
     string gid = 1;
@@ -10,9 +9,9 @@ message Group {
 }
 
 message Post {
-    int32 id = 1;
+    string id = 1;
     string author = 2;
-    Content content = 3;
+    string content = 3;
     google.protobuf.Timestamp last_updated = 4;
     google.protobuf.Timestamp created = 5;
     string title = 6;
@@ -20,11 +19,9 @@ message Post {
 
 // Send the last posts for a response with more posts
 message PostQuery {
-    int32 id = 1;
+    string id = 1;
     string author = 2;
-    google.protobuf.Timestamp last_updated = 3;
-    google.protobuf.Timestamp created = 4;
-    Group group = 6;
+    string gid = 6;
 }
 
 message PostUploadAck {

@@ -9,8 +9,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'content.pb.dart' as $1;
-import 'google/protobuf/timestamp.pb.dart' as $2;
+import 'google/protobuf/timestamp.pb.dart' as $1;
 
 class Group extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Group', createEmptyInstance: create)
@@ -83,22 +82,22 @@ class Group extends $pb.GeneratedMessage {
 
 class Post extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Post', createEmptyInstance: create)
-    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'author')
-    ..aOM<$1.Content>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'content', subBuilder: $1.Content.create)
-    ..aOM<$2.Timestamp>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastUpdated', subBuilder: $2.Timestamp.create)
-    ..aOM<$2.Timestamp>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created', subBuilder: $2.Timestamp.create)
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'content')
+    ..aOM<$1.Timestamp>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastUpdated', subBuilder: $1.Timestamp.create)
+    ..aOM<$1.Timestamp>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created', subBuilder: $1.Timestamp.create)
     ..aOS(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'title')
     ..hasRequiredFields = false
   ;
 
   Post._() : super();
   factory Post({
-    $core.int? id,
+    $core.String? id,
     $core.String? author,
-    $1.Content? content,
-    $2.Timestamp? lastUpdated,
-    $2.Timestamp? created,
+    $core.String? content,
+    $1.Timestamp? lastUpdated,
+    $1.Timestamp? created,
     $core.String? title,
   }) {
     final _result = create();
@@ -144,9 +143,9 @@ class Post extends $pb.GeneratedMessage {
   static Post? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get id => $_getIZ(0);
+  $core.String get id => $_getSZ(0);
   @$pb.TagNumber(1)
-  set id($core.int v) { $_setSignedInt32(0, v); }
+  set id($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
@@ -162,37 +161,35 @@ class Post extends $pb.GeneratedMessage {
   void clearAuthor() => clearField(2);
 
   @$pb.TagNumber(3)
-  $1.Content get content => $_getN(2);
+  $core.String get content => $_getSZ(2);
   @$pb.TagNumber(3)
-  set content($1.Content v) { setField(3, v); }
+  set content($core.String v) { $_setString(2, v); }
   @$pb.TagNumber(3)
   $core.bool hasContent() => $_has(2);
   @$pb.TagNumber(3)
   void clearContent() => clearField(3);
-  @$pb.TagNumber(3)
-  $1.Content ensureContent() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $2.Timestamp get lastUpdated => $_getN(3);
+  $1.Timestamp get lastUpdated => $_getN(3);
   @$pb.TagNumber(4)
-  set lastUpdated($2.Timestamp v) { setField(4, v); }
+  set lastUpdated($1.Timestamp v) { setField(4, v); }
   @$pb.TagNumber(4)
   $core.bool hasLastUpdated() => $_has(3);
   @$pb.TagNumber(4)
   void clearLastUpdated() => clearField(4);
   @$pb.TagNumber(4)
-  $2.Timestamp ensureLastUpdated() => $_ensure(3);
+  $1.Timestamp ensureLastUpdated() => $_ensure(3);
 
   @$pb.TagNumber(5)
-  $2.Timestamp get created => $_getN(4);
+  $1.Timestamp get created => $_getN(4);
   @$pb.TagNumber(5)
-  set created($2.Timestamp v) { setField(5, v); }
+  set created($1.Timestamp v) { setField(5, v); }
   @$pb.TagNumber(5)
   $core.bool hasCreated() => $_has(4);
   @$pb.TagNumber(5)
   void clearCreated() => clearField(5);
   @$pb.TagNumber(5)
-  $2.Timestamp ensureCreated() => $_ensure(4);
+  $1.Timestamp ensureCreated() => $_ensure(4);
 
   @$pb.TagNumber(6)
   $core.String get title => $_getSZ(5);
@@ -206,21 +203,17 @@ class Post extends $pb.GeneratedMessage {
 
 class PostQuery extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'PostQuery', createEmptyInstance: create)
-    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'author')
-    ..aOM<$2.Timestamp>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastUpdated', subBuilder: $2.Timestamp.create)
-    ..aOM<$2.Timestamp>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created', subBuilder: $2.Timestamp.create)
-    ..aOM<Group>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'group', subBuilder: Group.create)
+    ..aOS(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'gid')
     ..hasRequiredFields = false
   ;
 
   PostQuery._() : super();
   factory PostQuery({
-    $core.int? id,
+    $core.String? id,
     $core.String? author,
-    $2.Timestamp? lastUpdated,
-    $2.Timestamp? created,
-    Group? group,
+    $core.String? gid,
   }) {
     final _result = create();
     if (id != null) {
@@ -229,14 +222,8 @@ class PostQuery extends $pb.GeneratedMessage {
     if (author != null) {
       _result.author = author;
     }
-    if (lastUpdated != null) {
-      _result.lastUpdated = lastUpdated;
-    }
-    if (created != null) {
-      _result.created = created;
-    }
-    if (group != null) {
-      _result.group = group;
+    if (gid != null) {
+      _result.gid = gid;
     }
     return _result;
   }
@@ -262,9 +249,9 @@ class PostQuery extends $pb.GeneratedMessage {
   static PostQuery? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get id => $_getIZ(0);
+  $core.String get id => $_getSZ(0);
   @$pb.TagNumber(1)
-  set id($core.int v) { $_setSignedInt32(0, v); }
+  set id($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
@@ -279,51 +266,27 @@ class PostQuery extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearAuthor() => clearField(2);
 
-  @$pb.TagNumber(3)
-  $2.Timestamp get lastUpdated => $_getN(2);
-  @$pb.TagNumber(3)
-  set lastUpdated($2.Timestamp v) { setField(3, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasLastUpdated() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearLastUpdated() => clearField(3);
-  @$pb.TagNumber(3)
-  $2.Timestamp ensureLastUpdated() => $_ensure(2);
-
-  @$pb.TagNumber(4)
-  $2.Timestamp get created => $_getN(3);
-  @$pb.TagNumber(4)
-  set created($2.Timestamp v) { setField(4, v); }
-  @$pb.TagNumber(4)
-  $core.bool hasCreated() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearCreated() => clearField(4);
-  @$pb.TagNumber(4)
-  $2.Timestamp ensureCreated() => $_ensure(3);
-
   @$pb.TagNumber(6)
-  Group get group => $_getN(4);
+  $core.String get gid => $_getSZ(2);
   @$pb.TagNumber(6)
-  set group(Group v) { setField(6, v); }
+  set gid($core.String v) { $_setString(2, v); }
   @$pb.TagNumber(6)
-  $core.bool hasGroup() => $_has(4);
+  $core.bool hasGid() => $_has(2);
   @$pb.TagNumber(6)
-  void clearGroup() => clearField(6);
-  @$pb.TagNumber(6)
-  Group ensureGroup() => $_ensure(4);
+  void clearGid() => clearField(6);
 }
 
 class PostUploadAck extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'PostUploadAck', createEmptyInstance: create)
     ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
-    ..aOM<$2.Timestamp>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'savedTime', subBuilder: $2.Timestamp.create)
+    ..aOM<$1.Timestamp>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'savedTime', subBuilder: $1.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
   PostUploadAck._() : super();
   factory PostUploadAck({
     $core.int? id,
-    $2.Timestamp? savedTime,
+    $1.Timestamp? savedTime,
   }) {
     final _result = create();
     if (id != null) {
@@ -365,15 +328,15 @@ class PostUploadAck extends $pb.GeneratedMessage {
   void clearId() => clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Timestamp get savedTime => $_getN(1);
+  $1.Timestamp get savedTime => $_getN(1);
   @$pb.TagNumber(2)
-  set savedTime($2.Timestamp v) { setField(2, v); }
+  set savedTime($1.Timestamp v) { setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasSavedTime() => $_has(1);
   @$pb.TagNumber(2)
   void clearSavedTime() => clearField(2);
   @$pb.TagNumber(2)
-  $2.Timestamp ensureSavedTime() => $_ensure(1);
+  $1.Timestamp ensureSavedTime() => $_ensure(1);
 }
 
 class User extends $pb.GeneratedMessage {

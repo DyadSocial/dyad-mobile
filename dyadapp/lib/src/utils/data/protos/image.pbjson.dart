@@ -13,6 +13,7 @@ const ImageChunk$json = const {
   '1': 'ImageChunk',
   '2': const [
     const {'1': 'imagedata', '3': 1, '4': 1, '5': 9, '10': 'imagedata'},
+    const {'1': 'imagesize', '3': 3, '4': 1, '5': 5, '10': 'imagesize'},
   ],
   '9': const [
     const {'1': 2, '2': 3},
@@ -20,7 +21,7 @@ const ImageChunk$json = const {
 };
 
 /// Descriptor for `ImageChunk`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List imageChunkDescriptor = $convert.base64Decode('CgpJbWFnZUNodW5rEhwKCWltYWdlZGF0YRgBIAEoCVIJaW1hZ2VkYXRhSgQIAhAD');
+final $typed_data.Uint8List imageChunkDescriptor = $convert.base64Decode('CgpJbWFnZUNodW5rEhwKCWltYWdlZGF0YRgBIAEoCVIJaW1hZ2VkYXRhEhwKCWltYWdlc2l6ZRgDIAEoBVIJaW1hZ2VzaXplSgQIAhAD');
 @$core.Deprecated('Use metadataDescriptor instead')
 const Metadata$json = const {
   '1': 'Metadata',
