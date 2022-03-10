@@ -29,15 +29,24 @@ class grpcClient {
         options: CallOptions(timeout: Duration(seconds: 25)));
   }
 
-  Stream<ImageChunk> _byteChunker(String bytes) async* {
+  Stream<ImageChunk> _byteChunker(
+      String bytes, String username, String id) async* {
     int pos = 0;
     int endOffset = pos + CHUNK_SIZE;
-    print("$bytes");
+    print("Out: $bytes");
     while (pos < bytes.length) {
       if (endOffset < bytes.length) {
-        yield ImageChunk(imagedata: bytes.substring(pos, pos + CHUNK_SIZE));
+        yield ImageChunk(
+            imagedata: bytes.substring(pos, pos + CHUNK_SIZE),
+            id: id,
+            username: username,
+            imagesize: bytes.length);
       } else {
-        yield ImageChunk(imagedata: bytes.substring(pos, bytes.length));
+        yield ImageChunk(
+            imagedata: bytes.substring(pos, bytes.length),
+            id: id,
+            username: username,
+            imagesize: bytes.length);
       }
       pos += CHUNK_SIZE;
       endOffset = pos + CHUNK_SIZE;
@@ -47,15 +56,7 @@ class grpcClient {
   Future<Map<String, dynamic>> runUploadImage(
       Uint8List image, String username, String id) async {
     String imageBytes = base64.encode(image);
-
-    final Ack ack = await imagesStub.uploadImage(
-      _byteChunker(imageBytes),
-      options: CallOptions(metadata: {
-        "size": imageBytes.length.toString(),
-        "username": username,
-        "id": id
-      }),
-    );
+    final Ack ack = await imagesStub.uploadImage(_byteChunker(imageBytes));
     return ack.writeToJsonMap();
   }
 
@@ -107,9 +108,9 @@ Future<void> main(List<String> args) async {
   for (int i = 0; i < size; i++) {
     image = Uint8List.fromList([...image, (i % 10)]);
   }
-  await client.runUploadImage(image, "vncp", "abc123");
+  await client.runUploadImage(image, "infuhnit", "abc123");
 
-  await client.runPullImage("vncp", "abc123");
+  await client.runPullImage("infuhnit", "abc123");
   print("Done");
   exit(0);
 }

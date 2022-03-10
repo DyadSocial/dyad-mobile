@@ -3,16 +3,10 @@ syntax="proto3";
 import "google/protobuf/timestamp.proto";
 
 message ImageChunk{
-  reserved 2;
   string imagedata = 1;
-  int32 imagesize = 3;
-}
-
-message Metadata {
-  int64 size = 1;
-  int32 id = 2;
-  string author = 3;
-  google.protobuf.Timestamp created = 4;
+  optional int32 imagesize = 2;
+  optional string username = 3;
+  optional string id = 4;
 }
 
 message Ack {
