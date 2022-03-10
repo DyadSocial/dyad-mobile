@@ -57,7 +57,7 @@ class Group {
     allUsers.add(user);
   }
 
-  User getUser(String username) {
+  User? getUser(String username) {
     return allUsers.firstWhere((user) {
       return user.username == username;
     });

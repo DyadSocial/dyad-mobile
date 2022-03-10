@@ -8,33 +8,113 @@ import 'package:dyadapp/src/utils/data/test_message.dart';
 import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
 import 'package:dyadapp/src/utils/database_handler.dart';
 import 'package:dyadapp/src/utils/network_handler.dart';
+import 'package:dyadapp/src/utils/data/protos/google/protobuf/timestamp.pb.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:dyadapp/src/utils/user_session.dart';
 
+import '../utils/data/group.dart';
 
 class InboxPage extends StatefulWidget {
- 
-  InboxPage({Key? key}): super(key: key);
+  InboxPage({Key? key}) : super(key: key);
 
   @override
   _InboxPageState createState() => _InboxPageState();
 }
 
-class _InboxPageState extends State<InboxPage> 
+class _InboxPageState extends State<InboxPage>
     with SingleTickerProviderStateMixin {
-  List<Chat> _chats = [];
-  List<Message> _messages =[];
-  List <ImageProvider> profilePictures = [];
+  List<Chat> _chats = [
+    Chat(recipients: [
+      "infuhnit",
+      "vncp",
+      "primchi",
+      "goobygrooves"
+    ], messages: [
+      Message(
+          id: "1",
+          author: "infuhnit",
+          content: "Hey guys I'm streaming tonight",
+          lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 7, 2, 30))),
+      Message(
+          id: "1",
+          author: "vncp",
+          content: "I love coding",
+          lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 7, 2, 30))),
+      Message(
+          id: "1",
+          author: "primchi",
+          content: "I love coding",
+          lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 7, 2, 30))),
+      Message(
+          id: "1",
+          author: "goobygrooves",
+          content: "I like to make music",
+          lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 7, 2, 30))),
+    ]),
+    Chat(recipients: [
+      "vncp",
+      "primchi",
+      "goobygrooves",
+      "infuhnit"
+    ], messages: [
+      Message(
+          id: "1",
+          author: "goobygrooves",
+          content: "I like to make music",
+          lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 7, 2, 30))),
+    ]),
+    Chat(recipients: [
+      "primchi",
+      "goobygrooves",
+      "infuhnit",
+      "vncp"
+    ], messages: [
+      Message(
+          id: "1",
+          author: "primchi",
+          content: "I love coding",
+          lastUpdated:
+              Timestamp.fromDateTime(DateTime.utc(2022, 3, 17, 2, 30))),
+      Message(
+          id: "1",
+          author: "infuhnit",
+          content: "Hey guys I'm streaming tonight",
+          lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 7, 2, 30))),
+    ]),
+    Chat(recipients: [
+      "goobygrooves",
+      "infuhnit",
+      "vncp",
+      "primchi"
+    ], messages: [
+      Message(
+          id: "1",
+          author: "vncp",
+          content: "I love coding",
+          lastUpdated:
+              Timestamp.fromDateTime(DateTime.utc(2022, 3, 5, 15, 21))),
+      Message(
+          id: "1",
+          author: "primchi",
+          content: "I love coding",
+          lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 7, 2, 30))),
+      Message(
+          id: "1",
+          author: "goobygrooves",
+          content: "I like to make music",
+          lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 7, 2, 30))),
+    ])
+  ];
+  List<Message> _messages = [];
+  List<ImageProvider> profilePictures = [];
 
   @override
   void initState() {
     super.initState();
-    for (var chat in _chats)
-    {
+    for (var chat in _chats) {
       if (chat.messages.length > 0) {
         _messages.add(chat.messages[0]);
-      }
-      else {
+      } else {
         _messages.add(Message(id: "", author: "", content: ""));
       }
     }
@@ -48,14 +128,14 @@ class _InboxPageState extends State<InboxPage>
   }
 
   //TO DO: Helper function for profile picture
-    //Image provider = (Image.memory(await runPullProfileImage(message[index].author))).image;
+  //Image provider = (Image.memory(await runPullProfileImage(message[index].author))).image;
   Future<ImageProvider<Object>?> getProfilePicture(Chat chat) async {
     String current_user = await UserSession().get("username");
-    for (var recipient in chat.recipients)
-    {
-      if (recipient != current_user)
-      {
-        return ((Image.memory(await grpcClient().runPullImage(recipient, "profile_picture"))).image);
+    for (var recipient in chat.recipients) {
+      if (recipient != current_user) {
+        return Image.network(
+                "https://th.bing.com/th/id/OIP.Nen6j3vBZdl8g8kzNfoEHQAAAA?pid=ImgDet&rs=1")
+            .image;
       }
     }
     return null;
@@ -63,14 +143,10 @@ class _InboxPageState extends State<InboxPage>
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBar(
         title: Center(child: const Text('Dyad')),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: () {},
-        ),
+        leading: Text(" "),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -158,9 +234,16 @@ class _InboxPageState extends State<InboxPage>
                     return MessageList(
                       name: _messages[index].author,
                       text: _messages[index].content,
-                      //TO DO: 
-                      profilePicture: getProfilePicture(_chats[index]),
-                      time: timeago.format(DateTime.fromMillisecondsSinceEpoch((_messages[index].created.seconds * 1000).toInt()), locale: 'en_short'),
+                      //TO DO:
+                      profilePicture: groupInstance
+                              .getUser(_messages[index].author)
+                              ?.profilePicture ??
+                          null,
+                      time: timeago.format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              (_messages[index].lastUpdated.seconds * 1000)
+                                  .toInt()),
+                          locale: 'en_short'),
                       isMessageRead: (index == 0 || index == 3) ? true : false,
                     );
                   },

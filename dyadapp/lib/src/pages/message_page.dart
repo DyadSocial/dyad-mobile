@@ -5,7 +5,7 @@ import 'package:dyadapp/src/utils/data/test_message.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class MessagePage extends StatefulWidget {
-  Future<ImageProvider<Object>?> profilePicture;
+  ImageProvider<Object>? profilePicture;
   String nickname;
 
   MessagePage({Key? key, required this.profilePicture, required this.nickname})
@@ -42,18 +42,20 @@ class _MessagePageState extends State<MessagePage> {
                 SizedBox(
                   width: 2,
                 ),
-                FutureBuilder <ImageProvider?>(
+                /*
+                FutureBuilder<ImageProvider?>(
                     future: widget.profilePicture,
-                    builder: (BuildContext context, AsyncSnapshot<ImageProvider?> image) {
-                        return CircleAvatar(
-                            backgroundImage: image.data,
-                            foregroundColor: Colors.black12,
-                            backgroundColor: Colors.white70,
-                            maxRadius: 30,
-                            child: Text(widget.nickname.substring(0, min(4, widget.nickname.length)))
-                          );
-                      }
-                    ),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<ImageProvider?> image) {
+                      return CircleAvatar(
+                          backgroundImage: image.data,
+                          foregroundColor: Colors.black12,
+                          backgroundColor: Colors.white70,
+                          maxRadius: 30,
+                          child: Text(widget.nickname
+                              .substring(0, min(4, widget.nickname.length))));
+                    }),
+                 */
                 SizedBox(
                   width: 12,
                 ),

@@ -51,15 +51,12 @@ class _SignupScreenState extends State<SignupScreen> {
         MaterialPageRoute<void>(builder: (context) => const AboutScreen()));
   }
 
- void displayDialog(BuildContext context, String title, String text) => 
-	showDialog(
-	  context: context,
-	  builder: (context) =>
-	    AlertDialog(
-	      title: Text(title),
-	      content: Text(text)
-	    ),
-	); 
+  void displayDialog(BuildContext context, String title, String text) =>
+      showDialog(
+        context: context,
+        builder: (context) =>
+            AlertDialog(title: Text(title), content: Text(text)),
+      );
 
   Widget _buildSignup() {
     return Center(
@@ -146,24 +143,23 @@ class _SignupScreenState extends State<SignupScreen> {
                     details['username'] = _userNameController.text;
                     details['password'] = _passwordController.text;
 
-                    if (_userNameController.text.length < 3 || _userNameController.text.length > 20)
-                    {
-                      displayDialog(context,"Invalid Username", "The username should be 3-20 characters");
-                    }
-                    else if (_passwordController.text.length < 6 || _passwordController.text.length > 20)
-                    {
-                      displayDialog(context,"Invalid Password", "The password should be 6-20 characters");
-                    }
-                    else
-                    {
+                    if (_userNameController.text.length < 3 ||
+                        _userNameController.text.length > 20) {
+                      displayDialog(context, "Invalid Username",
+                          "The username should be 3-20 characters");
+                    } else if (_passwordController.text.length < 6 ||
+                        _passwordController.text.length > 20) {
+                      displayDialog(context, "Invalid Password",
+                          "The password should be 6-20 characters");
+                    } else {
                       var response = await APIProvider.postUserSignup(details);
-                      if (response != '')
-                      {
-                       displayDialog(context,"Success", "Your account has been successfully created");
-                      }
-                      else
-                      {
-                        displayDialog(context,"Error", "Username is already taken");
+                      if (response != '') {
+                        Navigator.of(context).pop();
+                        displayDialog(context, "Success",
+                            "Your account has been successfully created");
+                      } else {
+                        displayDialog(
+                            context, "Error", "Username is already taken");
                       }
                     }
                   },

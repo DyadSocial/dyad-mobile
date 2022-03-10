@@ -62,6 +62,20 @@ class _FeedScreenState extends State<FeedScreen>
     print("Refreshing Feed..");
   }
 
+  onDeletePostCallback(int id, String author) async {
+    if (author == await UserSession().get("username")) {
+      await DatabaseHandler().deletePost(id);
+      setState(() {
+        _posts.removeWhere((post) => post.id == id);
+      });
+    }
+  }
+
+  onEditPostCallback(int id, String author, String revision) {
+    print("Editing post[$id] from $author to $revision");
+    _getPostData();
+  }
+
   onWritePostCallback(postForm) async {
     var currentTime = DateTime.now();
     var postToAdd = Post(
@@ -86,6 +100,10 @@ class _FeedScreenState extends State<FeedScreen>
       // Update Post entry with file path
       postToAdd.content.image = imageFilePath;
       await DatabaseHandler().updatePost(newPostID, postToAdd);
+      var newPostList = await _getPostData();
+      setState(() {
+        _posts = newPostList;
+      });
     }
   }
 
@@ -101,9 +119,10 @@ class _FeedScreenState extends State<FeedScreen>
   }
 
   Future<List<Post>> _getSelfPostData() async {
-    _getPostData();
     final currentUser = await UserSession().get("username");
-    print(currentUser);
+    await DatabaseHandler().posts().then((newPosts) {
+      _posts = newPosts;
+    });
     return _posts.where((post) => post.author == currentUser).toList();
   }
 
@@ -172,6 +191,8 @@ class _FeedScreenState extends State<FeedScreen>
                                       _onFeedRefreshCallback,
                                       _onPostNavigatorCallback,
                                       snapshot.data!,
+                                      onDeletePostCallback,
+                                      onEditPostCallback,
                                       onTap: _handlePostTapped,
                                     )
                                   : Center(
@@ -186,6 +207,8 @@ class _FeedScreenState extends State<FeedScreen>
                                       _onFeedRefreshCallback,
                                       _onPostNavigatorCallback,
                                       snapshot.data!,
+                                      onDeletePostCallback,
+                                      onEditPostCallback,
                                       onTap: _handlePostTapped,
                                     )
                                   : Center(

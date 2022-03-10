@@ -121,12 +121,12 @@ class DatabaseHandler {
     );
   }
 
-  Future<void> deletePost(Post post) async {
+  Future<void> deletePost(int id) async {
     final db = await _helperInstance.database;
     await db.delete(
       'posts',
       where: 'id = ?',
-      whereArgs: [post.id],
+      whereArgs: [id],
     );
   }
 
@@ -172,7 +172,7 @@ class DatabaseHandler {
     );
   }
 
-Future<List<Chat>> chats() async {
+  Future<List<Chat>> chats() async {
     final db = await _helperInstance.database;
     final List<Map<String, dynamic>> maps = await db.query('chats');
     return List.generate(maps.length, (idx) {
@@ -200,7 +200,7 @@ Future<List<Chat>> chats() async {
     );
   }
 
-Future<void> updateChat(Chat chat) async {
+  Future<void> updateChat(Chat chat) async {
     final db = await _helperInstance.database;
     await db.update(
       'chats',
@@ -209,18 +209,18 @@ Future<void> updateChat(Chat chat) async {
         'author': chat.recipients,
         'data': chat.writeToBuffer(),
         'lastUpdated': chat.lastUpdated
-      },      where: 'id = ?',
+      },
+      where: 'id = ?',
       whereArgs: [chat.id],
     );
   }
 
-Future<Chat?> getChat(String? queryId) async {
-  if (queryId == null) return null;
-  final db = await _helperInstance.database;
-  final List<Map<String, dynamic>> maps =
+  Future<Chat?> getChat(String? queryId) async {
+    if (queryId == null) return null;
+    final db = await _helperInstance.database;
+    final List<Map<String, dynamic>> maps =
         await db.query('chats', where: 'id = ?', whereArgs: [queryId]);
-  
+
     return maps.isNotEmpty ? Chat.fromBuffer(maps[0]['data']) : null;
- }
- 
+  }
 }

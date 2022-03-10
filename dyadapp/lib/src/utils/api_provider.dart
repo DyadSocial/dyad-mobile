@@ -33,10 +33,17 @@ class APIProvider {
 
   static Future<Map<String, dynamic>> logIn(
       Map<String, String> formData) async {
-    final response = await http.post(Uri.parse('$_baseURL/core/login/'), body: {
-      "username": formData['username'],
-      "password": formData['password'],
-    });
-    return {"status": response.statusCode, "body": response.body};
+    try {
+      final response =
+          await http.post(Uri.parse('$_baseURL/core/login'), body: {
+        "username": formData['username'],
+        "password": formData['password'],
+      }).timeout(Duration(seconds: 4));
+      return {"status": response.statusCode, "body": response.body};
+    } catch (e) {
+      var obj = {"status": 420, "body": "Timeout Exception"};
+      var json = jsonEncode(obj);
+      return jsonDecode(json);
+    }
   }
 }
