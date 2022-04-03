@@ -25,10 +25,11 @@ class DyadAuth extends ChangeNotifier {
   Future<bool> signIn(String username, String password) async {
     var resp =
         await APIProvider.logIn({'username': username, 'password': password});
+    print("${resp['status']}");
     if (resp['status'] == 200) {
       _isSignedIn = true;
       await UserSession().set("username", username);
-      AuthToken.storeToken(jsonDecode(resp['body'])['jwt']);
+      //AuthToken.storeToken(jsonDecode(resp['body'])['jwt']);
     }
     notifyListeners();
     return _isSignedIn;

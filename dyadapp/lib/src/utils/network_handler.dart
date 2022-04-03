@@ -1,18 +1,82 @@
-/*
 import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:grpc/grpc.dart';
-import 'package:dyadapp/src/utils/data/protos/image.pbgrpc.dart';
+import 'package:dyadapp/src/utils/data/protos/content.pb.dart';
+import 'package:dyadapp/src/utils/data/protos/posts.pb.dart';
 import 'package:dyadapp/src/utils/data/protos/posts.pbgrpc.dart';
+import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
 import 'package:dyadapp/src/utils/data/protos/google/protobuf/timestamp.pb.dart';
 
-const CHUNK_SIZE = 32 * 1024; //(32Kb)
-
 class grpcClient {
-  late ImagesClient imagesStub;
-  late GroupSyncClient groupStub;
+  late PostsSyncClient postStub;
+  late ClientChannel channel;
+
+  grpcClient() {
+    final channelCredentials = new ChannelCredentials.insecure();
+    final channelOptions = new ChannelOptions(credentials: channelCredentials);
+    channel = ClientChannel('localhost', port: 80, options: channelOptions);
+    postStub = PostsSyncClient(channel,
+        options: CallOptions(timeout: Duration(seconds: 20)));
+  }
+
+  Future<List<Post>> runRefreshPosts(
+      String id, String currentUser, String city) async {
+    PostQuery query = PostQuery(id: id, author: currentUser, gid: city);
+    List<Post> posts = [];
+    await for (Post post in postStub.refreshPosts(query)) {
+      posts.add(post);
+    }
+    return posts;
+  }
+
+  Future<List<Post>> runQueryPosts(
+      String id, String currentUser, String city) async {
+    PostQuery query = PostQuery(id: id, author: currentUser, gid: city);
+    List<Post> posts = [];
+    await for (Post post in postStub.refreshPosts(query)) {
+      posts.add(post);
+    }
+    return posts;
+  }
+
+  Future<Map<String, dynamic>> runUploadPosts(List<Post> posts) async {
+    Stream yieldList<T>(List<T> items) async* {
+      for (var item in items) {
+        yield item;
+      }
+    }
+
+    final PostUploadAck ack =
+        await postStub.uploadPosts(yieldList(posts) as Stream<Post>);
+    return ack.writeToJsonMap();
+  }
+}
+
+Future<void> main(List<String> args) async {
+  final client = grpcClient();
+  List<Post> posts = [];
+  for (int i = 0; i < 5; i++) {
+    posts.add(Post(
+      id: "id$i",
+      author: "author$i",
+      content: Content(text: "text$i"),
+      lastUpdated: Timestamp.getDefault(),
+      created: Timestamp.getDefault(),
+      title: "title$i",
+      group: "reno",
+    ));
+  }
+  print("Uploading posts");
+  client.runUploadPosts(posts);
+  print("Pulling posts");
+  client.runRefreshPosts("idk", "vncp", "reno");
+}
+
+
+/* Old Code for Images for reference
+class grpcClient {
   late PostsSyncClient postStub;
   late ClientChannel channel;
 
@@ -22,10 +86,6 @@ class grpcClient {
     channel =
         ClientChannel('data.dyadsocial.com', port: 80, options: channelOptions);
 
-    imagesStub = ImagesClient(channel,
-        options: CallOptions(timeout: Duration(seconds: 120)));
-    groupStub = GroupSyncClient(channel,
-        options: CallOptions(timeout: Duration(seconds: 25)));
     postStub = PostsSyncClient(channel,
         options: CallOptions(timeout: Duration(seconds: 25)));
   }

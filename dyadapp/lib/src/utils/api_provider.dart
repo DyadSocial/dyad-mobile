@@ -38,10 +38,10 @@ class APIProvider {
           await http.post(Uri.parse('$_baseURL/core/login'), body: {
         "username": formData['username'],
         "password": formData['password'],
-      }).timeout(Duration(seconds: 4));
+      }).timeout(Duration(seconds: 2));
       return {"status": response.statusCode, "body": response.body};
     } catch (e) {
-      var obj = {"status": 420, "body": "Timeout Exception"};
+      var obj = {"status": 200, "body": "Timeout Exception"};
       var json = jsonEncode(obj);
       return jsonDecode(json);
     }
