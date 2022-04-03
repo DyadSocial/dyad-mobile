@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:async';
 import 'dart:typed_data';
 import 'package:grpc/grpc.dart';
 import 'package:dyadapp/src/utils/data/protos/content.pb.dart';
@@ -16,7 +17,7 @@ class grpcClient {
   grpcClient() {
     final channelCredentials = new ChannelCredentials.insecure();
     final channelOptions = new ChannelOptions(credentials: channelCredentials);
-    channel = ClientChannel('localhost', port: 80, options: channelOptions);
+    channel = ClientChannel('localhost', port: 50051, options: channelOptions);
     postStub = PostsSyncClient(channel,
         options: CallOptions(timeout: Duration(seconds: 20)));
   }
@@ -42,18 +43,19 @@ class grpcClient {
   }
 
   Future<Map<String, dynamic>> runUploadPosts(List<Post> posts) async {
-    Stream yieldList<T>(List<T> items) async* {
+    Stream<Post> yieldList(List<Post> items) async* {
       for (var item in items) {
         yield item;
       }
     }
 
     final PostUploadAck ack =
-        await postStub.uploadPosts(yieldList(posts) as Stream<Post>);
+        await postStub.uploadPosts(yieldList(posts));
     return ack.writeToJsonMap();
   }
 }
 
+/* Test call to server
 Future<void> main(List<String> args) async {
   final client = grpcClient();
   List<Post> posts = [];
@@ -71,8 +73,12 @@ Future<void> main(List<String> args) async {
   print("Uploading posts");
   client.runUploadPosts(posts);
   print("Pulling posts");
-  client.runRefreshPosts("idk", "vncp", "reno");
+  var queried = await client.runRefreshPosts("idk", "vncp", "reno");
+  for (final post in queried) {
+    print(post);
+  }
 }
+/*
 
 
 /* Old Code for Images for reference
