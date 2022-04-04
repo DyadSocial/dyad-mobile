@@ -28,4 +28,5 @@ service PostsSync {
     rpc refreshPosts(PostQuery) returns (stream Post);
     rpc queryPosts(PostQuery) returns (stream Post);
     rpc uploadPosts(stream Post) returns (PostUploadAck);
+    rpc deletePost(PostQuery) returns (PostUploadAck);
 }

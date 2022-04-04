@@ -66,6 +66,7 @@ class _DyadState extends State<Dyad> {
                 return DyadAuthScope(
                   notifier: _auth,
                   child: MaterialApp.router(
+                      debugShowCheckedModeBanner: false,
                       routerDelegate: _routerDelegate,
                       routeInformationParser: _routeParser,
                       theme: themeNotifier.isDark

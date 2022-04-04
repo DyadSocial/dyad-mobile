@@ -57,6 +57,11 @@ class grpcClient {
         await postStub.uploadPosts(yieldList(posts));
     return ack.writeToJsonMap();
   }
+
+  Future<Map<String, dynamic>> runDeletePost(int id, String currentUser, String city) async {
+    PostQuery query = PostQuery(id: id.toString(), author: currentUser, gid: city);
+    return (await postStub.deletePost(query)).writeToJsonMap();
+  }
 }
 
 /* Test call to server

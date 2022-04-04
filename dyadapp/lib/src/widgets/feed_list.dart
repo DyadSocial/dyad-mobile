@@ -7,7 +7,8 @@ import 'package:dyadapp/src/data.dart';
 
 import '../utils/data/group.dart';
 
-class FeedList extends StatelessWidget {
+class FeedList extends StatefulWidget {
+  final Future<Post?> Function(Post) onUpdateCallback;
   final Future<void> Function() refreshCallback;
   final Function(int) postNavigatorCallback;
   final List<Post> posts;
@@ -16,19 +17,32 @@ class FeedList extends StatelessWidget {
   final Function(int, String, String) onEditCallback;
 
   const FeedList(
-    this.refreshCallback,
-    this.postNavigatorCallback,
-    this.posts,
-    this.onDeleteCallback,
-    this.onEditCallback, {
-    this.onTap,
-    Key? key,
-  }) : super(key: key);
+      this.onUpdateCallback,
+      this.refreshCallback,
+      this.postNavigatorCallback,
+      this.posts,
+      this.onDeleteCallback,
+      this.onEditCallback, {
+        this.onTap,
+        Key? key,
+      }) : super(key: key);
+
+  @override
+  _FeedListState createState() => _FeedListState();
+}
+
+class _FeedListState extends State<FeedList> {
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
     // Sort chronologically
-    posts.sort((a, b) {
+    widget.posts.sort((a, b) {
       if (a.lastUpdated.seconds < b.lastUpdated.seconds) {
         return 1;
       } else if (a.lastUpdated.seconds == b.lastUpdated.seconds) {
@@ -39,32 +53,32 @@ class FeedList extends StatelessWidget {
     });
     return RefreshIndicator(
       strokeWidth: 1,
-      onRefresh: refreshCallback,
+      onRefresh: widget.refreshCallback,
       child: ListView.separated(
         separatorBuilder: (context, index) => SizedBox(height: 11),
-        itemCount: posts.length + 2,
+        itemCount: widget.posts.length + 2,
         itemBuilder: (context, index) {
           if (index == 0) return SizedBox(height: 15);
-          if (index == posts.length + 1) return SizedBox(height: 300);
+          if (index == widget.posts.length + 1) return SizedBox(height: 300);
           index = index - 1;
           return PostTile(
-            postNavigatorCallback: postNavigatorCallback,
-            onDeleteCallback: onDeleteCallback,
-            onEditCallback: onEditCallback,
-            postId: posts[index].id,
+            postNavigatorCallback: widget.postNavigatorCallback,
+            onDeleteCallback: widget.onDeleteCallback,
+            onUpdateCallback: widget.onUpdateCallback,
+            postId: widget.posts[index].id,
             profilePicture: groupInstance.allUsers
                     .firstWhereOrNull(
-                        (user) => user.username == posts[index].author)
+                        (user) => user.username == widget.posts[index].author)
                     ?.profilePicture ??
                 null,
-            image: posts[index].content.hasImage()
-                ? Image.file(File(posts[index].content.image))
+            image: widget.posts[index].content.hasImage()
+                ? Image.file(File(widget.posts[index].content.image))
                 : null,
-            title: posts[index].title,
-            author: posts[index].author,
-            content: posts[index].content.text,
+            title: widget.posts[index].title,
+            author: widget.posts[index].author,
+            content: widget.posts[index].content.text,
             datetime: DateTime.fromMillisecondsSinceEpoch(
-                (posts[index].created.seconds * 1000).toInt()),
+                (widget.posts[index].created.seconds * 1000).toInt()),
           );
         },
       ),

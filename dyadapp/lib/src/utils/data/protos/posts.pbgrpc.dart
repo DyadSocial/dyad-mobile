@@ -26,6 +26,11 @@ class PostsSyncClient extends $grpc.Client {
       '/PostsSync/uploadPosts',
       ($0.Post value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.PostUploadAck.fromBuffer(value));
+  static final _$deletePost =
+      $grpc.ClientMethod<$0.PostQuery, $0.PostUploadAck>(
+          '/PostsSync/deletePost',
+          ($0.PostQuery value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) => $0.PostUploadAck.fromBuffer(value));
 
   PostsSyncClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -51,6 +56,11 @@ class PostsSyncClient extends $grpc.Client {
       {$grpc.CallOptions? options}) {
     return $createStreamingCall(_$uploadPosts, request, options: options)
         .single;
+  }
+
+  $grpc.ResponseFuture<$0.PostUploadAck> deletePost($0.PostQuery request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$deletePost, request, options: options);
   }
 }
 
@@ -79,6 +89,13 @@ abstract class PostsSyncServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.Post.fromBuffer(value),
         ($0.PostUploadAck value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.PostQuery, $0.PostUploadAck>(
+        'deletePost',
+        deletePost_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.PostQuery.fromBuffer(value),
+        ($0.PostUploadAck value) => value.writeToBuffer()));
   }
 
   $async.Stream<$0.Post> refreshPosts_Pre(
@@ -91,10 +108,17 @@ abstract class PostsSyncServiceBase extends $grpc.Service {
     yield* queryPosts(call, await request);
   }
 
+  $async.Future<$0.PostUploadAck> deletePost_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.PostQuery> request) async {
+    return deletePost(call, await request);
+  }
+
   $async.Stream<$0.Post> refreshPosts(
       $grpc.ServiceCall call, $0.PostQuery request);
   $async.Stream<$0.Post> queryPosts(
       $grpc.ServiceCall call, $0.PostQuery request);
   $async.Future<$0.PostUploadAck> uploadPosts(
       $grpc.ServiceCall call, $async.Stream<$0.Post> request);
+  $async.Future<$0.PostUploadAck> deletePost(
+      $grpc.ServiceCall call, $0.PostQuery request);
 }

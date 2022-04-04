@@ -13,9 +13,9 @@ import '../utils/theme_preferences.dart';
 
 class PostTile extends StatelessWidget {
   const PostTile({
+    required this.onUpdateCallback,
     required this.postNavigatorCallback,
     required this.onDeleteCallback,
-    required this.onEditCallback,
     required this.postId,
     required this.profilePicture,
     required this.title,
@@ -28,7 +28,7 @@ class PostTile extends StatelessWidget {
 
   final Function(int) postNavigatorCallback;
   final Function(int, String) onDeleteCallback;
-  final Function(int, String, String) onEditCallback;
+  final Future<Post?> Function(Post) onUpdateCallback;
   final int postId;
   final ImageProvider<Object>? profilePicture;
   final String title;
@@ -54,7 +54,20 @@ class PostTile extends StatelessWidget {
                           EdgeInsets.only(left: 20, right: 20, bottom: 10),
                       children: [
                         ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              Post? post = await DatabaseHandler().getPost(postId.toString());
+                              var username = await UserSession().get("username");
+                              if (post != null) {
+                                Navigator.of(context).push(MaterialPageRoute<void>(
+                                  builder: (context) => PostScreen(
+                                      onUpdateCallback,
+                                      groupInstance.allUsers
+                                          .firstWhere((user) => user.username == author),
+                                      post,
+                                      username == author),
+                                ));
+                              }
+                            },
                             child: const Text('Edit',
                                 style: TextStyle(fontSize: 14))),
                         ElevatedButton(
@@ -70,13 +83,16 @@ class PostTile extends StatelessWidget {
           },
           onPressed: () async {
             Post? post = await DatabaseHandler().getPost(postId.toString());
-            print(post);
+            var username = await UserSession().get("username");
             if (post != null)
               Navigator.of(context).push(MaterialPageRoute<void>(
-                  builder: (context) => PostScreen(
-                      groupInstance.allUsers
-                          .firstWhere((user) => user.username == author),
-                      post)));
+                builder: (context) => PostScreen(
+                    onUpdateCallback,
+                    groupInstance.allUsers
+                        .firstWhere((user) => user.username == author),
+                    post,
+                    username == author),
+              ));
           },
           child: Container(
             decoration: BoxDecoration(

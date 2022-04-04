@@ -28,7 +28,7 @@ class UserSession {
   }
 
   Future clear() async {
-    this._sharedPrefs.clear();
+    await this._sharedPrefs.clear();
   }
 
   Future set(key, value) async {

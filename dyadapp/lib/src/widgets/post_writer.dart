@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 // Image Packages
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -61,9 +62,11 @@ class _PostWriterState extends State<PostWriter> {
       aspectRatioPresets: [
         CropAspectRatioPreset.original,
         CropAspectRatioPreset.square,
-        CropAspectRatioPreset.ratio5x4,
-        CropAspectRatioPreset.ratio4x3
       ],
+      androidUiSettings: AndroidUiSettings(
+          toolbarTitle: 'Image Cropper',
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false),
     );
     setState(() {
       _imageFile = cropped ?? _imageFile;

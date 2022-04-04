@@ -68,19 +68,61 @@ class _FeedScreenState extends State<FeedScreen>
     print("Refreshing Feed..");
     String currentUser = await UserSession().get("username");
     //String currentCity = await UserSession().get("city");
-    String currentCity = "reno";
-    List<Post> updatedPosts = await _grpcClient.runRefreshPosts(
-        _posts.isEmpty ? 0 : _posts[0].id, currentUser, currentCity);
-    Map<String, Post> oldPosts = Map.fromIterable(await _getPostData(),
-        key: (post) => "${post.author}:${post.id}", value: (post) => (post));
-    for (var post in updatedPosts) {
-      if (oldPosts["${post.author}:${post.id}"] != null) {
-        await DatabaseHandler().updatePost(post.id, post);
-      } else {
-        await DatabaseHandler().insertPost(post);
+    String? currentCity = await UserSession().get("city");
+    if (currentCity != null) {
+      DatabaseHandler().clearData();
+      for (var post
+          in await _grpcClient.runRefreshPosts(0, currentUser, currentCity)) {
+        setState(() {
+          print("New Post ${post.id}");
+          DatabaseHandler().insertPost(post);
+        });
       }
     }
-    setState(() {});
+  }
+
+  Future<Post?> _onUpdatePostCallback(Post post) async {
+    print("********UPDATE CALLBACK****");
+    post.lastUpdated = Timestamp.fromDateTime(DateTime.now());
+    await DatabaseHandler().updatePost(post.id, post);
+    _grpcClient.runUploadPosts([post]);
+    List<Post> updatedPosts = await _getPostData();
+    setState(() {
+      _posts = updatedPosts;
+    });
+    for (int i = 0; i < _posts.length; i++) {
+      if (_posts[i] == post.author && _posts[i] == post.id) {
+        return _posts[i];
+      }
+    }
+  }
+
+  Future<void> _onFeedQueryCallback() async {
+    // Edge case
+    if (_posts.isEmpty) {
+      return _onFeedRefreshCallback();
+    }
+    // Sort chronologically
+    _posts.sort((a, b) {
+      if (a.lastUpdated.seconds < b.lastUpdated.seconds) {
+        return 1;
+      } else if (a.lastUpdated.seconds == b.lastUpdated.seconds) {
+        return 0;
+      } else {
+        return -1;
+      }
+    });
+    Post lastPost = _posts[_posts.length];
+    String? currentCity = await UserSession().get("city");
+    if (currentCity == null) {
+      return;
+    }
+    for (var post in await _grpcClient.runQueryPosts(
+        lastPost.id, lastPost.author, currentCity)) {
+      setState(() {
+        DatabaseHandler().insertPost(post);
+      });
+    }
   }
 
   onDeletePostCallback(int id, String author) async {
@@ -89,6 +131,11 @@ class _FeedScreenState extends State<FeedScreen>
       setState(() {
         _posts.removeWhere((post) => post.id == id);
       });
+      String? currentCity = await UserSession().get("city");
+      if (currentCity == null) {
+        return;
+      }
+      print(await _grpcClient.runDeletePost(id, author, currentCity));
     }
   }
 
@@ -98,8 +145,7 @@ class _FeedScreenState extends State<FeedScreen>
 
   onWritePostCallback(postForm) async {
     var currentTime = DateTime.now();
-    String currentCity = "reno";
-    //String currentCity = await UserSession().get("city");
+    String currentCity = await UserSession().get("city");
     var postToAdd = Post(
         title: postForm.title,
         content: Content(
@@ -129,6 +175,7 @@ class _FeedScreenState extends State<FeedScreen>
     setState(() {
       _posts = newPostList;
     });
+    print(newPostList.length);
     var ack = await _grpcClient.runUploadPosts([postToAdd]);
     print(ack);
   }
@@ -238,6 +285,7 @@ class _FeedScreenState extends State<FeedScreen>
                             builder: (context, snapshot) {
                               return snapshot.hasData
                                   ? FeedList(
+                                      _onUpdatePostCallback,
                                       _onFeedRefreshCallback,
                                       _onPostNavigatorCallback,
                                       snapshot.data!,
@@ -254,6 +302,7 @@ class _FeedScreenState extends State<FeedScreen>
                             builder: (context, snapshot) {
                               return snapshot.hasData
                                   ? FeedList(
+                                      _onUpdatePostCallback,
                                       _onFeedRefreshCallback,
                                       _onPostNavigatorCallback,
                                       snapshot.data!,

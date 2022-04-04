@@ -9,7 +9,9 @@ import 'package:dyadapp/src/utils/data/protos/posts.pb.dart';
 class DatabaseHandler {
   // Single private constructor
   DatabaseHandler._constructor();
+
   static final DatabaseHandler _helperInstance = DatabaseHandler._constructor();
+
   // Return the same instance whenever called
   factory DatabaseHandler() => _helperInstance;
 
@@ -68,7 +70,7 @@ class DatabaseHandler {
     _database = await _initDatabase();
     return _database!;
   }
-  
+
   Future<void> clearData() async {
     final db = await _helperInstance.database;
     db.rawDelete('DELETE FROM posts');
