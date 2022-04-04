@@ -45,6 +45,9 @@ dependencies:
   protobuf: ^2.0.1
   flutter_nearby_connections: ^1.1.1
   device_info_plus: ^3.2.2
+  google_maps_flutter: ^2.0.1
+  geolocator: ^8.0.5
+  geocoding: ^2.0.4
 
 dev_dependencies:
   test:

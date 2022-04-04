@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:dyadapp/src/pages/about.dart';
 import 'package:dyadapp/src/pages/signup.dart';
 import 'package:dyadapp/src/pages/help.dart';
+import 'package:dyadapp/src/pages/map.dart';
 
 import '../routing.dart';
 import '../utils/auth_token.dart';
@@ -75,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _handleAboutTapped() {
     Navigator.of(context).push<void>(
-        MaterialPageRoute<void>(builder: (context) => const AboutScreen()));
+        MaterialPageRoute<void>(builder: (context) => AboutScreen()));
   }
 
   void displayDialog(BuildContext context, String title, String text) =>

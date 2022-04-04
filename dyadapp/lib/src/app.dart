@@ -75,10 +75,12 @@ class _DyadState extends State<Dyad> {
                                   background: Color(0xFF3B4252),
                                   onBackground: Color(0xFFE5E9F0),
                                   primary: Color(0xFF88C0D0),
+                                  primaryVariant: Color(0xFF88C0D0),
                                   onPrimary: Color(0xFF2E3440),
                                   error: Color(0xFFBF616A),
                                   onError: Color(0xFFECEFF4),
                                   secondary: Color(0xFF81A1C1),
+                                  secondaryVariant: Color(0xFF81A1C1),
                                   onSecondary: Color(0xFF2E3440),
                                   surface: Color(0xFF5E81AC),
                                   onSurface: Color(0xFFECEFF4)))
@@ -88,10 +90,12 @@ class _DyadState extends State<Dyad> {
                                   background: Color(0xFFE3F2FC),
                                   onBackground: Color(0xFF5C566A),
                                   primary: Color(0xFF88C0D0),
+                                  primaryVariant: Color(0xFF88C0D0),
                                   onPrimary: Color(0xFF2E3440),
                                   error: Color(0xFFBF616A),
                                   onError: Color(0xFFECEFF4),
                                   secondary: Color(0xFF8FBCBB),
+                                  secondaryVariant: Color(0xFF8FBCBB),
                                   onSecondary: Color(0xFF3440),
                                   surface: Color(0xFF81A1C1),
                                   onSurface: Color(0xFFECEFF4)))),
@@ -103,7 +107,7 @@ class _DyadState extends State<Dyad> {
       );
 
   Future<ParsedRoute> _guard(ParsedRoute from) async {
-    final signedIn = _auth.isSignedIn;
+    final signedIn = _auth.isSignedIn; //for testing while db is down
     final signInRoute = ParsedRoute('/login', '/login', {}, {});
     // from sign in page
     if (!signedIn && from.pathTemplate == '/about') {
