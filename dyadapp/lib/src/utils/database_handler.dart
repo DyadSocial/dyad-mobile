@@ -68,6 +68,11 @@ class DatabaseHandler {
     _database = await _initDatabase();
     return _database!;
   }
+  
+  Future<void> clearData() async {
+    final db = await _helperInstance.database;
+    db.rawDelete('DELETE FROM posts');
+  }
 
   Future<int> insertPost(Post post) async {
     final db = await _helperInstance.database;

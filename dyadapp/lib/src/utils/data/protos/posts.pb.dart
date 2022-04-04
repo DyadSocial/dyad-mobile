@@ -14,7 +14,7 @@ import 'google/protobuf/timestamp.pb.dart' as $2;
 
 class Post extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Post', createEmptyInstance: create)
-    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
+    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'author')
     ..aOM<$1.Content>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'content', subBuilder: $1.Content.create)
     ..aOM<$2.Timestamp>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastUpdated', subBuilder: $2.Timestamp.create)
@@ -26,7 +26,7 @@ class Post extends $pb.GeneratedMessage {
 
   Post._() : super();
   factory Post({
-    $core.String? id,
+    $core.int? id,
     $core.String? author,
     $1.Content? content,
     $2.Timestamp? lastUpdated,
@@ -80,9 +80,9 @@ class Post extends $pb.GeneratedMessage {
   static Post? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get id => $_getSZ(0);
+  $core.int get id => $_getIZ(0);
   @$pb.TagNumber(1)
-  set id($core.String v) { $_setString(0, v); }
+  set id($core.int v) { $_setSignedInt32(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
@@ -285,66 +285,5 @@ class PostUploadAck extends $pb.GeneratedMessage {
   void clearSavedTime() => clearField(2);
   @$pb.TagNumber(2)
   $2.Timestamp ensureSavedTime() => $_ensure(1);
-}
-
-class User extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'User', createEmptyInstance: create)
-    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'username')
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'hwid')
-    ..hasRequiredFields = false
-  ;
-
-  User._() : super();
-  factory User({
-    $core.String? username,
-    $core.String? hwid,
-  }) {
-    final _result = create();
-    if (username != null) {
-      _result.username = username;
-    }
-    if (hwid != null) {
-      _result.hwid = hwid;
-    }
-    return _result;
-  }
-  factory User.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory User.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  User clone() => User()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  User copyWith(void Function(User) updates) => super.copyWith((message) => updates(message as User)) as User; // ignore: deprecated_member_use
-  $pb.BuilderInfo get info_ => _i;
-  @$core.pragma('dart2js:noInline')
-  static User create() => User._();
-  User createEmptyInstance() => create();
-  static $pb.PbList<User> createRepeated() => $pb.PbList<User>();
-  @$core.pragma('dart2js:noInline')
-  static User getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<User>(create);
-  static User? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get username => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set username($core.String v) { $_setString(0, v); }
-  @$pb.TagNumber(1)
-  $core.bool hasUsername() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearUsername() => clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get hwid => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set hwid($core.String v) { $_setString(1, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasHwid() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearHwid() => clearField(2);
 }
 

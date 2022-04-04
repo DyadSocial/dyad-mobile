@@ -14,17 +14,21 @@ class grpcClient {
   late PostsSyncClient postStub;
   late ClientChannel channel;
 
-  grpcClient() {
+  static final grpcClient _instance = new grpcClient._internal();
+
+  factory grpcClient() => _instance;
+
+  grpcClient._internal() {
     final channelCredentials = new ChannelCredentials.insecure();
     final channelOptions = new ChannelOptions(credentials: channelCredentials);
-    channel = ClientChannel('localhost', port: 50051, options: channelOptions);
+    channel = ClientChannel('192.168.1.5', port: 50051, options: channelOptions);
     postStub = PostsSyncClient(channel,
-        options: CallOptions(timeout: Duration(seconds: 20)));
+        options: CallOptions(timeout: Duration(minutes: 1)));
   }
 
   Future<List<Post>> runRefreshPosts(
-      String id, String currentUser, String city) async {
-    PostQuery query = PostQuery(id: id, author: currentUser, gid: city);
+      int id, String currentUser, String city) async {
+    PostQuery query = PostQuery(id: id.toString(), author: currentUser, gid: city);
     List<Post> posts = [];
     await for (Post post in postStub.refreshPosts(query)) {
       posts.add(post);
@@ -33,8 +37,8 @@ class grpcClient {
   }
 
   Future<List<Post>> runQueryPosts(
-      String id, String currentUser, String city) async {
-    PostQuery query = PostQuery(id: id, author: currentUser, gid: city);
+      int id, String currentUser, String city) async {
+    PostQuery query = PostQuery(id: id.toString(), author: currentUser, gid: city);
     List<Post> posts = [];
     await for (Post post in postStub.refreshPosts(query)) {
       posts.add(post);
@@ -48,7 +52,7 @@ class grpcClient {
         yield item;
       }
     }
-
+    print("Uploading: ${channel.host}:${channel.port}");
     final PostUploadAck ack =
         await postStub.uploadPosts(yieldList(posts));
     return ack.writeToJsonMap();
@@ -78,7 +82,7 @@ Future<void> main(List<String> args) async {
     print(post);
   }
 }
-/*
+*/
 
 
 /* Old Code for Images for reference

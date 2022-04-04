@@ -10,6 +10,8 @@ import 'package:dyadapp/src/widgets/post_writer.dart';
 import 'package:dyadapp/src/utils/database_handler.dart';
 import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:dyadapp/src/utils/data/protos/content.pb.dart';
+import 'package:dyadapp/src/utils/data/protos/posts.pb.dart';
+import 'package:dyadapp/src/utils/network_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quiver/core.dart';
 
@@ -27,6 +29,7 @@ class _FeedScreenState extends State<FeedScreen>
   late TabController _tabController;
   late bool _postWriterActive;
   List<Post> _posts = [];
+  late final grpcClient _grpcClient;
 
   @override
   void initState() {
@@ -37,6 +40,8 @@ class _FeedScreenState extends State<FeedScreen>
       length: 2,
       vsync: this,
     )..addListener(_handleTabIndexChanged);
+    _grpcClient = grpcClient();
+    _onFeedRefreshCallback();
   }
 
   @override
@@ -60,6 +65,25 @@ class _FeedScreenState extends State<FeedScreen>
   Future<void> _onFeedRefreshCallback() async {
     // setState posts
     print("Refreshing Feed..");
+    String currentUser = await UserSession().get("username");
+    //String currentCity = await UserSession().get("city");
+    String currentCity = "reno";
+    List<Post> updatedPosts = await _grpcClient.runRefreshPosts(
+        _posts.isEmpty ? 0 : _posts[0].id, currentUser, currentCity);
+    Map<String, Post> oldPosts = Map.fromIterable(await _getPostData(),
+        key: (post) => "${post.author}:${post.id}", value: (post) => (post));
+    for (var post in updatedPosts) {
+      print("ID: ${post.id}");
+      print("$post.author}:${post.id}");
+      if (oldPosts["${post.author}:${post.id}"] != null) {
+        await DatabaseHandler().updatePost(post.id, post);
+      } else {
+        await DatabaseHandler().insertPost(post);
+      }
+    }
+    setState(() {
+    });
+
   }
 
   onDeletePostCallback(int id, String author) async {
@@ -78,6 +102,8 @@ class _FeedScreenState extends State<FeedScreen>
 
   onWritePostCallback(postForm) async {
     var currentTime = DateTime.now();
+    String currentCity = "reno";
+    //String currentCity = await UserSession().get("city");
     var postToAdd = Post(
         title: postForm.title,
         content: Content(
@@ -85,7 +111,8 @@ class _FeedScreenState extends State<FeedScreen>
         ),
         author: await UserSession().get("username"),
         created: Timestamp.fromDateTime(currentTime),
-        lastUpdated: Timestamp.fromDateTime(currentTime));
+        lastUpdated: Timestamp.fromDateTime(currentTime),
+        group: currentCity);
 
     int newPostID = await DatabaseHandler().insertPost(postToAdd);
     if (postForm.imageFile != null) {
@@ -99,12 +126,15 @@ class _FeedScreenState extends State<FeedScreen>
       imageFile.writeAsBytes((postForm.imageFile as File).readAsBytesSync());
       // Update Post entry with file path
       postToAdd.content.image = imageFilePath;
-      await DatabaseHandler().updatePost(newPostID, postToAdd);
-      var newPostList = await _getPostData();
-      setState(() {
-        _posts = newPostList;
-      });
     }
+    postToAdd.id = newPostID;
+    await DatabaseHandler().updatePost(newPostID, postToAdd);
+    var newPostList = await _getPostData();
+    setState(() {
+      _posts = newPostList;
+    });
+    var ack = await _grpcClient.runUploadPosts([postToAdd]);
+    print(ack);
   }
 
   _onPostNavigatorCallback(postId) async {
@@ -145,8 +175,8 @@ class _FeedScreenState extends State<FeedScreen>
               icon: const Icon(Icons.settings),
               onPressed: () => {
                 Navigator.of(context).push<void>(MaterialPageRoute<void>(
-                    builder: (context) =>
-                        const SettingsScreen())) //Changed temporarily for inbox screen from SettingsScreen()
+                    builder: (context) => const SettingsScreen()))
+                //Changed temporarily for inbox screen from SettingsScreen()
               },
               tooltip: 'About Dyad',
             ),

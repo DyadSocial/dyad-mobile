@@ -4,7 +4,7 @@ import "google/protobuf/timestamp.proto";
 import "content.proto";
 
 message Post {
-    string id = 1;
+    int32 id = 1;
     string author = 2;
     Content content = 3;
     google.protobuf.Timestamp last_updated = 4;
@@ -22,11 +22,6 @@ message PostQuery {
 message PostUploadAck {
     int32 id = 1;
     google.protobuf.Timestamp saved_time = 2;
-}
-
-message User {
-    string username = 1;
-    string hwid = 2;
 }
 
 service PostsSync {

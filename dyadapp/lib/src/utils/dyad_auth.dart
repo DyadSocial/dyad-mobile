@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:dyadapp/src/utils/user_session.dart';
+import 'package:dyadapp/src/utils/database_handler.dart';
 
 import 'api_provider.dart';
 import 'auth_token.dart';
@@ -16,7 +17,7 @@ class DyadAuth extends ChangeNotifier {
 
   Future<void> signOut() async {
     // Simulating response from server
-    await Future<void>.delayed(const Duration(milliseconds: 200));
+    DatabaseHandler().clearData();
     AuthToken.logout();
     _isSignedIn = false;
     notifyListeners();
