@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:dyadapp/src/utils/location.dart';
 import 'dart:async';
 
@@ -33,7 +34,7 @@ class _MapScreenState extends State<MapScreen> {
   //Asynchronous function to get the current city from location.dart, then draw a circle around it.
   getPos() async {
     await LocationDyad().getUserPosition();
-    print(LocationDyad.currentAddress);
+    UserSession().set("city", LocationDyad.currentAddress);
     _MapScreenState.latitude = LocationDyad.latitude;
     _MapScreenState.longitude = LocationDyad.longitude;
     circles = Set.from(

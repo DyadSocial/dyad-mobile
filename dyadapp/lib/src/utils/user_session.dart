@@ -27,6 +27,10 @@ class UserSession {
     this._sharedPrefs.remove(key);
   }
 
+  Future clear() async {
+    this._sharedPrefs.clear();
+  }
+
   Future set(key, value) async {
     await _initSharedPrefs();
 

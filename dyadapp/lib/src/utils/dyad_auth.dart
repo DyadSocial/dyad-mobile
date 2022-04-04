@@ -18,6 +18,7 @@ class DyadAuth extends ChangeNotifier {
   Future<void> signOut() async {
     // Simulating response from server
     DatabaseHandler().clearData();
+    UserSession().clear();
     AuthToken.logout();
     _isSignedIn = false;
     notifyListeners();

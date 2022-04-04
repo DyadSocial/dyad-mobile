@@ -12,6 +12,7 @@ import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:dyadapp/src/utils/data/protos/content.pb.dart';
 import 'package:dyadapp/src/utils/data/protos/posts.pb.dart';
 import 'package:dyadapp/src/utils/network_handler.dart';
+import 'package:dyadapp/src/pages/map.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quiver/core.dart';
 
@@ -73,17 +74,13 @@ class _FeedScreenState extends State<FeedScreen>
     Map<String, Post> oldPosts = Map.fromIterable(await _getPostData(),
         key: (post) => "${post.author}:${post.id}", value: (post) => (post));
     for (var post in updatedPosts) {
-      print("ID: ${post.id}");
-      print("$post.author}:${post.id}");
       if (oldPosts["${post.author}:${post.id}"] != null) {
         await DatabaseHandler().updatePost(post.id, post);
       } else {
         await DatabaseHandler().insertPost(post);
       }
     }
-    setState(() {
-    });
-
+    setState(() {});
   }
 
   onDeletePostCallback(int id, String author) async {
@@ -96,7 +93,6 @@ class _FeedScreenState extends State<FeedScreen>
   }
 
   onEditPostCallback(int id, String author, String revision) {
-    print("Editing post[$id] from $author to $revision");
     _getPostData();
   }
 
@@ -167,8 +163,32 @@ class _FeedScreenState extends State<FeedScreen>
               });
             },
           ),
-          title: Center(child: const Text('Dyad')),
-          toolbarHeight: _postWriterActive ? 50 : 60,
+          title: Center(
+              child: Column(children: [
+            TextButton(
+                child: Text("Dyad",
+                    style: TextStyle(fontSize: 30, color: Color(0xFFECEFF4))),
+                onPressed: () {
+                  Navigator.of(context).push<void>(MaterialPageRoute<void>(
+                      builder: (context) => const MapScreen()));
+                }),
+            Padding(
+              padding: EdgeInsets.only(bottom: 5),
+              child: FutureBuilder<dynamic>(
+                  future: UserSession().get("city"),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    return snapshot.hasData
+                        ? Text(snapshot.data ?? "Error getting location",
+                            style: TextStyle(
+                                fontSize: 14, color: Color(0xFFECEFF4)))
+                        : Text('Loading..',
+                            style: TextStyle(
+                                fontSize: 14, color: Color(0xFFE5E9F0)));
+                  }),
+            )
+          ])),
+          toolbarHeight: _postWriterActive ? 80 : 60,
           bottomOpacity: 1,
           actions: [
             IconButton(
