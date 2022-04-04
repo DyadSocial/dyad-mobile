@@ -47,22 +47,22 @@ class PostBar extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: themeNotifier.isDark
-                            ? Color(0xFFECEFF4)
-                            : Color(0xFF555555),
-                      ),
-                    ),
                     Text(author,
                         style: TextStyle(
                             fontSize: 16,
                             color: themeNotifier.isDark
                                 ? Color(0xFFD8DEE9)
                                 : Color(0xFF6A808F))),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: themeNotifier.isDark
+                            ? Color(0xFFECEFF4)
+                            : Color(0xFF555555),
+                      ),
+                    ),
                   ],
                 ),
               ),

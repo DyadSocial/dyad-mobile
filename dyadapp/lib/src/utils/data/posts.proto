@@ -10,10 +10,22 @@ message Post {
     google.protobuf.Timestamp last_updated = 4;
     google.protobuf.Timestamp created = 5;
     string title = 6;
+    string group = 7;
 }
 
-message Feed {
-    repeated string recipients = 1;
-    repeated Post posts = 2;
-    google.protobuf.Timestamp last_updated = 3;
+message PostQuery {
+    string id = 1;
+    string author = 2;
+    string gid = 6;
+}
+
+message PostUploadAck {
+    int32 id = 1;
+    google.protobuf.Timestamp saved_time = 2;
+}
+
+service PostsSync {
+    rpc refreshPosts(PostQuery) returns (stream Post);
+    rpc queryPosts(PostQuery) returns (stream Post);
+    rpc uploadPosts(stream Post) returns (PostUploadAck);
 }

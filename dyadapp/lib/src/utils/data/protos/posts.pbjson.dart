@@ -18,20 +18,32 @@ const Post$json = const {
     const {'1': 'last_updated', '3': 4, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'lastUpdated'},
     const {'1': 'created', '3': 5, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'created'},
     const {'1': 'title', '3': 6, '4': 1, '5': 9, '10': 'title'},
+    const {'1': 'group', '3': 7, '4': 1, '5': 9, '10': 'group'},
   ],
 };
 
 /// Descriptor for `Post`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List postDescriptor = $convert.base64Decode('CgRQb3N0Eg4KAmlkGAEgASgFUgJpZBIWCgZhdXRob3IYAiABKAlSBmF1dGhvchIiCgdjb250ZW50GAMgASgLMgguQ29udGVudFIHY29udGVudBI9CgxsYXN0X3VwZGF0ZWQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgtsYXN0VXBkYXRlZBI0CgdjcmVhdGVkGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIHY3JlYXRlZBIUCgV0aXRsZRgGIAEoCVIFdGl0bGU=');
-@$core.Deprecated('Use feedDescriptor instead')
-const Feed$json = const {
-  '1': 'Feed',
+final $typed_data.Uint8List postDescriptor = $convert.base64Decode('CgRQb3N0Eg4KAmlkGAEgASgFUgJpZBIWCgZhdXRob3IYAiABKAlSBmF1dGhvchIiCgdjb250ZW50GAMgASgLMgguQ29udGVudFIHY29udGVudBI9CgxsYXN0X3VwZGF0ZWQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgtsYXN0VXBkYXRlZBI0CgdjcmVhdGVkGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIHY3JlYXRlZBIUCgV0aXRsZRgGIAEoCVIFdGl0bGUSFAoFZ3JvdXAYByABKAlSBWdyb3Vw');
+@$core.Deprecated('Use postQueryDescriptor instead')
+const PostQuery$json = const {
+  '1': 'PostQuery',
   '2': const [
-    const {'1': 'recipients', '3': 1, '4': 3, '5': 9, '10': 'recipients'},
-    const {'1': 'posts', '3': 2, '4': 3, '5': 11, '6': '.Post', '10': 'posts'},
-    const {'1': 'last_updated', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'lastUpdated'},
+    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+    const {'1': 'author', '3': 2, '4': 1, '5': 9, '10': 'author'},
+    const {'1': 'gid', '3': 6, '4': 1, '5': 9, '10': 'gid'},
   ],
 };
 
-/// Descriptor for `Feed`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List feedDescriptor = $convert.base64Decode('CgRGZWVkEh4KCnJlY2lwaWVudHMYASADKAlSCnJlY2lwaWVudHMSGwoFcG9zdHMYAiADKAsyBS5Qb3N0UgVwb3N0cxI9CgxsYXN0X3VwZGF0ZWQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgtsYXN0VXBkYXRlZA==');
+/// Descriptor for `PostQuery`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List postQueryDescriptor = $convert.base64Decode('CglQb3N0UXVlcnkSDgoCaWQYASABKAlSAmlkEhYKBmF1dGhvchgCIAEoCVIGYXV0aG9yEhAKA2dpZBgGIAEoCVIDZ2lk');
+@$core.Deprecated('Use postUploadAckDescriptor instead')
+const PostUploadAck$json = const {
+  '1': 'PostUploadAck',
+  '2': const [
+    const {'1': 'id', '3': 1, '4': 1, '5': 5, '10': 'id'},
+    const {'1': 'saved_time', '3': 2, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'savedTime'},
+  ],
+};
+
+/// Descriptor for `PostUploadAck`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List postUploadAckDescriptor = $convert.base64Decode('Cg1Qb3N0VXBsb2FkQWNrEg4KAmlkGAEgASgFUgJpZBI5CgpzYXZlZF90aW1lGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJc2F2ZWRUaW1l');

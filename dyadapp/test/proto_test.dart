@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 Content addContent(String input, [List<int>? image]) {
   Content content = Content();
   content.text = input;
-  if (image != null) content.image = image;
+  if (image != null) content.image = image as String;
   return content;
 }
 

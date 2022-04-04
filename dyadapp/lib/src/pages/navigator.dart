@@ -78,6 +78,7 @@ class _DyadNavigatorState extends State<DyadNavigator> {
                 if (signedIn) {
                   routeState.go('/feed');
                 }
+                return signedIn;
               },
             ),
           )

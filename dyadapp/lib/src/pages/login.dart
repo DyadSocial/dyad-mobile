@@ -23,7 +23,7 @@ class Credentials {
 
 // Login Widget
 class LoginScreen extends StatefulWidget {
-  final ValueChanged<Credentials> onSignIn;
+  final Future<bool> Function(Credentials) onSignIn;
 
   const LoginScreen({
     required this.onSignIn,
@@ -38,6 +38,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
+  late var _loginStatus;
 
   void rerouteLoggedIn() async {
     await Future.delayed(Duration.zero, () async {
@@ -54,6 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     // Check if user is logged in
+    _loginStatus = "NO_ERROR";
     rerouteLoggedIn();
   }
 
@@ -102,6 +104,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
+            Visibility(
+              visible: (_loginStatus == "ERROR"),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 12.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: const Color(0xffBF616A),
+                      borderRadius: BorderRadius.circular(5)),
+                  height: 40,
+                  child: Center(
+                      child: Text("Error: Invalid Login Credentials",
+                          style: TextStyle(fontSize: 16))),
+                ),
+              ),
+            ),
             Container(
               height: 100,
               child: TextFormField(
@@ -146,10 +163,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: ElevatedButton(
                   child: Text("Sign In"),
                   onPressed: () async {
-                    widget.onSignIn(Credentials(
+                    var signInStatus = await widget.onSignIn(Credentials(
                       _userNameController.value.text,
                       _passwordController.value.text,
                     ));
+                    setState(() {
+                      if (!signInStatus) {
+                        _loginStatus = "ERROR";
+                      }
+                    });
+
                     //displayDialog(
                     //  context, "Error", "Incorrect Username or Password");
                   },

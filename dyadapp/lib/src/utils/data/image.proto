@@ -1,0 +1,29 @@
+syntax="proto3";
+
+import "google/protobuf/timestamp.proto";
+
+message ImageChunk{
+  string imagedata = 1;
+  optional int32 imagesize = 2;
+  optional string username = 3;
+  optional string id = 4;
+}
+
+message Ack {
+  string imagesize = 1;
+  bool success = 2;
+  string imageurl = 3;
+}
+
+message ImageQuery {
+  string author = 1;
+  string id = 2;
+  google.protobuf.Timestamp created = 3;
+}
+
+service Images {
+  // Client-To-Server RPC. Client sends stream to server and an 
+  // acknowledgement is received once the image is finished uploading
+  rpc UploadImage(stream ImageChunk) returns (Ack);
+  rpc PullImage(ImageQuery) returns (stream ImageChunk);
+}

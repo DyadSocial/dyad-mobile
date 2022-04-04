@@ -1,8 +1,10 @@
+import 'package:dyadapp/src/utils/data/group.dart';
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/widgets/post_bar.dart';
 import 'package:dyadapp/src/routing.dart';
 import 'package:dyadapp/src/pages/post.dart';
 import 'package:dyadapp/src/utils/database_handler.dart';
+import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:dyadapp/src/data.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +14,8 @@ import '../utils/theme_preferences.dart';
 class PostTile extends StatelessWidget {
   const PostTile({
     required this.postNavigatorCallback,
+    required this.onDeleteCallback,
+    required this.onEditCallback,
     required this.postId,
     required this.profilePicture,
     required this.title,
@@ -23,6 +27,8 @@ class PostTile extends StatelessWidget {
   }) : super(key: key);
 
   final Function(int) postNavigatorCallback;
+  final Function(int, String) onDeleteCallback;
+  final Function(int, String, String) onEditCallback;
   final int postId;
   final ImageProvider<Object>? profilePicture;
   final String title;
@@ -36,6 +42,32 @@ class PostTile extends StatelessWidget {
     final ThemeModel _themeModel = ThemeModelScope.of(context);
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return TextButton(
+          onLongPress: () async {
+            if (author == await UserSession().get("username"))
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SimpleDialog(
+                      title: const Text('Post Options',
+                          style: TextStyle(fontSize: 20)),
+                      contentPadding:
+                          EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {},
+                            child: const Text('Edit',
+                                style: TextStyle(fontSize: 14))),
+                        ElevatedButton(
+                            onPressed: () {
+                              onDeleteCallback(this.postId, this.author);
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Delete',
+                                style: TextStyle(fontSize: 14)))
+                      ],
+                    );
+                  });
+          },
           onPressed: () async {
             Post? post = await DatabaseHandler().getPost(postId.toString());
             print(post);
@@ -76,7 +108,9 @@ class PostTile extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20.0),
+                    borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(20.0),
+                        bottomLeft: Radius.circular(20.0)),
                     child: image ??
                         Padding(
                           padding: const EdgeInsets.only(

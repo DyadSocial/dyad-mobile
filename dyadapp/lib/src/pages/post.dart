@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:dyadapp/src/data.dart';
 import 'package:dyadapp/src/pages/settings.dart';
 import 'package:dyadapp/src/widgets/post_bar.dart';
+import 'package:dyadapp/src/utils/data/protos/content.pb.dart';
 
 class PostScreen extends StatelessWidget {
   final User author;

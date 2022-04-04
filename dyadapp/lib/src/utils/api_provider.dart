@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:dyadapp/src/data.dart';
 
 class APIProvider {
-  static final _baseURL = 'http://api.dyadsocial.com:8000';
+  static final _baseURL = 'https://api.dyadsocial.com';
   final http.Client httpClient;
   APIProvider(this.httpClient);
 
@@ -33,10 +33,17 @@ class APIProvider {
 
   static Future<Map<String, dynamic>> logIn(
       Map<String, String> formData) async {
-    final response = await http.post(Uri.parse('$_baseURL/core/login/'), body: {
-      "username": formData['username'],
-      "password": formData['password'],
-    });
-    return {"status": response.statusCode, "body": response.body};
+    try {
+      final response =
+          await http.post(Uri.parse('$_baseURL/core/login'), body: {
+        "username": formData['username'],
+        "password": formData['password'],
+      }).timeout(Duration(seconds: 2));
+      return {"status": response.statusCode, "body": response.body};
+    } catch (e) {
+      var obj = {"status": 200, "body": "Timeout Exception"};
+      var json = jsonEncode(obj);
+      return jsonDecode(json);
+    }
   }
 }

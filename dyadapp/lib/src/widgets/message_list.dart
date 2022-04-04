@@ -1,10 +1,11 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/pages/message_page.dart';
 
 class MessageList extends StatefulWidget {
   String name;
   String text;
-  final ImageProvider<Object> profilePicture;
+  ImageProvider<Object>? profilePicture;
   String time;
   bool isMessageRead;
   MessageList(
@@ -39,9 +40,26 @@ class _MessageListState extends State<MessageList> {
               child: Row(
                 children: <Widget>[
                   CircleAvatar(
-                    backgroundImage: widget.profilePicture,
-                    maxRadius: 30,
-                  ),
+                      backgroundImage: widget.profilePicture,
+                      foregroundColor: Colors.black12,
+                      backgroundColor: Colors.white70,
+                      maxRadius: 30,
+                      child: Text(widget.name
+                          .substring(0, min(4, widget.name.length)))),
+                  /*
+                  FutureBuilder<ImageProvider?>(
+                      future: widget.profilePicture,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<ImageProvider?> image) {
+                        return CircleAvatar(
+                            backgroundImage: image.data,
+                            foregroundColor: Colors.black12,
+                            backgroundColor: Colors.white70,
+                            maxRadius: 30,
+                            child: Text(widget.name
+                                .substring(0, min(4, widget.name.length))));
+                      }),
+                   */
                   SizedBox(
                     width: 16,
                   ),
