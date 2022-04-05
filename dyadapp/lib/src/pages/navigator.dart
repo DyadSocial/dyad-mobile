@@ -76,7 +76,7 @@ class _DyadNavigatorState extends State<DyadNavigator> {
                 var signedIn = await authState.signIn(
                     credentials.userName, credentials.password);
                 if (signedIn) {
-                  routeState.go('/feed');
+                  routeState.go('/map');
                 }
                 return signedIn;
               },

@@ -96,9 +96,9 @@ class _DyadState extends State<Dyad> {
                                   onPrimary: Color(0xFF2E3440),
                                   error: Color(0xFFBF616A),
                                   onError: Color(0xFFECEFF4),
-                                  secondary: Color(0xFF8FBCBB),
+                                  secondary: Colors.white,
                                   secondaryVariant: Color(0xFF8FBCBB),
-                                  onSecondary: Color(0xFF3440),
+                                  onSecondary: Color(0xFF88C0D0),
                                   surface: Color(0xFF81A1C1),
                                   onSurface: Color(0xFFECEFF4)))),
                 );

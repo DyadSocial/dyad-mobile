@@ -74,7 +74,6 @@ class _FeedScreenState extends State<FeedScreen>
       for (var post
           in await _grpcClient.runRefreshPosts(0, currentUser, currentCity)) {
         setState(() {
-          print("New Post ${post.id}");
           DatabaseHandler().insertPost(post);
         });
       }
