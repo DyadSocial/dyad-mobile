@@ -1,26 +1,32 @@
 import 'dart:math';
+import 'package:dyadapp/src/data.dart';
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/pages/message_page.dart';
+import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
 
-class MessageList extends StatefulWidget {
+class MessageListEntry extends StatefulWidget {
   String name;
   String text;
   ImageProvider<Object>? profilePicture;
   String time;
   bool isMessageRead;
-  MessageList(
+  List<Message> messages;
+
+  MessageListEntry(
       {required this.name,
       required this.text,
       required this.profilePicture,
       required this.time,
-      required this.isMessageRead});
+      required this.isMessageRead,
+      required this.messages});
   @override
-  _MessageListState createState() => _MessageListState();
+  _MessageListEntryState createState() => _MessageListEntryState();
 }
 
-class _MessageListState extends State<MessageList> {
+class _MessageListEntryState extends State<MessageListEntry> {
   @override
   Widget build(BuildContext context) {
+    print("Message list received: " + widget.name);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -29,6 +35,9 @@ class _MessageListState extends State<MessageList> {
               builder: (context) => MessagePage(
                 profilePicture: widget.profilePicture,
                 nickname: widget.name,
+                //In the future, grab the messages between current user and then widget.name
+                //This is for demo purposes
+                messages: widget.messages,
               ),
             ));
       },

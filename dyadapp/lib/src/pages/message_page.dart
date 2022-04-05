@@ -1,14 +1,15 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:dyadapp/src/utils/data/message.dart';
+import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
 import 'package:dyadapp/src/utils/data/test_message.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class MessagePage extends StatefulWidget {
   ImageProvider<Object>? profilePicture;
   String nickname;
+  List<Message> messages;
 
-  MessagePage({Key? key, required this.profilePicture, required this.nickname})
+  MessagePage({Key? key, required this.profilePicture, required this.nickname, required this.messages})
       : super(key: key);
 
   @override
@@ -16,7 +17,8 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
-  List<Message> _messages = [];
+  //Commented out for demo
+  //List<Message> _messages = [];
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class _MessagePageState extends State<MessagePage> {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.blueGrey,
+
         flexibleSpace: SafeArea(
           child: Container(
             padding: EdgeInsets.only(right: 16),
@@ -124,6 +126,7 @@ class _MessagePageState extends State<MessagePage> {
                   ),
                   Expanded(
                     child: TextField(
+                      style: TextStyle(color: Colors.black),
                       decoration: InputDecoration(
                           hintText: "Write message...",
                           hintStyle: TextStyle(color: Colors.black54),
@@ -154,36 +157,47 @@ class _MessagePageState extends State<MessagePage> {
 
   buildMessages(String sender) {
     return ListView.builder(
-      itemCount: _messages.length,
+      itemCount: widget.messages.length,
       shrinkWrap: true,
       padding: EdgeInsets.only(top: 10, bottom: 10),
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        if (_messages[index].author.username == sender ||
-            _messages[index].recipient.username == sender) {
+        if (widget.messages[index].author == sender) {
           return Container(
             padding: EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
             child: Align(
-              alignment: (_messages[index].author.username == widget.nickname
-                  ? Alignment.topLeft
-                  : Alignment.topRight),
+              alignment: Alignment.topLeft,
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: (_messages[index].author.username == widget.nickname
-                      ? Colors.grey.shade200
-                      : Colors.blue[200]),
+                  color: Colors.grey.shade200,
                 ),
                 padding: EdgeInsets.all(16),
                 child: Text(
-                  _messages[index].content,
-                  style: TextStyle(fontSize: 15),
+                  widget.messages[index].content,
+                  style: TextStyle(fontSize: 15, color: Colors.black),
                 ),
               ),
             ),
           );
         } else {
-          return Container();
+          return Container(
+            padding: EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.blue.shade50,
+                ),
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  widget.messages[index].content,
+                  style: TextStyle(fontSize: 15, color: Colors.black),
+                ),
+              ),
+            ),
+          );
         }
       },
     );

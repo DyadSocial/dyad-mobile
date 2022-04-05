@@ -32,7 +32,7 @@ twitch.tv/infuhnit
         'https://scontent-sjc3-1.xx.fbcdn.net/v/t1.6435-9/102380597_1514900362022644_5290959128538387371_n.jpg?_nc_cat=105&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=SIyORgrVRMMAX92KTb_&tn=ruCaUUGVVERAM7KS&_nc_ht=scontent-sjc3-1.xx&oh=00_AT_1oVw-8vEc82fs9J7ApWi7mcN3EgPO76C0Koa-egLvrw&oe=622FD551'),
   )
   ..addUser(
-    username: 'wavy_gooby',
+    username: 'goobygrooves',
     nickname: 'Sam',
     biography: '''サムエル / 사무엘 日常人間
 UNR Comp Sci & Engineering 22"

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:dyadapp/src/pages/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:dyadapp/src/widgets/message_list.dart';
+import 'package:dyadapp/src/widgets/message_list_entry.dart';
 import 'package:dyadapp/src/utils/data/test_message.dart';
 import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
 import 'package:dyadapp/src/utils/database_handler.dart';
@@ -23,34 +23,9 @@ class InboxPage extends StatefulWidget {
 
 class _InboxPageState extends State<InboxPage>
     with SingleTickerProviderStateMixin {
+  final _toController = TextEditingController();
+  final _msgController = TextEditingController();
   List<Chat> _chats = [
-    Chat(recipients: [
-      "infuhnit",
-      "vncp",
-      "primchi",
-      "goobygrooves"
-    ], messages: [
-      Message(
-          id: "1",
-          author: "infuhnit",
-          content: "Hey guys I'm streaming tonight",
-          lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 7, 2, 30))),
-      Message(
-          id: "1",
-          author: "vncp",
-          content: "I love coding",
-          lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 7, 2, 30))),
-      Message(
-          id: "1",
-          author: "primchi",
-          content: "I love coding",
-          lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 7, 2, 30))),
-      Message(
-          id: "1",
-          author: "goobygrooves",
-          content: "I like to make music",
-          lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 7, 2, 30))),
-    ]),
     Chat(recipients: [
       "vncp",
       "primchi",
@@ -63,50 +38,14 @@ class _InboxPageState extends State<InboxPage>
           content: "I like to make music",
           lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 7, 2, 30))),
     ]),
-    Chat(recipients: [
-      "primchi",
-      "goobygrooves",
-      "infuhnit",
-      "vncp"
-    ], messages: [
-      Message(
-          id: "1",
-          author: "primchi",
-          content: "I love coding",
-          lastUpdated:
-              Timestamp.fromDateTime(DateTime.utc(2022, 3, 17, 2, 30))),
-      Message(
-          id: "1",
-          author: "infuhnit",
-          content: "Hey guys I'm streaming tonight",
-          lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 7, 2, 30))),
-    ]),
-    Chat(recipients: [
-      "goobygrooves",
-      "infuhnit",
-      "vncp",
-      "primchi"
-    ], messages: [
-      Message(
-          id: "1",
-          author: "vncp",
-          content: "I love coding",
-          lastUpdated:
-              Timestamp.fromDateTime(DateTime.utc(2022, 3, 5, 15, 21))),
-      Message(
-          id: "1",
-          author: "primchi",
-          content: "I love coding",
-          lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 7, 2, 30))),
-      Message(
-          id: "1",
-          author: "goobygrooves",
-          content: "I like to make music",
-          lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 7, 2, 30))),
-    ])
+
   ];
   List<Message> _messages = [];
   List<ImageProvider> profilePictures = [];
+
+  //Fake message list to send for demo 4-4-22
+  List<Chat> _chatsDemo = [];
+  List<Message> _messagesDemo = [];
 
   @override
   void initState() {
@@ -143,6 +82,9 @@ class _InboxPageState extends State<InboxPage>
 
   @override
   Widget build(BuildContext context) {
+    for(var msg in _messages){
+      print("In inbox, _messages has first message from user: " + msg.author);
+    }
     return Scaffold(
       appBar: AppBar(
         title: Center(child: const Text('Dyad')),
@@ -178,7 +120,7 @@ class _InboxPageState extends State<InboxPage>
                       ),
                       Container(
                         padding: EdgeInsets.only(
-                            left: 8, right: 8, top: 2, bottom: 2),
+                            left: 4, right: 4),
                         height: 30,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
@@ -191,14 +133,67 @@ class _InboxPageState extends State<InboxPage>
                               color: Colors.blueGrey,
                               size: 20,
                             ),
-                            SizedBox(
-                              width: 2,
-                            ),
-                            Text(
-                              "New",
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold),
-                            ),
+
+                            TextButton(onPressed: ()=>{
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context){
+                                  return AlertDialog(
+                                    insetPadding: EdgeInsets.all(8.0),
+                                    content: Stack(
+                                      children: <Widget>[
+                                        Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(5.0),
+                                              height: 50,
+                                              width: 200,
+                                              child: TextFormField(
+                                                decoration: InputDecoration(
+                                                  icon: Icon(Icons.person),
+                                                  hintText: 'To who?',
+                                                ),
+                                                keyboardType: TextInputType.text,
+                                                controller: _toController,
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.all(5.0),
+                                              height: 50,
+                                              width: 200,
+                                              child: TextFormField(
+                                                decoration: InputDecoration(
+                                                  icon: Icon(Icons.edit),
+                                                  hintText: 'Message',
+                                                ),
+                                                keyboardType: TextInputType.multiline,
+                                                controller: _msgController,
+                                              ),
+                                            ),
+                                            SizedBox(height: 50),
+                                            TextButton(onPressed: () async {
+                                              //Temporary for demo
+                                              _chats[0].messages.add(
+                                                Message(
+                                                  id: "1",
+                                                  author: await UserSession().get("username"),
+                                                  content: _msgController.value.text,
+                                                  lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 17, 2, 30))),
+                                              );
+                                              _messagesDemo.add(_chats[0].messages[0]);
+                                              _messagesDemo.add(_chats[0].messages[1]);
+                                              Navigator.pop(context);
+                                            }, child: Text("SEND"))
+                                          ],
+                                        )
+                                      ]
+                                    ),
+                                    title: Text('Send a new message'),
+                                  );
+                                }
+                              )
+                            }, child: Text("New")),
                           ],
                         ),
                       ),
@@ -225,13 +220,14 @@ class _InboxPageState extends State<InboxPage>
                     ),
                   ),
                 ),
+
                 ListView.builder(
                   itemCount: _messages.length,
                   shrinkWrap: true,
                   padding: EdgeInsets.only(top: 16),
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return MessageList(
+                    return MessageListEntry(
                       name: _messages[index].author,
                       text: _messages[index].content,
                       //TO DO:
@@ -244,7 +240,8 @@ class _InboxPageState extends State<InboxPage>
                               (_messages[index].lastUpdated.seconds * 1000)
                                   .toInt()),
                           locale: 'en_short'),
-                      isMessageRead: (index == 0 || index == 3) ? true : false,
+                      isMessageRead: false,
+                      messages: _messagesDemo,//(index == 0 || index == 3) ? true : false,
                     );
                   },
                 ),
