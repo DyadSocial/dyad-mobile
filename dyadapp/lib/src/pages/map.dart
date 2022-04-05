@@ -69,7 +69,7 @@ class _MapScreenState extends State<MapScreen> {
           return AlertDialog(
             title: Text("What is this?"),
             content:
-                Text("This map tells you where you are sourcing posts from."),
+            Text("This map tells you where you are sourcing posts from."),
             actions: [
               TextButton(
                 child: Text("OK"),
@@ -118,13 +118,13 @@ class _MapScreenState extends State<MapScreen> {
                 ],
               ),
               floatingActionButtonLocation:
-                  FloatingActionButtonLocation.endFloat,
+              FloatingActionButtonLocation.endFloat,
             );
           } else {
             return Center(
               child: SizedBox(
                   child:
-                      CircularProgressIndicator(backgroundColor: Colors.white),
+                  CircularProgressIndicator(backgroundColor: Colors.white),
                   height: 25.0,
                   width: 25.0),
             );

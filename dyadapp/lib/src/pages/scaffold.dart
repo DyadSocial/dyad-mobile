@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:adaptive_navigation/adaptive_navigation.dart';
-
+import 'package:dyadapp/src/pages/map.dart';
 import 'package:dyadapp/src/routing.dart';
 import 'package:dyadapp/src/widgets/fade_transition_page.dart';
 import 'package:dyadapp/src/data.dart';
@@ -30,6 +30,8 @@ class DyadScaffold extends StatelessWidget {
           if (idx == 0) {
             routeState.go('/feed/all');
           } else if (idx == 1) {
+            routeState.go('/map');
+          } else if (idx == 2) {
             routeState.go('/inbox');
           }
         },
@@ -37,6 +39,10 @@ class DyadScaffold extends StatelessWidget {
           AdaptiveScaffoldDestination(
             title: 'Feed',
             icon: Icons.feed,
+          ),
+          AdaptiveScaffoldDestination(
+            title: 'Map',
+            icon: Icons.map,
           ),
           AdaptiveScaffoldDestination(
             title: 'Inbox',
@@ -48,8 +54,10 @@ class DyadScaffold extends StatelessWidget {
   }
 
   int _getSelectedIndex(String pathTemplate) {
+    print(pathTemplate);
     if (pathTemplate == '/feed/all') return 0;
-    if (pathTemplate == '/inbox') return 1;
+    if (pathTemplate == '/map') return 1;
+    if (pathTemplate == '/inbox') return 2;
     return 0;
   }
 }
@@ -76,6 +84,11 @@ class DyadScaffoldBody extends StatelessWidget {
               child: InboxPage(),
             )
           // Prevent Navigator from building with non-defined path
+          else if (currentRoute.pathTemplate.startsWith('/map'))
+            FadeTransitionPage<void>(
+              key: const ValueKey('map'),
+              child: MapScreen(),
+            )
           else
             const FadeTransitionPage<void>(
               key: ValueKey('feed'),

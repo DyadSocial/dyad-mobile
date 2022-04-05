@@ -34,6 +34,7 @@ class _DyadState extends State<Dyad> {
         '/profile/:profileId',
         '/post/:postId',
         '/inbox',
+        '/map'
       ],
       guard: _guard,
       initialRoute: '/login',

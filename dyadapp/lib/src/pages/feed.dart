@@ -126,6 +126,7 @@ class _FeedScreenState extends State<FeedScreen>
   }
 
   onDeletePostCallback(int id, String author) async {
+    print("CALL TO DELETE $id:$author");
     if (author == await UserSession().get("username")) {
       await DatabaseHandler().deletePost(id);
       setState(() {

@@ -74,7 +74,7 @@ class _FeedListState extends State<FeedList> {
             image: widget.posts[index].content.hasImage()
                 ? Image.file(File(widget.posts[index].content.image))
                 : null,
-            title: widget.posts[index].title,
+            title: widget.posts[index].title + " ${widget.posts[index].id}",
             author: widget.posts[index].author,
             content: widget.posts[index].content.text,
             datetime: DateTime.fromMillisecondsSinceEpoch(

@@ -14,7 +14,7 @@ message Post {
 }
 
 message PostQuery {
-    string id = 1;
+    int32 id = 1;
     string author = 2;
     string gid = 6;
 }

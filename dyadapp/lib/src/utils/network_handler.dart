@@ -28,7 +28,7 @@ class grpcClient {
 
   Future<List<Post>> runRefreshPosts(
       int id, String currentUser, String city) async {
-    PostQuery query = PostQuery(id: id.toString(), author: currentUser, gid: city);
+    PostQuery query = PostQuery(id: id, author: currentUser, gid: city);
     List<Post> posts = [];
     await for (Post post in postStub.refreshPosts(query)) {
       posts.add(post);
@@ -38,7 +38,7 @@ class grpcClient {
 
   Future<List<Post>> runQueryPosts(
       int id, String currentUser, String city) async {
-    PostQuery query = PostQuery(id: id.toString(), author: currentUser, gid: city);
+    PostQuery query = PostQuery(id: id, author: currentUser, gid: city);
     List<Post> posts = [];
     await for (Post post in postStub.refreshPosts(query)) {
       posts.add(post);
@@ -59,7 +59,7 @@ class grpcClient {
   }
 
   Future<Map<String, dynamic>> runDeletePost(int id, String currentUser, String city) async {
-    PostQuery query = PostQuery(id: id.toString(), author: currentUser, gid: city);
+    PostQuery query = PostQuery(id: id, author: currentUser, gid: city);
     return (await postStub.deletePost(query)).writeToJsonMap();
   }
 }

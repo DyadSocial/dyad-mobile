@@ -151,7 +151,7 @@ class Post extends $pb.GeneratedMessage {
 
 class PostQuery extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'PostQuery', createEmptyInstance: create)
-    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
+    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'author')
     ..aOS(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'gid')
     ..hasRequiredFields = false
@@ -159,7 +159,7 @@ class PostQuery extends $pb.GeneratedMessage {
 
   PostQuery._() : super();
   factory PostQuery({
-    $core.String? id,
+    $core.int? id,
     $core.String? author,
     $core.String? gid,
   }) {
@@ -197,9 +197,9 @@ class PostQuery extends $pb.GeneratedMessage {
   static PostQuery? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get id => $_getSZ(0);
+  $core.int get id => $_getIZ(0);
   @$pb.TagNumber(1)
-  set id($core.String v) { $_setString(0, v); }
+  set id($core.int v) { $_setSignedInt32(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
