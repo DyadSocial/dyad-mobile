@@ -78,16 +78,28 @@ class DatabaseHandler {
 
   Future<int> insertPost(Post post) async {
     final db = await _helperInstance.database;
-    print("ID: ${post.id}");
-    int id = await db.insert(
-      'posts',
-      {
-        "id": post.id,
-        "author": post.author,
-        "data": post.writeToBuffer(),
-      },
-      conflictAlgorithm: ConflictAlgorithm.ignore,
-    );
+    int id;
+    if (post.hasId()) {
+      id = await db.insert(
+        'posts',
+        {
+          "id": post.id,
+          "author": post.author,
+          "data": post.writeToBuffer(),
+        },
+        conflictAlgorithm: ConflictAlgorithm.ignore,
+      );
+    } else {
+      id = await db.insert(
+        'posts',
+        {
+          "author": post.author,
+          "data": post.writeToBuffer(),
+        },
+        conflictAlgorithm: ConflictAlgorithm.ignore,
+      );
+
+    }
     print("INSERTING POST: $id");
     return id;
   }
