@@ -6,6 +6,8 @@ import '../routing.dart';
 
 enum UserStatus { loggedIn, loggedOut }
 
+//Class for storing the JWT that is returned upon a successful user authentication
+
 class AuthToken {
   Map<String, dynamic>? _decodedToken;
 

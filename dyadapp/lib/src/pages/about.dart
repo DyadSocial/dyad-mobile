@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//The about page is where users can go to find out more about the application and its creators
 class AboutScreen extends StatelessWidget {
   const AboutScreen({Key? key}) : super(key: key);
 

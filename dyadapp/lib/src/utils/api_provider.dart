@@ -3,6 +3,8 @@ import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:http/http.dart' as http;
 import 'package:dyadapp/src/data.dart';
 
+//Utility class for accessing dyad api for user authentication
+
 class APIProvider {
   static final _baseURL = 'https://api.dyadsocial.com';
   final http.Client httpClient;

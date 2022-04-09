@@ -13,6 +13,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   Completer<GoogleMapController> _controller = Completer();
+  //Default latitude and longitude to display if location services are disabled and geo ip doesn't work; Rare
   static double latitude = 25.0;
   static double longitude = 25.0;
   late Timer mapRefresh;
@@ -23,6 +24,7 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   initState() {
+    //Map refreshes every minute
     mapRefresh = Timer.periodic(Duration(seconds: 60), (timer) {
       getPos();
     });
@@ -45,9 +47,11 @@ class _MapScreenState extends State<MapScreen> {
   getPos() async {
     await Future.delayed(const Duration(seconds: 5), (){});
     await LocationDyad().getUserPosition();
+    //Dyad only stores the city, instead of the latitude and longitude or direct location of the user
     UserSession().set("city", LocationDyad.currentAddress);
     _MapScreenState.latitude = LocationDyad.latitude;
     _MapScreenState.longitude = LocationDyad.longitude;
+    //Redraw the circle; Purely for user visual, any user within the city displayed at top of screen will see your posts and vice versa
     circles = Set.from(
       [
         Circle(
@@ -64,8 +68,10 @@ class _MapScreenState extends State<MapScreen> {
 
   //Refresh button will call this and bring user zoomed back out to their general location
   Future<void> _toCurrentLocation() async {
+    //Get location again
     getPos();
     final GoogleMapController controller = await _controller.future;
+    //Move camera to updated position after getPos call
     controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
         target: LatLng(latitude, longitude),
         zoom: 12.0,
@@ -73,6 +79,7 @@ class _MapScreenState extends State<MapScreen> {
         bearing: 0)));
   }
 
+  //Button with question mark for telling users what they are looking at; Floating Alert Dialog
   Future<void> showMapDialog() async {
     return showDialog<void>(
         context: context,
@@ -122,6 +129,7 @@ class _MapScreenState extends State<MapScreen> {
         future: getPos(),
         builder: (context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
+            //If getPos returns with data, then create GoogleMap instance
             return GoogleMap(
               initialCameraPosition: _InitialPosition,
               scrollGesturesEnabled: true,
@@ -136,6 +144,7 @@ class _MapScreenState extends State<MapScreen> {
               circles: circles,
             );
           } else {
+            //Loading while waiting for getPos to return
             return Center(
                 child: SizedBox(
               child: CircularProgressIndicator(backgroundColor: Colors.white),

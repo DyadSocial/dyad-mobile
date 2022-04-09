@@ -40,6 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   late var _loginStatus;
 
+  //On successful login, reroute to feed page
   void rerouteLoggedIn() async {
     await Future.delayed(Duration.zero, () async {
       if (await AuthToken.getStatus() == UserStatus.loggedIn) {
@@ -65,6 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         title: const Text('Dyad'),
         actions: [
+          //About button so users can find out more about the application
           IconButton(
             icon: const Icon(Icons.help),
             onPressed: _handleAboutTapped,
@@ -80,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.of(context).push<void>(
         MaterialPageRoute<void>(builder: (context) => AboutScreen()));
   }
-
+  //Alert Dialog for errors when logging in
   void displayDialog(BuildContext context, String title, String text) =>
       showDialog(
         context: context,
@@ -179,6 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
+            //Button for forgot password resetting.
             Padding(
               padding: const EdgeInsets.only(top: 0, bottom: 0),
               child: TextButton(
@@ -189,6 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
               ),
             ),
+            //Button to create a new account
             TextButton(
               child: Text('Create an account'),
               onPressed: () => {

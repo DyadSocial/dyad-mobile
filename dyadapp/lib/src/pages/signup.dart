@@ -51,6 +51,7 @@ class _SignupScreenState extends State<SignupScreen> {
         MaterialPageRoute<void>(builder: (context) => const AboutScreen()));
   }
 
+  //Displays dialog if error occurs during validation of fields or account can or cannot be created.
   void displayDialog(BuildContext context, String title, String text) =>
       showDialog(
         context: context,

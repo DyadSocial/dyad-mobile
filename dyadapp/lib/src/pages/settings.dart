@@ -8,6 +8,7 @@ import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:dyadapp/src/data.dart';
 import 'package:dyadapp/src/utils/dyad_auth.dart';
 
+//The settings will allow the user to change themes or look at their profile.
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
@@ -15,6 +16,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //Consumer is wrapped to update the theme on button press
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
         appBar: AppBar(
@@ -33,6 +35,7 @@ class SettingsScreen extends StatelessWidget {
                 },
               ),
             ),
+            //Brings user to their profile page
             Container(
               child: ElevatedButton(
                 child: Text("View Profile"),

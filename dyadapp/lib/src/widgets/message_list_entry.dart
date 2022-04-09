@@ -4,12 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:dyadapp/src/pages/message_page.dart';
 import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
 
+
+//MessageListEntry is just one entry of the messages between the current user and another.
 class MessageListEntry extends StatefulWidget {
   String name;
   String text;
   ImageProvider<Object>? profilePicture;
   String time;
   bool isMessageRead;
+  //Because the messagelistentry file is how users get to the actual dms between users, maybe have to pass in a Chat here from inbox.dart, which will then get passed to
+  //message_page.dart for rendering the chat between users.
+  //Chat chat?
   List<Message> messages;
 
   MessageListEntry(
@@ -35,8 +40,8 @@ class _MessageListEntryState extends State<MessageListEntry> {
               builder: (context) => MessagePage(
                 profilePicture: widget.profilePicture,
                 nickname: widget.name,
-                //In the future, grab the messages between current user and then widget.name
-                //This is for demo purposes
+                //As said above, might want to instead pass in a Chat between the current user and widget.name instead of a list of messages
+                //This was for demo purposes only
                 messages: widget.messages,
               ),
             ));
