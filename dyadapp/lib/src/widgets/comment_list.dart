@@ -50,5 +50,6 @@ class _CommentListState extends State<CommentList> {
     return Column(
       children: getCommentWidgetList(_comments),
     );
+
   }
 }
