@@ -6,6 +6,7 @@ import 'package:dyadapp/src/data.dart';
 import 'package:dyadapp/src/pages/settings.dart';
 import 'package:dyadapp/src/widgets/post_bar.dart';
 import 'package:dyadapp/src/utils/data/protos/content.pb.dart';
+import 'package:dyadapp/src/widgets/comment_list.dart';
 
 class PostScreen extends StatefulWidget {
   final Future<Post?> Function(Post) onUpdateCallback;
@@ -50,6 +51,15 @@ class _PostScreenState extends State<PostScreen> {
   void dispose() {
     _editingController.dispose();
     super.dispose();
+  }
+
+  Future<void> onUpdateCommentCallback(CommentThread commentThread) async {
+    for (var i = 0; i < _post.comments.length; i++) {
+      if (commentThread.id == _post.comments[i].id) {
+        _post.comments[i] = commentThread;
+      }
+    }
+    widget.onUpdateCallback(_post);
   }
 
   @override
@@ -101,48 +111,55 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   Widget _buildPage() {
-    return Column(
-      children: [
-        PostBar(
-            _author.profilePicture,
-            _author.username,
-            _post.title,
-            DateTime.fromMillisecondsSinceEpoch(
-                (_post.created.seconds * 1000).toInt())),
-        Visibility(
-          visible: _isTextEditable,
-          child: Container(
-              alignment: AlignmentDirectional.topEnd,
-              child: IconButton(
-                icon: Icon(!_isEditingText ? Icons.mode_edit : Icons.done,
-                    size: 20),
-                onPressed: () async {
-                  _post.content.text = _editingController.value.text;
-                  var updatedPost = await widget.onUpdateCallback(_post);
-                  setState(() {
-                    _isEditingText = !_isEditingText;
-                    if (updatedPost != null) {
-                      _post = updatedPost;
-                    }
-                  });
-                },
-              )),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: _editPostContentField(),
-        ),
-        Container(
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(),
-              ),
-            ),
-            child: Visibility(
-              visible: _post.content.hasImage(),
-              child: Image.file(File(_post.content.image)),
-            )),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          PostBar(
+              _author.profilePicture,
+              _author.username,
+              _post.title,
+              DateTime.fromMillisecondsSinceEpoch(
+                  (_post.created.seconds * 1000).toInt())),
+          Visibility(
+            visible: _isTextEditable,
+            child: Container(
+                alignment: AlignmentDirectional.topEnd,
+                child: IconButton(
+                  icon: Icon(!_isEditingText ? Icons.mode_edit : Icons.done,
+                      size: 20),
+                  onPressed: () async {
+                    _post.content.text = _editingController.value.text;
+                    var updatedPost = await widget.onUpdateCallback(_post);
+                    setState(() {
+                      _isEditingText = !_isEditingText;
+                      if (updatedPost != null) {
+                        _post = updatedPost;
+                      }
+                    });
+                  },
+                )),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(5),
+            child: _editPostContentField(),
+          ),
+          Visibility(
+            visible: _post.content.hasImage(),
+            child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(),
+                  ),
+                ),
+                child: Visibility(
+                  visible: _post.content.hasImage(),
+                  child: Image.file(File(_post.content.image)),
+                )),
+          ),
+          Divider(color: Colors.white, thickness: 1),
+          CommentList(onUpdateCommentCallback, _post.comments)
+        ],
+      ),
     );
   }
 }

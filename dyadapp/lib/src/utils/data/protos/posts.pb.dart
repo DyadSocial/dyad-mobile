@@ -21,6 +21,7 @@ class Post extends $pb.GeneratedMessage {
     ..aOM<$2.Timestamp>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created', subBuilder: $2.Timestamp.create)
     ..aOS(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'title')
     ..aOS(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'group')
+    ..pc<CommentThread>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'comments', $pb.PbFieldType.PM, subBuilder: CommentThread.create)
     ..hasRequiredFields = false
   ;
 
@@ -33,6 +34,7 @@ class Post extends $pb.GeneratedMessage {
     $2.Timestamp? created,
     $core.String? title,
     $core.String? group,
+    $core.Iterable<CommentThread>? comments,
   }) {
     final _result = create();
     if (id != null) {
@@ -55,6 +57,9 @@ class Post extends $pb.GeneratedMessage {
     }
     if (group != null) {
       _result.group = group;
+    }
+    if (comments != null) {
+      _result.comments.addAll(comments);
     }
     return _result;
   }
@@ -147,6 +152,199 @@ class Post extends $pb.GeneratedMessage {
   $core.bool hasGroup() => $_has(6);
   @$pb.TagNumber(7)
   void clearGroup() => clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.List<CommentThread> get comments => $_getList(7);
+}
+
+class Comment extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Comment', createEmptyInstance: create)
+    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'author')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'text')
+    ..aOM<$2.Timestamp>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastUpdated', subBuilder: $2.Timestamp.create)
+    ..aOM<$2.Timestamp>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created', subBuilder: $2.Timestamp.create)
+    ..hasRequiredFields = false
+  ;
+
+  Comment._() : super();
+  factory Comment({
+    $core.int? id,
+    $core.String? author,
+    $core.String? text,
+    $2.Timestamp? lastUpdated,
+    $2.Timestamp? created,
+  }) {
+    final _result = create();
+    if (id != null) {
+      _result.id = id;
+    }
+    if (author != null) {
+      _result.author = author;
+    }
+    if (text != null) {
+      _result.text = text;
+    }
+    if (lastUpdated != null) {
+      _result.lastUpdated = lastUpdated;
+    }
+    if (created != null) {
+      _result.created = created;
+    }
+    return _result;
+  }
+  factory Comment.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Comment.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  Comment clone() => Comment()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  Comment copyWith(void Function(Comment) updates) => super.copyWith((message) => updates(message as Comment)) as Comment; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Comment create() => Comment._();
+  Comment createEmptyInstance() => create();
+  static $pb.PbList<Comment> createRepeated() => $pb.PbList<Comment>();
+  @$core.pragma('dart2js:noInline')
+  static Comment getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Comment>(create);
+  static Comment? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int v) { $_setSignedInt32(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get author => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set author($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasAuthor() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAuthor() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get text => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set text($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasText() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearText() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $2.Timestamp get lastUpdated => $_getN(3);
+  @$pb.TagNumber(4)
+  set lastUpdated($2.Timestamp v) { setField(4, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasLastUpdated() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearLastUpdated() => clearField(4);
+  @$pb.TagNumber(4)
+  $2.Timestamp ensureLastUpdated() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $2.Timestamp get created => $_getN(4);
+  @$pb.TagNumber(5)
+  set created($2.Timestamp v) { setField(5, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasCreated() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearCreated() => clearField(5);
+  @$pb.TagNumber(5)
+  $2.Timestamp ensureCreated() => $_ensure(4);
+}
+
+class CommentThread extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'CommentThread', createEmptyInstance: create)
+    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'author')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'text')
+    ..pc<Comment>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'replies', $pb.PbFieldType.PM, subBuilder: Comment.create)
+    ..hasRequiredFields = false
+  ;
+
+  CommentThread._() : super();
+  factory CommentThread({
+    $core.int? id,
+    $core.String? author,
+    $core.String? text,
+    $core.Iterable<Comment>? replies,
+  }) {
+    final _result = create();
+    if (id != null) {
+      _result.id = id;
+    }
+    if (author != null) {
+      _result.author = author;
+    }
+    if (text != null) {
+      _result.text = text;
+    }
+    if (replies != null) {
+      _result.replies.addAll(replies);
+    }
+    return _result;
+  }
+  factory CommentThread.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CommentThread.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  CommentThread clone() => CommentThread()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  CommentThread copyWith(void Function(CommentThread) updates) => super.copyWith((message) => updates(message as CommentThread)) as CommentThread; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static CommentThread create() => CommentThread._();
+  CommentThread createEmptyInstance() => create();
+  static $pb.PbList<CommentThread> createRepeated() => $pb.PbList<CommentThread>();
+  @$core.pragma('dart2js:noInline')
+  static CommentThread getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CommentThread>(create);
+  static CommentThread? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int v) { $_setSignedInt32(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get author => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set author($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasAuthor() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAuthor() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get text => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set text($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasText() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearText() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.List<Comment> get replies => $_getList(3);
 }
 
 class PostQuery extends $pb.GeneratedMessage {
