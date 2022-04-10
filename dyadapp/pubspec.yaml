@@ -49,6 +49,8 @@ dependencies:
   google_maps_flutter: ^2.0.1
   geolocator: ^8.0.5
   geocoding: ^2.0.4
+  #for fallback ip grab
+  dart_ipify: ^1.1.1
 
 dev_dependencies:
   test:

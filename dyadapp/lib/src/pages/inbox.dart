@@ -25,6 +25,7 @@ class _InboxPageState extends State<InboxPage>
     with SingleTickerProviderStateMixin {
   final _toController = TextEditingController();
   final _msgController = TextEditingController();
+  //One sample chat for presentation; We want to grab all the chats the user is apart of in future and store them in a list of chats
   List<Chat> _chats = [
     Chat(recipients: [
       "vncp",
@@ -133,7 +134,7 @@ class _InboxPageState extends State<InboxPage>
                               color: Colors.blueGrey,
                               size: 20,
                             ),
-
+                            //The new button brings up an alert dialog to send a message to someone
                             TextButton(onPressed: ()=>{
                               showDialog(
                                 context: context,
@@ -174,13 +175,17 @@ class _InboxPageState extends State<InboxPage>
                                             SizedBox(height: 50),
                                             TextButton(onPressed: () async {
                                               //Temporary for demo
+                                              //When messaging works completely, you should find the chat recipients who has the person in _toController and add this message to it
+                                              //Then you should POST to the server the new updated chat because it has a new message in it
                                               _chats[0].messages.add(
                                                 Message(
                                                   id: "1",
+                                                  //You are the author of the message
                                                   author: await UserSession().get("username"),
                                                   content: _msgController.value.text,
                                                   lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 17, 2, 30))),
                                               );
+                                              //For demo only
                                               _messagesDemo.add(_chats[0].messages[0]);
                                               _messagesDemo.add(_chats[0].messages[1]);
                                               Navigator.pop(context);
@@ -200,6 +205,7 @@ class _InboxPageState extends State<InboxPage>
                     ],
                   ),
                 )),
+                //Search button does not work yet; Possibly implement?
                 Padding(
                   padding: EdgeInsets.only(top: 16, left: 16, right: 16),
                   child: TextField(
@@ -220,13 +226,14 @@ class _InboxPageState extends State<InboxPage>
                     ),
                   ),
                 ),
-
+                //Listview builder builds a inbox full of the latest message between the user and others
                 ListView.builder(
                   itemCount: _messages.length,
                   shrinkWrap: true,
                   padding: EdgeInsets.only(top: 16),
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
+                    //Message list entry shows the first message from every chat, initialized in initState()
                     return MessageListEntry(
                       name: _messages[index].author,
                       text: _messages[index].content,
