@@ -4,29 +4,45 @@ import "google/protobuf/timestamp.proto";
 import "content.proto";
 
 message Post {
-    int32 id = 1;
-    string author = 2;
-    Content content = 3;
-    google.protobuf.Timestamp last_updated = 4;
-    google.protobuf.Timestamp created = 5;
-    string title = 6;
-    string group = 7;
+  int32 id = 1;
+  string author = 2;
+  Content content = 3;
+  google.protobuf.Timestamp last_updated = 4;
+  google.protobuf.Timestamp created = 5;
+  string title = 6;
+  string group = 7;
+  repeated CommentThread comments = 8;
+}
+
+message Comment {
+  int32 id = 1;
+  string author = 2;
+  string text = 3;
+  google.protobuf.Timestamp last_updated = 4;
+  google.protobuf.Timestamp created = 5;
+}
+
+message CommentThread {
+  int32 id = 1;
+  string author = 2;
+  string text = 3;
+  repeated Comment replies = 4;
 }
 
 message PostQuery {
-    int32 id = 1;
-    string author = 2;
-    string gid = 6;
+  int32 id = 1;
+  string author = 2;
+  string gid = 6;
 }
 
 message PostUploadAck {
-    int32 id = 1;
-    google.protobuf.Timestamp saved_time = 2;
+  int32 id = 1;
+  google.protobuf.Timestamp saved_time = 2;
 }
 
 service PostsSync {
-    rpc refreshPosts(PostQuery) returns (stream Post);
-    rpc queryPosts(PostQuery) returns (stream Post);
-    rpc uploadPosts(stream Post) returns (PostUploadAck);
-    rpc deletePost(PostQuery) returns (PostUploadAck);
+  rpc refreshPosts(PostQuery) returns (stream Post);
+  rpc queryPosts(PostQuery) returns (stream Post);
+  rpc uploadPosts(stream Post) returns (PostUploadAck);
+  rpc deletePost(PostQuery) returns (PostUploadAck);
 }

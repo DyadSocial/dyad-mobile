@@ -11,7 +11,7 @@ final groupInstance = Group()
     code..
     repeat..''',
     profilePicture: NetworkImage(
-      'https://scontent-sjc3-1.xx.fbcdn.net/v/t1.6435-9/120904095_10217726686145469_5615115273804572193_n.jpg?_nc_cat=109&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=VbLO0epcTzkAX_m1SgK&_nc_ht=scontent-sjc3-1.xx&oh=00_AT9GljfezSRmVfN_RKeeZXQkd_py5X4JoWcOjxROSfhRRA&oe=623211ED',
+      'https://media-exp1.licdn.com/dms/image/C5603AQGf4tbhyvvvOw/profile-displayphoto-shrink_800_800/0/1642625696688?e=1654732800&v=beta&t=im4-szJJ1v97pUlNK_mjUX8pFupdSegAXOdMUfDy5Lo',
     ),
   )
   ..addUser(
@@ -22,14 +22,14 @@ final groupInstance = Group()
 twitch.tv/infuhnit
     ''',
     profilePicture: NetworkImage(
-        'https://scontent-sjc3-1.xx.fbcdn.net/v/t1.6435-9/122292494_3745393062147578_9171079194156674668_n.jpg?_nc_cat=107&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=QVYdpSLA0iAAX_Btxaw&_nc_ht=scontent-sjc3-1.xx&oh=00_AT96GBGi8MCRUfy476UwXPKAF2ro4VFNSKsQLjXhuL8_qA&oe=6232CBA2'),
+        'https://media-exp1.licdn.com/dms/image/C4E03AQEA6K6FqRUwug/profile-displayphoto-shrink_800_800/0/1603301837498?e=1654732800&v=beta&t=t14MryYkwq2pA1RypgreCWjUplrKeD0VWt-GMdkLDQI'),
   )
   ..addUser(
     username: 'primchi',
     nickname: 'prim',
     biography: 'UNR ‘22 | ΚΦΛ | 🇹🇭',
     profilePicture: NetworkImage(
-        'https://scontent-sjc3-1.xx.fbcdn.net/v/t1.6435-9/102380597_1514900362022644_5290959128538387371_n.jpg?_nc_cat=105&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=SIyORgrVRMMAX92KTb_&tn=ruCaUUGVVERAM7KS&_nc_ht=scontent-sjc3-1.xx&oh=00_AT_1oVw-8vEc82fs9J7ApWi7mcN3EgPO76C0Koa-egLvrw&oe=622FD551'),
+        'https://media-exp1.licdn.com/dms/image/C5603AQFNHj_f33DmjA/profile-displayphoto-shrink_800_800/0/1572290373534?e=1654732800&v=beta&t=B-3RTRdUDE7Sb0Dwb1DdA3YNLRHRMT8SQniXA_hmmPM'),
   )
   ..addUser(
     username: 'goobygrooves',
@@ -40,7 +40,7 @@ UNR Comp Sci & Engineering 22"
 🌤 - [ Programmer | Engineer ]
 🌃 - [ Composer | Singer-Songwriter | Mix Engineer ]''',
     profilePicture: NetworkImage(
-        'https://scontent-sjc3-1.xx.fbcdn.net/v/t1.6435-9/93430317_1470948506417830_421140398279229440_n.jpg?_nc_cat=107&ccb=1-5&_nc_sid=e3f864&_nc_ohc=e80ZG_4yX90AX-e21QP&_nc_ht=scontent-sjc3-1.xx&oh=00_AT-HzulLWBpzUMYeg6cjcNCY2is-KK-uIzovi_fd90Qpxw&oe=6231DDBB'),
+        'https://media-exp1.licdn.com/dms/image/C5603AQHvXGtCb_kI6w/profile-displayphoto-shrink_800_800/0/1603825712378?e=1654732800&v=beta&t=ShDzRtDI_Zwh5CFw4FrL-U3ozbf4gHil0j2UdS0kvg4'),
   );
 
 class Group {

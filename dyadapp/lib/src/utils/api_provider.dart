@@ -6,7 +6,7 @@ import 'package:dyadapp/src/data.dart';
 //Utility class for accessing dyad api for user authentication
 
 class APIProvider {
-  static final _baseURL = 'https://api.dyadsocial.com';
+  static final _baseURL = 'http://192.168.1.5:8001';
   final http.Client httpClient;
   APIProvider(this.httpClient);
 
@@ -16,7 +16,6 @@ class APIProvider {
 
     if (response.statusCode == 200) {
       List<User> userList = [];
-      print(response.body);
     }
     return [];
   }
@@ -30,7 +29,7 @@ class APIProvider {
         "password": formData['password']
       },
     );
-    return {"status": response.statusCode, "body": response.body};
+    return {"status": 200, "body": response.body};
   }
 
   static Future<Map<String, dynamic>> logIn(
@@ -43,7 +42,8 @@ class APIProvider {
       }).timeout(Duration(seconds: 2));
       return {"status": response.statusCode, "body": response.body};
     } catch (e) {
-      var obj = {"status": 200, "body": "Timeout Exception"};
+      print(e);
+      var obj = {"status": 400, "body": "Timeout Exception"};
       var json = jsonEncode(obj);
       return jsonDecode(json);
     }

@@ -38,7 +38,6 @@ class _FeedListState extends State<FeedList> {
 
   }
 
-
   @override
   Widget build(BuildContext context) {
     // Sort chronologically
@@ -74,7 +73,7 @@ class _FeedListState extends State<FeedList> {
             image: widget.posts[index].content.hasImage()
                 ? Image.file(File(widget.posts[index].content.image))
                 : null,
-            title: widget.posts[index].title + " ${widget.posts[index].id}",
+            title: widget.posts[index].title,
             author: widget.posts[index].author,
             content: widget.posts[index].content.text,
             datetime: DateTime.fromMillisecondsSinceEpoch(

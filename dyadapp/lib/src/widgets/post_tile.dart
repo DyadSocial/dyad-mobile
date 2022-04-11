@@ -9,7 +9,6 @@ import 'package:dyadapp/src/data.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/theme_model.dart';
-import '../utils/theme_preferences.dart';
 
 class PostTile extends StatelessWidget {
   const PostTile({
@@ -39,7 +38,6 @@ class PostTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeModel _themeModel = ThemeModelScope.of(context);
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return TextButton(
           onLongPress: () async {
