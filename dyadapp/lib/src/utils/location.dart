@@ -15,14 +15,26 @@ class LocationDyad {
     final Position currentPosition = await _getCurrentLocation();
     //To be used in the map screen
     if(enabled == true){
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-          currentPosition.latitude, currentPosition.longitude);
-      Placemark place = placemarks[0];
-      if (place.locality != null) {
-        currentAddress = place.locality;
+      try{
+        List<Placemark> placemarks = await placemarkFromCoordinates(
+            currentPosition.latitude, currentPosition.longitude);
+        Placemark place = placemarks[0];
+        if (place.locality != null) {
+          currentAddress = place.locality;
+        }
+        latitude = currentPosition.latitude;
+        longitude = currentPosition.longitude;
       }
-      latitude = currentPosition.latitude;
-      longitude = currentPosition.longitude;
+      catch(e) {
+        //Must be on windows or if user accepts location but the api not working, or turned off gps
+        final Map<String, dynamic> temp = await fetchLocationByIp();
+        if (temp != {}) {
+          currentAddress = temp['city'];
+          latitude = temp['lat'];
+          longitude = temp['lon'];
+        }
+      }
+
     }
     //If location is disabled, use method fetchLocationByIp to get what to display on map. Uses the public geo-ip instead.
     else{
@@ -31,6 +43,11 @@ class LocationDyad {
         currentAddress = temp['city'];
         latitude = temp['lat'];
         longitude = temp['lon'];
+      }
+      else{
+        currentAddress = "ERROR";
+        latitude = 25.0;
+        longitude = 25.0;
       }
     }
   }
