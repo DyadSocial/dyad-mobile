@@ -6,7 +6,7 @@ import 'package:dyadapp/src/data.dart';
 //Utility class for accessing dyad api for user authentication
 
 class APIProvider {
-  static final _baseURL = 'http://192.168.1.5:8001';
+  static final _baseURL = 'https://api.dyadsocial.com';
   final http.Client httpClient;
   APIProvider(this.httpClient);
 
@@ -42,7 +42,6 @@ class APIProvider {
       }).timeout(Duration(seconds: 2));
       return {"status": response.statusCode, "body": response.body};
     } catch (e) {
-      print(e);
       var obj = {"status": 400, "body": "Timeout Exception"};
       var json = jsonEncode(obj);
       return jsonDecode(json);

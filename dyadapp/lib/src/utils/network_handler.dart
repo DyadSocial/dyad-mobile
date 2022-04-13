@@ -21,7 +21,7 @@ class grpcClient {
   grpcClient._internal() {
     final channelCredentials = new ChannelCredentials.insecure();
     final channelOptions = new ChannelOptions(credentials: channelCredentials);
-    channel = ClientChannel('192.168.1.5', port: 50051, options: channelOptions);
+    channel = ClientChannel('data.dyadsocial.com', port: 50051, options: channelOptions);
     postStub = PostsSyncClient(channel,
         options: CallOptions(timeout: Duration(minutes: 1)));
   }
