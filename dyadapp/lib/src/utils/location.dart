@@ -1,11 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
 import 'package:dart_ipify/dart_ipify.dart';
 import 'dart:convert';
+import 'package:provider/provider.dart';
 
-class LocationDyad {
+class LocationDyad extends ChangeNotifier {
   static var currentAddress;
   static var latitude;
   static var longitude;
@@ -38,6 +39,7 @@ class LocationDyad {
       }
       latitude = currentPosition.latitude;
       longitude = currentPosition.longitude;
+      notifyListeners();
     }
     catch(e){
       final Map<String, dynamic> temp = await fetchLocationByIp();
