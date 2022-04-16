@@ -42,7 +42,6 @@ class APIProvider {
       }).timeout(Duration(seconds: 2));
       return {"status": response.statusCode, "body": response.body};
     } catch (e) {
-      print(e);
       var obj = {"status": 400, "body": "Timeout Exception"};
       var json = jsonEncode(obj);
       return jsonDecode(json);

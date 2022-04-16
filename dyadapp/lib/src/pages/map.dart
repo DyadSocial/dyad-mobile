@@ -4,6 +4,8 @@ import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:dyadapp/src/utils/location.dart';
 import 'dart:async';
 
+import 'package:provider/provider.dart';
+
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
 
@@ -101,71 +103,74 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     //Use future builder to show the loading screen while location information is grabbed. See future: getPos(), is waiting for this to complete
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        toolbarHeight: 60,
-        title: Center(
-            child: Column(children: [
-              Text("Dyad", style: TextStyle(fontSize: 30, color: Color(0xFFECEFF4))),
-              Padding(
-                padding: EdgeInsets.only(bottom: 5),
-                child: FutureBuilder<dynamic>(
-                    future: UserSession().get("city"),
-                    builder:
-                        (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                      return snapshot.hasData
-                          ? Text(snapshot.data ?? "Error getting location",
-                          style: TextStyle(
-                              fontSize: 14, color: Color(0xFFECEFF4)))
-                          : Text('Loading..',
-                          style: TextStyle(
-                              fontSize: 14, color: Color(0xFFE5E9F0)));
-                    }),
-              )
-            ])),
+    return ChangeNotifierProvider(
+      create: (context) => LocationDyad(),
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          toolbarHeight: 60,
+          title: Center(
+              child: Column(children: [
+                Text("Dyad", style: TextStyle(fontSize: 30, color: Color(0xFFECEFF4))),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 5),
+                  child: FutureBuilder<dynamic>(
+                      future: UserSession().get("city"),
+                      builder:
+                          (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                        return snapshot.hasData
+                            ? Text(snapshot.data ?? "Error getting location",
+                            style: TextStyle(
+                                fontSize: 14, color: Color(0xFFECEFF4)))
+                            : Text('Loading..',
+                            style: TextStyle(
+                                fontSize: 14, color: Color(0xFFE5E9F0)));
+                      }),
+                )
+              ])),
+        ),
+        body: FutureBuilder<dynamic>(
+          future: getPos(),
+          builder: (context, AsyncSnapshot<dynamic> snapshot) {
+            if (snapshot.hasData) {
+              //If getPos returns with data, then create GoogleMap instance
+              return GoogleMap(
+                initialCameraPosition: _InitialPosition,
+                scrollGesturesEnabled: true,
+                tiltGesturesEnabled: false,
+                rotateGesturesEnabled: false,
+                zoomControlsEnabled: false,
+                zoomGesturesEnabled: true,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                },
+                onCameraMove: null,
+                circles: circles,
+              );
+            } else {
+              //Loading while waiting for getPos to return
+              return Center(
+                  child: SizedBox(
+                    child: CircularProgressIndicator(backgroundColor: Colors.white),
+                    height: 25.0,
+                    width: 25.0,
+                  ));
+            }
+          },
+        ),
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+                onPressed: () async => {_toCurrentLocation()},
+                child: Icon(Icons.refresh)),
+            SizedBox(height: 6),
+            FloatingActionButton(
+                onPressed: () async => {showMapDialog()}, child: Icon(Icons.help))
+          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
-      body: FutureBuilder<dynamic>(
-        future: getPos(),
-        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-          if (snapshot.hasData) {
-            //If getPos returns with data, then create GoogleMap instance
-            return GoogleMap(
-              initialCameraPosition: _InitialPosition,
-              scrollGesturesEnabled: true,
-              tiltGesturesEnabled: false,
-              rotateGesturesEnabled: false,
-              zoomControlsEnabled: false,
-              zoomGesturesEnabled: true,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-              },
-              onCameraMove: null,
-              circles: circles,
-            );
-          } else {
-            //Loading while waiting for getPos to return
-            return Center(
-                child: SizedBox(
-              child: CircularProgressIndicator(backgroundColor: Colors.white),
-              height: 25.0,
-              width: 25.0,
-            ));
-          }
-        },
-      ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-              onPressed: () async => {_toCurrentLocation()},
-              child: Icon(Icons.refresh)),
-          SizedBox(height: 6),
-          FloatingActionButton(
-              onPressed: () async => {showMapDialog()}, child: Icon(Icons.help))
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
