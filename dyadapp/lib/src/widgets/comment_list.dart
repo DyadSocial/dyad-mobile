@@ -11,9 +11,8 @@ class CommentList extends StatefulWidget {
   final Future<void> Function(CommentThread) onUpdateCallback;
   final List<CommentThread> comments;
 
-  const CommentList(this.onUpdateCallback,
-      this.comments,
-      {Key? key}) : super(key: key);
+  const CommentList(this.onUpdateCallback, this.comments, {Key? key})
+      : super(key: key);
 
   @override
   _CommentListState createState() => _CommentListState();
@@ -32,9 +31,9 @@ class _CommentListState extends State<CommentList> {
     _comments = widget.comments;
   }
 
-  List<Widget> getCommentWidgetList(List<CommentThread> _comments) {
+  List<Widget> getCommentWidgetList() {
     List<CommentTile> tile = [];
-    for(var comment in _comments) {
+    for (var comment in _comments) {
       tile.add(CommentTile(widget.onUpdateCallback, comment));
     }
     return tile;
@@ -44,12 +43,16 @@ class _CommentListState extends State<CommentList> {
   @override
   Widget build(BuildContext context) {
     // Sort comments chronologically
+    print("Comments List: ${_comments}");
+    print("Empty? ${_comments.isEmpty}");
+    print("Size? ${_comments.length}");
     if (_comments.isEmpty) {
-      return Text("No Comments");
+      return Padding(
+          padding: EdgeInsets.all(20),
+          child: Text("No Comments", style: TextStyle(fontSize: 18)));
     }
     return Column(
-      children: getCommentWidgetList(_comments),
+      children: getCommentWidgetList(),
     );
-
   }
 }

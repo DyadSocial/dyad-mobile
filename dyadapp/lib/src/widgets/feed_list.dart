@@ -55,7 +55,7 @@ class _FeedListState extends State<FeedList> {
       onRefresh: widget.refreshCallback,
       child: ListView.separated(
         separatorBuilder: (context, index) => SizedBox(height: 11),
-        itemCount: widget.posts.length + 2,
+        itemCount: widget.posts.length,
         itemBuilder: (context, index) {
           if (index == 0) return SizedBox(height: 15);
           if (index == widget.posts.length + 1) return SizedBox(height: 300);

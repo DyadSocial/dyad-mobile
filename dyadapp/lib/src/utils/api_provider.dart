@@ -6,7 +6,7 @@ import 'package:dyadapp/src/data.dart';
 //Utility class for accessing dyad api for user authentication
 
 class APIProvider {
-  static final _baseURL = 'http://192.168.1.5:8001';
+  static final _baseURL = 'https://api.dyadsocial.com';
   final http.Client httpClient;
   APIProvider(this.httpClient);
 

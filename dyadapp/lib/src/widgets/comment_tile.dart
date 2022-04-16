@@ -9,8 +9,7 @@ class CommentTile extends StatefulWidget {
   final Future<void> Function(CommentThread) onUpdateCallback;
   final CommentThread commentThread;
 
-  const CommentTile(
-      this.onUpdateCallback, this.commentThread, {Key? key})
+  const CommentTile(this.onUpdateCallback, this.commentThread, {Key? key})
       : super(key: key);
 
   @override
@@ -34,6 +33,11 @@ class _CommentTileState extends State<CommentTile> {
   Widget build(BuildContext context) {
     // We need to returna  consumer of theme notifier in order to change the
     // colors depending on whether we are in light or dark mode
-    return TextButton(child: Text("CommentThread"), onPressed: () => {});
+    return TextButton(
+      child: Row(
+        children: [Text("Pic"), Text(commentThread.author), Text(commentThread.text), Text("Time Ago")],
+      ),
+      onPressed: () => {},
+    );
   }
 }
