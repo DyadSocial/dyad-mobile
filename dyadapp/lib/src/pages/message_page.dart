@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
 import 'package:dyadapp/src/utils/data/test_message.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 //MessagePage is the page the user is brought to if they want to see the private messages between themselves and another user
 class MessagePage extends StatefulWidget {
@@ -21,6 +23,10 @@ class MessagePage extends StatefulWidget {
 class _MessagePageState extends State<MessagePage> {
   //Commented out for demo
   //List<Message> _messages = [];
+
+  final channel = WebSocketChannel.connect(
+  Uri.parse('ws://74.207.251.32:8000/ws/chat/testroom/')
+);
 
   @override
   Widget build(BuildContext context) {
@@ -97,10 +103,17 @@ class _MessagePageState extends State<MessagePage> {
           ),
         ),
       ),
-      body: Stack(
+      body: 
+      Stack(
         children: <Widget>[
           //Build messages will display a list view of the messages between current user and other
-          buildMessages(widget.nickname),
+          //buildMessages(widget.nickname),
+          StreamBuilder(
+            stream: channel.stream,
+            builder: (context, snapshot) {
+        return Text(snapshot.hasData ? '${snapshot.data}' : 'x');
+      }
+    ),
           //Begin view of bottom bar for sending message
           Align(
             alignment: Alignment.bottomLeft,
@@ -147,7 +160,9 @@ class _MessagePageState extends State<MessagePage> {
                   ),
                   //Send button is where you would POST to the server and rerender
                   FloatingActionButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      sendMessage();
+                    },
                     child: Icon(
                       Icons.send,
                       color: Colors.grey,
@@ -161,8 +176,18 @@ class _MessagePageState extends State<MessagePage> {
             ),
           ),
         ],
-      ),
+      ), 
     );
+  }
+
+  sendMessage()
+  {
+    var message = {
+      "message": "hi",
+      "command": "new_message"
+    };
+    var jsonString = json.encode(message);
+    channel.sink.add(jsonString);
   }
 
   //Method for rendering list of messages using ListViewBuilder.
