@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:dyadapp/src/utils/data/protos/google/protobuf/timestamp.pb.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 //MessagePage is the page the user is brought to if they want to see the private messages between themselves and another user
 class MessagePage extends StatefulWidget {
@@ -13,7 +15,11 @@ class MessagePage extends StatefulWidget {
   String nickname;
   //As mentioned in message_list_entry, might just want to pass in a Chat object to this page which can then render instead of a list of messages
   Chat chat;
-  List<Message> messages = [];
+  List<Message> messages = [Message(
+  id: "1",
+  author: "goobygrooves",
+  content: "I like to make music",
+  lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 4, 21, 12, 30)))];
 
   MessagePage({Key? key, required this.profilePicture, required this.nickname, required this.chat})
       : super(key: key);
@@ -27,19 +33,20 @@ class _MessagePageState extends State<MessagePage> {
   Uri.parse('ws://74.207.251.32:8000/ws/chat/testroom/')
 );
   late Stream broadCast;
-  late Timer refresh;
+  //late Timer refresh;
+  final _msgController = TextEditingController();
 
 
   //List<Message> messages = []; //get last 10 messages from backend database 
   @override
   void initState() {
     broadCast = channel.stream.asBroadcastStream();
-    getMessages();
-    refresh = Timer.periodic(Duration(seconds: 5), (timer) {
-      setState(() {
+    //getMessages();
+    //refresh = Timer.periodic(Duration(seconds: 5), (timer) {
+    //  setState(() {
         
-      });
-    });
+    //  });
+    //});
     super.initState();
     
   }
@@ -169,12 +176,16 @@ void dispose() {
                   Expanded(
                     //Need to add a controller for this textfield, which then should append to the chat object and POST to the server. Then messages should be rendered
                     //again to show updated
-                    child: TextField(
+                    child: TextFormField(
                       style: TextStyle(color: Colors.black),
                       decoration: InputDecoration(
-                          hintText: "Write message...",
-                          hintStyle: TextStyle(color: Colors.black54),
-                          border: InputBorder.none),
+                        icon: Icon(Icons.edit),
+                        iconColor: Colors.grey,
+                        hintText: 'Write a message...',
+                        hintStyle: TextStyle(color:Colors.grey),
+                      ),
+                      keyboardType: TextInputType.multiline,
+                      controller: _msgController,
                     ),
                   ),
                   SizedBox(
@@ -182,10 +193,13 @@ void dispose() {
                   ),
                   //Send button is where you would POST to the server and rerender
                   FloatingActionButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      Message message = Message(author: await UserSession().get("user"), content: _msgController.value.text, lastUpdated: null, created: null, image: null);
+                      _msgController.clear();
                       setState(() {
-                        
+                        widget.messages.add(message);
                       });
+                      FocusManager.instance.primaryFocus?.unfocus();
                     },
                     child: Icon(
                       Icons.send,
