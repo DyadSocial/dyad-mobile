@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:async';
 import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
@@ -22,23 +23,40 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
-   final channel = WebSocketChannel.connect(
+  final channel = WebSocketChannel.connect(
   Uri.parse('ws://74.207.251.32:8000/ws/chat/testroom/')
 );
+  late Stream broadCast;
+  late Timer refresh;
+
+
   //List<Message> messages = []; //get last 10 messages from backend database 
   @override
   void initState() {
+    broadCast = channel.stream.asBroadcastStream();
+    getMessages();
+    refresh = Timer.periodic(Duration(seconds: 5), (timer) {
+      setState(() {
+        
+      });
+    });
     super.initState();
-    widget.messages = getMessages();
+    
   }
+
+@override
+void dispose() {
+  channel.sink.close();
+  super.dispose();
+}
 
   @override
   Widget build(BuildContext context) {
+    //getMessages();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-
         flexibleSpace: SafeArea(
           child: Container(
             padding: EdgeInsets.only(right: 16),
@@ -110,14 +128,14 @@ class _MessagePageState extends State<MessagePage> {
       body: 
       Stack(
         children: <Widget>[
-          //Build messages will display a list view of the messages between current user and other
-          //buildMessages(widget.nickname),
-          StreamBuilder(
-            stream: channel.stream,
-            builder: (context, snapshot) {
-        return Text(snapshot.hasData ? '${snapshot.data}' : 'x');
-      }
-    ),
+        //Build messages will display a list view of the messages between current user and other
+          buildMessages(widget.nickname),
+    //       StreamBuilder(
+    //         stream: channel.stream,
+    //         builder: (context, snapshot) {
+    //       return Text(snapshot.hasData ? '${snapshot.data}' : 'x');
+    //     }
+    //  ),
           //Begin view of bottom bar for sending message
           Align(
             alignment: Alignment.bottomLeft,
@@ -165,7 +183,9 @@ class _MessagePageState extends State<MessagePage> {
                   //Send button is where you would POST to the server and rerender
                   FloatingActionButton(
                     onPressed: () {
-                      sendMessage();
+                      setState(() {
+                        
+                      });
                     },
                     child: Icon(
                       Icons.send,
@@ -184,31 +204,38 @@ class _MessagePageState extends State<MessagePage> {
     );
   }
 
-  sendMessage()
+  addToMessages(var messageList)
   {
-    var message = {
-      "message": "hi",
-      "command": "new_message"
-    };
-    var jsonString = json.encode(message);
-    channel.sink.add(jsonString);
+    setState(() {
+      var i = 0;
+      for (var msg in messageList) {
+        widget.messages.add(Message(author: msg['author'], id: i.toString(), content: msg['content'], lastUpdated: null, created: null, image: false));
+        i++;
+      }
+    });
+    print("LENGTH " + widget.messages.length.toString());
   }
 
-  List<Message> getMessages()
+  getMessages()
   {
     var command = {
-      "message": "",
+      "message": "aaaa",
       "command": "fetch_messages",
-      "roomname": widget.chat.id,
-      "username" : UserSession().get("username")
+      "roomname": "testroom", //widget.chat.id,
+      "username" : "test123"
     };
     
-    channel.sink.add(json.encode(command));
-    var response = channel.stream.last.toString();
-    var messagelist = jsonDecode(response) as List;
-    List<Message> messageobj = messagelist.map((messageobj) => Message.fromJson(messageobj)).toList();
-    return messageobj;
+    var jsonString = json.encode(command);
+    channel.sink.add(jsonString);
+    print("added to sink");
+
+    broadCast.listen((event) {
+      var messagelist = jsonDecode(event)['message'] as List;
+      addToMessages(messagelist); 
+      print("listening");
+    });
   }
+  
 
   //Method for rendering list of messages using ListViewBuilder.
   buildMessages(String sender) {
@@ -216,7 +243,7 @@ class _MessagePageState extends State<MessagePage> {
       itemCount: widget.messages.length,
       shrinkWrap: true,
       padding: EdgeInsets.only(top: 10, bottom: 10),
-      physics: NeverScrollableScrollPhysics(),
+      physics: ClampingScrollPhysics(),
       itemBuilder: (context, index) {
         //If the author is the other user, then the messages should be appended to the listview and display on the left
         if (widget.messages[index].author == sender) {

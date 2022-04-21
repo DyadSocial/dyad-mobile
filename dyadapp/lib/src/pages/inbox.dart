@@ -11,6 +11,7 @@ import 'package:dyadapp/src/utils/network_handler.dart';
 import 'package:dyadapp/src/utils/data/protos/google/protobuf/timestamp.pb.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:dyadapp/src/utils/user_session.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../utils/data/group.dart';
 
@@ -248,7 +249,7 @@ class _InboxPageState extends State<InboxPage>
                                   .toInt()),
                           locale: 'en_short'),
                       isMessageRead: false,
-                      messages: _messagesDemo,//(index == 0 || index == 3) ? true : false,
+                      chat: _chats[0],//(index == 0 || index == 3) ? true : false,
                     );
                   },
                 ),

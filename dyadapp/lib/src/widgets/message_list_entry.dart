@@ -15,7 +15,7 @@ class MessageListEntry extends StatefulWidget {
   //Because the messagelistentry file is how users get to the actual dms between users, maybe have to pass in a Chat here from inbox.dart, which will then get passed to
   //message_page.dart for rendering the chat between users.
   //Chat chat?
-  List<Message> messages;
+  Chat chat;
 
   MessageListEntry(
       {required this.name,
@@ -23,7 +23,7 @@ class MessageListEntry extends StatefulWidget {
       required this.profilePicture,
       required this.time,
       required this.isMessageRead,
-      required this.messages});
+      required this.chat});
   @override
   _MessageListEntryState createState() => _MessageListEntryState();
 }
@@ -42,7 +42,7 @@ class _MessageListEntryState extends State<MessageListEntry> {
                 nickname: widget.name,
                 //As said above, might want to instead pass in a Chat between the current user and widget.name instead of a list of messages
                 //This was for demo purposes only
-                messages: widget.messages,
+                chat: widget.chat,
               ),
             ));
       },
