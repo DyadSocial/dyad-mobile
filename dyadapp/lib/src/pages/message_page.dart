@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
-import 'package:dyadapp/src/utils/data/test_message.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -11,9 +11,10 @@ class MessagePage extends StatefulWidget {
   ImageProvider<Object>? profilePicture;
   String nickname;
   //As mentioned in message_list_entry, might just want to pass in a Chat object to this page which can then render instead of a list of messages
-  List<Message> messages;
+  Chat chat;
+  List<Message> messages = [];
 
-  MessagePage({Key? key, required this.profilePicture, required this.nickname, required this.messages})
+  MessagePage({Key? key, required this.profilePicture, required this.nickname, required this.chat})
       : super(key: key);
 
   @override
@@ -21,12 +22,15 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
-  //Commented out for demo
-  //List<Message> _messages = [];
-
-  final channel = WebSocketChannel.connect(
+   final channel = WebSocketChannel.connect(
   Uri.parse('ws://74.207.251.32:8000/ws/chat/testroom/')
 );
+  //List<Message> messages = []; //get last 10 messages from backend database 
+  @override
+  void initState() {
+    super.initState();
+    widget.messages = getMessages();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -188,6 +192,22 @@ class _MessagePageState extends State<MessagePage> {
     };
     var jsonString = json.encode(message);
     channel.sink.add(jsonString);
+  }
+
+  List<Message> getMessages()
+  {
+    var command = {
+      "message": "",
+      "command": "fetch_messages",
+      "roomname": widget.chat.id,
+      "username" : UserSession().get("username")
+    };
+    
+    channel.sink.add(json.encode(command));
+    var response = channel.stream.last.toString();
+    var messagelist = jsonDecode(response) as List;
+    List<Message> messageobj = messagelist.map((messageobj) => Message.fromJson(messageobj)).toList();
+    return messageobj;
   }
 
   //Method for rendering list of messages using ListViewBuilder.
