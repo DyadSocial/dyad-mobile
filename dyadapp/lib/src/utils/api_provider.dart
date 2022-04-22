@@ -47,4 +47,19 @@ class APIProvider {
       return jsonDecode(json);
     }
   }
+  
+  static Future<Map<String, dynamic>> fetchMessages (
+      Map<String, String> formData) async {
+        try {
+          final response = 
+            await http.post(Uri.parse('$_baseURL/chat/api/fetchmessages'), body: {
+              "chatid": formData['chat_id']
+            });
+            return {"status": response.statusCode, "body": response.body};
+        } catch(e) {
+            var obj = {"status": 400, "body": "Timeout Exception"};
+            var json = jsonEncode(obj);
+            return jsonDecode(json);
+        }
+      }
 }
