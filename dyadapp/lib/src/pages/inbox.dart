@@ -61,11 +61,8 @@ class _InboxPageState extends State<InboxPage>
     }
   }
 
-  Future<List<Chat>> _getChatData() async {
-    await DatabaseHandler().chats().then((newChats) {
-      _chats = newChats;
-    });
-    return _chats;
+  getChats() {
+    //get chats that user is a part of from api endpoint
   }
 
   //TO DO: Helper function for profile picture
@@ -249,7 +246,7 @@ class _InboxPageState extends State<InboxPage>
                                   .toInt()),
                           locale: 'en_short'),
                       isMessageRead: false,
-                      chat: _chats[0],//(index == 0 || index == 3) ? true : false,
+                      chat_id: "testroom",//(index == 0 || index == 3) ? true : false,
                     );
                   },
                 ),

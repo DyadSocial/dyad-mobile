@@ -8,20 +8,18 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:dyadapp/src/utils/data/protos/google/protobuf/timestamp.pb.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:dyadapp/src/utils/database_handler.dart';
+import 'package:dyadapp/src/utils/api_provider.dart';
 
 //MessagePage is the page the user is brought to if they want to see the private messages between themselves and another user
 class MessagePage extends StatefulWidget {
   ImageProvider<Object>? profilePicture;
   String nickname;
   //As mentioned in message_list_entry, might just want to pass in a Chat object to this page which can then render instead of a list of messages
-  Chat chat;
-  List<Message> messages = [Message(
-  id: "1",
-  author: "goobygrooves",
-  content: "I like to make music",
-  lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 4, 21, 12, 30)))];
+  String chat_id;
+  List<Message> messages = [];
 
-  MessagePage({Key? key, required this.profilePicture, required this.nickname, required this.chat})
+  MessagePage({Key? key, required this.profilePicture, required this.nickname, required this.chat_id})
       : super(key: key);
 
   @override
@@ -137,12 +135,17 @@ void dispose() {
         children: <Widget>[
         //Build messages will display a list view of the messages between current user and other
           buildMessages(widget.nickname),
-    //       StreamBuilder(
-    //         stream: channel.stream,
-    //         builder: (context, snapshot) {
-    //       return Text(snapshot.hasData ? '${snapshot.data}' : 'x');
-    //     }
-    //  ),
+          StreamBuilder(
+            stream: channel.stream,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var json = jsonEncode(snapshot.data);
+                Message msg = Message.fromJson(json);
+                DatabaseHandler().insertMessage(msg, widget.chat_id);
+              }
+          return Text(snapshot.hasData ? '${snapshot.data}' : 'x');
+        }
+     ),
           //Begin view of bottom bar for sending message
           Align(
             alignment: Alignment.bottomLeft,
@@ -179,8 +182,6 @@ void dispose() {
                     child: TextFormField(
                       style: TextStyle(color: Colors.black),
                       decoration: InputDecoration(
-                        icon: Icon(Icons.edit),
-                        iconColor: Colors.grey,
                         hintText: 'Write a message...',
                         hintStyle: TextStyle(color:Colors.grey),
                       ),
@@ -218,36 +219,22 @@ void dispose() {
     );
   }
 
-  addToMessages(var messageList)
+  addToMessages(List<Message> messageList) async
   {
-    setState(() {
-      var i = 0;
-      for (var msg in messageList) {
-        widget.messages.add(Message(author: msg['author'], id: i.toString(), content: msg['content'], lastUpdated: null, created: null, image: false));
-        i++;
-      }
-    });
-    print("LENGTH " + widget.messages.length.toString());
+    for (var message in messageList) {
+      DatabaseHandler().insertMessage(message, widget.chat_id);
+    }
   }
 
-  getMessages()
+//TO DO: grab 10 messages from api endpoint 
+  getLatestMessages() async
   {
-    var command = {
-      "message": "aaaa",
-      "command": "fetch_messages",
-      "roomname": "testroom", //widget.chat.id,
-      "username" : "test123"
-    };
-    
-    var jsonString = json.encode(command);
-    channel.sink.add(jsonString);
-    print("added to sink");
-
-    broadCast.listen((event) {
-      var messagelist = jsonDecode(event)['message'] as List;
-      addToMessages(messagelist); 
-      print("listening");
-    });
+    final response = await APIProvider.fetchMessages({'chatid': widget.chat_id});
+    if (response['status'] == 200 {
+      List<Message> messageList = response['body'];
+    }
+   
+    // addToMessages(messageList);
   }
   
 
