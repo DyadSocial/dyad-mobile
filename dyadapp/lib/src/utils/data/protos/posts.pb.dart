@@ -164,6 +164,7 @@ class Comment extends $pb.GeneratedMessage {
     ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'text')
     ..aOM<$2.Timestamp>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastUpdated', subBuilder: $2.Timestamp.create)
     ..aOM<$2.Timestamp>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created', subBuilder: $2.Timestamp.create)
+    ..a<$core.int>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'parentId', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
@@ -174,6 +175,7 @@ class Comment extends $pb.GeneratedMessage {
     $core.String? text,
     $2.Timestamp? lastUpdated,
     $2.Timestamp? created,
+    $core.int? parentId,
   }) {
     final _result = create();
     if (id != null) {
@@ -190,6 +192,9 @@ class Comment extends $pb.GeneratedMessage {
     }
     if (created != null) {
       _result.created = created;
+    }
+    if (parentId != null) {
+      _result.parentId = parentId;
     }
     return _result;
   }
@@ -262,6 +267,15 @@ class Comment extends $pb.GeneratedMessage {
   void clearCreated() => clearField(5);
   @$pb.TagNumber(5)
   $2.Timestamp ensureCreated() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  $core.int get parentId => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set parentId($core.int v) { $_setSignedInt32(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasParentId() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearParentId() => clearField(6);
 }
 
 class CommentThread extends $pb.GeneratedMessage {
@@ -269,7 +283,10 @@ class CommentThread extends $pb.GeneratedMessage {
     ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'author')
     ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'text')
-    ..pc<Comment>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'replies', $pb.PbFieldType.PM, subBuilder: Comment.create)
+    ..aOM<$2.Timestamp>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastUpdated', subBuilder: $2.Timestamp.create)
+    ..aOM<$2.Timestamp>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created', subBuilder: $2.Timestamp.create)
+    ..a<$core.int>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'parentId', $pb.PbFieldType.O3)
+    ..pc<Comment>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'replies', $pb.PbFieldType.PM, subBuilder: Comment.create)
     ..hasRequiredFields = false
   ;
 
@@ -278,6 +295,9 @@ class CommentThread extends $pb.GeneratedMessage {
     $core.int? id,
     $core.String? author,
     $core.String? text,
+    $2.Timestamp? lastUpdated,
+    $2.Timestamp? created,
+    $core.int? parentId,
     $core.Iterable<Comment>? replies,
   }) {
     final _result = create();
@@ -289,6 +309,15 @@ class CommentThread extends $pb.GeneratedMessage {
     }
     if (text != null) {
       _result.text = text;
+    }
+    if (lastUpdated != null) {
+      _result.lastUpdated = lastUpdated;
+    }
+    if (created != null) {
+      _result.created = created;
+    }
+    if (parentId != null) {
+      _result.parentId = parentId;
     }
     if (replies != null) {
       _result.replies.addAll(replies);
@@ -344,7 +373,38 @@ class CommentThread extends $pb.GeneratedMessage {
   void clearText() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.List<Comment> get replies => $_getList(3);
+  $2.Timestamp get lastUpdated => $_getN(3);
+  @$pb.TagNumber(4)
+  set lastUpdated($2.Timestamp v) { setField(4, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasLastUpdated() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearLastUpdated() => clearField(4);
+  @$pb.TagNumber(4)
+  $2.Timestamp ensureLastUpdated() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $2.Timestamp get created => $_getN(4);
+  @$pb.TagNumber(5)
+  set created($2.Timestamp v) { setField(5, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasCreated() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearCreated() => clearField(5);
+  @$pb.TagNumber(5)
+  $2.Timestamp ensureCreated() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  $core.int get parentId => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set parentId($core.int v) { $_setSignedInt32(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasParentId() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearParentId() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.List<Comment> get replies => $_getList(6);
 }
 
 class PostQuery extends $pb.GeneratedMessage {

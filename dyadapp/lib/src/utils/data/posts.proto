@@ -20,13 +20,17 @@ message Comment {
   string text = 3;
   google.protobuf.Timestamp last_updated = 4;
   google.protobuf.Timestamp created = 5;
+  int32 parent_id = 6;
 }
 
 message CommentThread {
   int32 id = 1;
   string author = 2;
   string text = 3;
-  repeated Comment replies = 4;
+  google.protobuf.Timestamp last_updated = 4;
+  google.protobuf.Timestamp created = 5;
+  int32 parent_id = 6;
+  repeated Comment replies = 7;
 }
 
 message PostQuery {
