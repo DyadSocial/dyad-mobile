@@ -7,6 +7,7 @@ import 'package:dyadapp/src/data.dart';
 
 class APIProvider {
   static final _baseURL = 'https://api.dyadsocial.com';
+  static final _chatURL = 'http://74.207.251.32:8000';
   final http.Client httpClient;
   APIProvider(this.httpClient);
 
@@ -52,9 +53,9 @@ class APIProvider {
       Map<String, String> formData) async {
         try {
           final response = 
-            await http.post(Uri.parse('$_baseURL/chat/api/fetchmessages'), body: {
-              "chatid": formData['chat_id']
-            });
+            await http.post(Uri.parse('$_chatURL/chat/api/fetchmessages/'), body: {
+              "chatid": formData['chatid']
+            }).timeout(Duration(seconds: 2));
             return {"status": response.statusCode, "body": response.body};
         } catch(e) {
             var obj = {"status": 400, "body": "Timeout Exception"};

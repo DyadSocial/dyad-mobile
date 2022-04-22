@@ -27,10 +27,9 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
-  final channel = WebSocketChannel.connect(
-  Uri.parse('ws://74.207.251.32:8000/ws/chat/testroom/')
-);
-  late Stream broadCast;
+  var channel;
+  var latestID;
+  //late Stream broadCast;
   //late Timer refresh;
   final _msgController = TextEditingController();
 
@@ -38,15 +37,18 @@ class _MessagePageState extends State<MessagePage> {
   //List<Message> messages = []; //get last 10 messages from backend database 
   @override
   void initState() {
-    broadCast = channel.stream.asBroadcastStream();
+    channel = WebSocketChannel.connect(
+        Uri.parse('ws://74.207.251.32:8000/ws/chat/' + widget.chat_id + '/')
+    );
+    latestID = "";
+    //broadCast = channel.stream.asBroadcastStream();
     //getMessages();
     //refresh = Timer.periodic(Duration(seconds: 5), (timer) {
     //  setState(() {
-        
     //  });
     //});
+    getLatestMessages();
     super.initState();
-    
   }
 
 @override
@@ -134,27 +136,36 @@ void dispose() {
       Stack(
         children: <Widget>[
         //Build messages will display a list view of the messages between current user and other
-          buildMessages(widget.nickname),
+          Container(padding: EdgeInsets.only(bottom: 36), child: buildMessages(widget.nickname),),
+          //buildMessages(widget.nickname),
           StreamBuilder(
             stream: channel.stream,
-            builder: (context, snapshot) {
+            builder: (context, snapshot){
               if (snapshot.hasData) {
-                var json = jsonEncode(snapshot.data);
-                Message msg = Message.fromJson(json);
+                var jsonString = json.decode(snapshot.data.toString());
+                Future.delayed(Duration.zero, () async {
+                  setState(() {
+                    latestID = jsonString['message_id'] + 1;
+                    latestID = latestID.toString();
+                  });
+                });
+                Message msg = Message(content: jsonString['message'], author: jsonString['author'], id: jsonString['message_id'].toString(), lastUpdated: null);
                 DatabaseHandler().insertMessage(msg, widget.chat_id);
+                setMessages();
               }
-          return Text(snapshot.hasData ? '${snapshot.data}' : 'x');
-        }
-     ),
+              return Text("");
+            }
+          ),
           //Begin view of bottom bar for sending message
           Align(
             alignment: Alignment.bottomLeft,
             child: Container(
               padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-              height: 60,
+              height: 50,
               width: double.infinity,
               color: Colors.white,
               child: Row(
+
                 children: <Widget>[
                   GestureDetector(
                     //Needs functionality to be added. Adding media?
@@ -177,6 +188,7 @@ void dispose() {
                     width: 15,
                   ),
                   Expanded(
+
                     //Need to add a controller for this textfield, which then should append to the chat object and POST to the server. Then messages should be rendered
                     //again to show updated
                     child: TextFormField(
@@ -195,11 +207,23 @@ void dispose() {
                   //Send button is where you would POST to the server and rerender
                   FloatingActionButton(
                     onPressed: () async {
-                      Message message = Message(author: await UserSession().get("user"), content: _msgController.value.text, lastUpdated: null, created: null, image: null);
-                      _msgController.clear();
-                      setState(() {
-                        widget.messages.add(message);
+                      //Make a message object to be saved to local database
+                      print(latestID + 'ID TEST');
+                      Message message = Message(id: latestID, author: 'test123', content: _msgController.value.text, lastUpdated: null, created: null, image: null);
+                      DatabaseHandler().insertMessage(message, widget.chat_id);
+                      //Send to websocket so other user can get message too
+                      var jsonString = {
+                        'roomname': widget.chat_id,
+                        'username': 'test123',
+                        'message': _msgController.value.text,
+                        'command': 'new_message',
+                      };
+                      channel.sink.add(jsonEncode(jsonString));
+                      final messageList = await DatabaseHandler().getMessages(widget.chat_id);
+                      setState((){
+                        widget.messages = messageList;
                       });
+                      _msgController.clear();
                       FocusManager.instance.primaryFocus?.unfocus();
                     },
                     child: Icon(
@@ -221,25 +245,55 @@ void dispose() {
 
   addToMessages(List<Message> messageList) async
   {
-    for (var message in messageList) {
-      DatabaseHandler().insertMessage(message, widget.chat_id);
+    if(messageList != null){
+      for (var message in messageList) {
+        DatabaseHandler().insertMessage(message, widget.chat_id);
+      }
     }
+    final messagelist = await DatabaseHandler().getMessages(widget.chat_id);
+    var temp = int.parse(messageList[messageList.length-1].id);
+    temp = temp + 1;
+    var latest = temp.toString();
+    setState((){
+      widget.messages = messagelist;
+      latestID = latest;
+    });
   }
 
 //TO DO: grab 10 messages from api endpoint 
   getLatestMessages() async
   {
     final response = await APIProvider.fetchMessages({'chatid': widget.chat_id});
-    if (response['status'] == 200 {
-      List<Message> messageList = response['body'];
+    List<Message> messageList = [];
+    if (response['status'] == 200) {
+      //List of obj
+      var res = json.decode(response['body']);
+      for(var msg in res){
+        String msg_id = msg['message_id'].toString();
+        Message message = Message(id: msg_id, content: msg['content'], author: msg['author_name'], lastUpdated: null);
+        messageList.add(message);
+      }
     }
-   
-    // addToMessages(messageList);
+    else{
+      print("TIMEOUT EXCEPTION");
+    }
+    addToMessages(messageList);
   }
-  
+
+  setMessages() async{
+    var messageList = await DatabaseHandler().getMessages(widget.chat_id);
+    setState(() {
+      widget.messages = messageList;
+    });
+  }
+
+  setLatestID(dynamic jsonString) {
+
+  }
 
   //Method for rendering list of messages using ListViewBuilder.
-  buildMessages(String sender) {
+  buildMessages(String sender){
+
     return ListView.builder(
       itemCount: widget.messages.length,
       shrinkWrap: true,

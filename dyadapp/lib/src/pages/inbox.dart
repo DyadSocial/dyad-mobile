@@ -246,7 +246,7 @@ class _InboxPageState extends State<InboxPage>
                                   .toInt()),
                           locale: 'en_short'),
                       isMessageRead: false,
-                      chat_id: "testroom",//(index == 0 || index == 3) ? true : false,
+                      chat_id: "test1232",//(index == 0 || index == 3) ? true : false,
                     );
                   },
                 ),
