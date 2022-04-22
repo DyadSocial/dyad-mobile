@@ -4,14 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:dyadapp/src/data.dart';
 import 'package:dyadapp/src/utils/data/protos/posts.pb.dart';
 
+import '../utils/user_session.dart';
 import 'comment_tile.dart';
 
 // Builds a list of comment tiles via the _CommentListState class
 class CommentList extends StatefulWidget {
   final Future<void> Function(CommentThread) onUpdateCallback;
+  final Future<void> Function(int) replyCommentCallback;
   final List<CommentThread> comments;
 
-  const CommentList(this.onUpdateCallback, this.comments, {Key? key})
+  const CommentList(
+      this.onUpdateCallback, this.replyCommentCallback, this.comments,
+      {Key? key})
       : super(key: key);
 
   @override
@@ -31,10 +35,12 @@ class _CommentListState extends State<CommentList> {
     _comments = widget.comments;
   }
 
-  List<Widget> getCommentWidgetList() {
+  Future<List<Widget>> getCommentWidgetList() async {
     List<CommentTile> tile = [];
+    var _currentUser = await UserSession().get("username");
     for (var comment in _comments) {
-      tile.add(CommentTile(widget.onUpdateCallback, comment));
+      tile.add(CommentTile(widget.onUpdateCallback, comment, _currentUser,
+          widget.replyCommentCallback));
     }
     return tile;
   }
@@ -42,17 +48,24 @@ class _CommentListState extends State<CommentList> {
   // Actually builds the widget as described in the class description
   @override
   Widget build(BuildContext context) {
-    // Sort comments chronologically
-    print("Comments List: ${_comments}");
-    print("Empty? ${_comments.isEmpty}");
-    print("Size? ${_comments.length}");
+    // If no comments, print no comments to the user
     if (_comments.isEmpty) {
       return Padding(
           padding: EdgeInsets.all(20),
-          child: Text("No Comments", style: TextStyle(fontSize: 18)));
+          child: Text("No Comments 💤", style: TextStyle(fontSize: 16)));
     }
-    return Column(
-      children: getCommentWidgetList(),
-    );
+    // Sort comments chronologically
+    // else render all widgets in a column
+    return FutureBuilder<List<Widget>>(
+        future: getCommentWidgetList(),
+        builder: (BuildContext context, AsyncSnapshot<List<Widget>> snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: snapshot.data!);
+          } else {
+            return CircularProgressIndicator();
+          }
+        });
   }
 }
