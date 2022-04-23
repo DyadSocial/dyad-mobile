@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:dyadapp/src/pages/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,8 +12,10 @@ import 'package:dyadapp/src/utils/data/protos/google/protobuf/timestamp.pb.dart'
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-
+import 'package:dyadapp/src/utils/api_provider.dart';
 import '../utils/data/group.dart';
+
+Chat chattest = Chat(recipients: ["infuhnit", "goobygrooves"], messages: []);
 
 class InboxPage extends StatefulWidget {
   InboxPage({Key? key}) : super(key: key);
@@ -26,43 +28,111 @@ class _InboxPageState extends State<InboxPage>
     with SingleTickerProviderStateMixin {
   final _toController = TextEditingController();
   final _msgController = TextEditingController();
-  //One sample chat for presentation; We want to grab all the chats the user is apart of in future and store them in a list of chats
-  List<Chat> _chats = [
-    Chat(recipients: [
-      "vncp",
-      "primchi",
-      "goobygrooves",
-      "infuhnit"
-    ], messages: [
-      Message(
-          id: "1",
-          author: "goobygrooves",
-          content: "I like to make music",
-          lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 4, 21, 12, 30))),
-    ]),
-
-  ];
-  List<Message> _messages = [];
+  var username;
+  //Will hold the list of chats that the user is apart of from api endpoint
+  List<Chat> _chats = [];
   List<ImageProvider> profilePictures = [];
+  var latestID;
+  var latestMessage;
 
-  //Fake message list to send for demo 4-4-22
-  List<Chat> _chatsDemo = [];
-  List<Message> _messagesDemo = [];
+
 
   @override
   void initState() {
+    getUser();
+    getChats();
     super.initState();
-    for (var chat in _chats) {
+    /*for (var chat in _chats) {
       if (chat.messages.length > 0) {
         _messages.add(chat.messages[0]);
       } else {
         _messages.add(Message(id: "", author: "", content: ""));
       }
+    }*/
+  }
+
+  getUser() async{
+    //print(username);
+  }
+
+  getChats() async{
+    //get username
+    var user = await UserSession().get("username");
+    setState(() {
+      username = user;
+    });
+    //print(username);
+    final response = await APIProvider.fetchChats({'username': username});
+    if (response['status'] == 200) {
+      //List of obj
+      var res = json.decode(response['body']);
+      //print(res);
+      //Go through every chat
+      for(var msg in res){
+        var participants = new List<String>.from(msg['participants']);
+        //print(participants);
+        Chat tempchat = Chat(recipients: participants, messages: []);
+        //print(tempchat);
+         setState(() {
+           _chats.add(tempchat);
+         });
+      }
+    }
+    else{
+      print("TIMEOUT : CHATS");
+    }
+
+    //get chats that user is a part of from api endpoint
+  }
+
+  getLatestMessage(String chatid) async{
+    //Put chatid in here once its figured out
+    List<Message> messageList = await DatabaseHandler().getMessages(chatid);
+    if(messageList.length>0){
+      setState(() {
+        latestMessage = messageList[messageList.length-1];
+      });
+    }
+    else{
+      return "test";
     }
   }
 
-  getChats() {
-    //get chats that user is a part of from api endpoint
+//grab ten latest messages
+  getLatestMessages(String chatid) async
+  {
+    //Put in chatid once we figure it out
+    final response = await APIProvider.fetchMessages({'chatid': chatid});
+    List<Message> messageList = [];
+    if (response['status'] == 200) {
+      //List of obj
+      var res = json.decode(response['body']);
+      for(var msg in res){
+        String msg_id = msg['message_id'].toString();
+        Message message = Message(id: msg_id, content: msg['content'], author: msg['author_name'], lastUpdated: null);
+        messageList.add(message);
+      }
+      return messageList;
+    }
+    else{
+      print("TIMEOUT EXCEPTION : MESSAGES");
+      return [];
+    }
+  }
+
+  //The chatID will be a concatenation of all recipients usernames in alphabetical order, like goobygroovesprimchi or infuhnitvncp
+  getChatId(Chat chat){
+    //print(chat.recipients);
+    List<String> chatIdList = [];
+    for(var recipient in chat.recipients){
+      chatIdList.add(recipient);
+    }
+    chatIdList.sort();
+    String chatID = "";
+    for(var user in chatIdList){
+      chatID = chatID + user;
+    }
+    return chatID;
   }
 
   //TO DO: Helper function for profile picture
@@ -81,9 +151,7 @@ class _InboxPageState extends State<InboxPage>
 
   @override
   Widget build(BuildContext context) {
-    for(var msg in _messages){
-      print("In inbox, _messages has first message from user: " + msg.author);
-    }
+
     return Scaffold(
       appBar: AppBar(
         title: Center(child: const Text('Dyad')),
@@ -172,20 +240,87 @@ class _InboxPageState extends State<InboxPage>
                                             ),
                                             SizedBox(height: 50),
                                             TextButton(onPressed: () async {
-                                              //Temporary for demo
-                                              //When messaging works completely, you should find the chat recipients who has the person in _toController and add this message to it
-                                              //Then you should POST to the server the new updated chat because it has a new message in it
-                                              _chats[0].messages.add(
-                                                Message(
-                                                  id: "1",
-                                                  //You are the author of the message
-                                                  author: await UserSession().get("username"),
-                                                  content: _msgController.value.text,
-                                                  lastUpdated: Timestamp.fromDateTime(DateTime.utc(2022, 3, 17, 2, 30))),
-                                              );
-                                              //For demo only
-                                              _messagesDemo.add(_chats[0].messages[0]);
-                                              _messagesDemo.add(_chats[0].messages[1]);
+                                              //For id, first check if a chat exists, if it doesn't create a new message in a new chatroom. If it exists
+                                              //open the websocket connection and add in using latest_id.
+                                              //Would help if sam could send the chats with their latest message?
+                                              for(var chat in _chats){
+                                                //Already exists; add to websocket
+                                                if(chat.recipients.contains(username) && chat.recipients.contains(_toController.value.text)){
+                                                  final channel = WebSocketChannel.connect(
+                                                    //put in chatid once we figure it out
+                                                      Uri.parse('ws://74.207.251.32:8000/ws/chat/' + getChatId(chat) + '/')
+                                                  );
+                                                  var jsonString = {
+                                                    'roomname': getChatId(chat),
+                                                    'username': username,
+                                                    'message': _msgController.value.text,
+                                                    'command': 'new_message',
+                                                  };
+
+                                                  channel.sink.add(jsonEncode(jsonString));
+                                                  print(channel.stream.last);
+                                                  channel.sink.close();
+
+                                                  //Get latest ID from 10 chats or if sam sends back latest message in chat
+                                                  //Used for getting the latestID in a chat to display as an entry
+                                                  //Problem may arise from getting id like this, maybe have an id
+                                                  List<Message> _tenLatestMessages = getLatestMessages(getChatId(chat));
+                                                  var temp = int.parse(_tenLatestMessages[0].id);
+                                                  temp = temp + 1;
+                                                  latestID = temp.toString();
+                                                  Message message = Message(
+                                                      id: latestID,
+                                                      author: username,
+                                                      content: _msgController.value.text,
+                                                      lastUpdated: Timestamp.fromDateTime(DateTime.now().toUtc()),
+                                                      created: null,
+                                                      image: null);
+                                                  //Put in chatid once we figure it out
+                                                  DatabaseHandler().insertMessage(message, getChatId(chat));
+                                                  //Send to websocket so other user can get message too
+                                                }
+                                              }
+                                              //Make a new chat object with new chat
+                                              List<String> tempRecList = [];
+                                              //Put recipients in alphabetical order
+                                              tempRecList.add(username);
+                                              tempRecList.add(_toController.value.text);
+                                              tempRecList.sort();
+                                              Chat newChat = Chat(recipients: [], messages: []);
+                                              for(var recipient in tempRecList){
+                                                newChat.recipients.add(recipient);
+                                              }
+                                              //If it is a new chat and doesn't already exist; getChats one more time
+                                              getChats();
+                                              if(!_chats.contains(newChat)){
+                                                  //_chats.add(newChat);
+                                                  final channel = WebSocketChannel.connect(
+                                                    //put in chatid once we figure it out
+                                                      Uri.parse('ws://74.207.251.32:8000/ws/chat/' + getChatId(newChat) + '/')
+                                                  );
+                                                  //Send to websocket so other user can get message too
+                                                  var jsonString = {
+                                                    'roomname': getChatId(newChat),
+                                                    'username': username,
+                                                    'message': _msgController.value.text,
+                                                    'command': 'new_message',
+                                                  };
+                                                  channel.sink.add(jsonEncode(jsonString));
+                                                  print(await channel.stream.last);
+                                                  channel.sink.close();
+                                                  //LatestID should be 1 because its a new chatroom
+                                                  latestID = "1";
+                                                  Message message = Message(
+                                                      id: latestID,
+                                                      author: username,
+                                                      content: _msgController.value.text,
+                                                      lastUpdated: Timestamp.fromDateTime(DateTime.now().toUtc()),
+                                                      created: null,
+                                                      image: null);
+                                                  //Chatid for inserting into database can be like currentuser-touser?
+                                                  //put in chatid once we figure it out
+                                                  DatabaseHandler().insertMessage(message, getChatId(newChat));
+                                              }
                                               Navigator.pop(context);
                                             }, child: Text("SEND"))
                                           ],
@@ -204,7 +339,7 @@ class _InboxPageState extends State<InboxPage>
                   ),
                 )),
                 //Search button does not work yet; Possibly implement?
-                Padding(
+                /*Padding(
                   padding: EdgeInsets.only(top: 16, left: 16, right: 16),
                   child: TextField(
                     decoration: InputDecoration(
@@ -223,30 +358,36 @@ class _InboxPageState extends State<InboxPage>
                           borderSide: BorderSide(color: Colors.grey.shade100)),
                     ),
                   ),
-                ),
+                ),*/
                 //Listview builder builds a inbox full of the latest message between the user and others
+
                 ListView.builder(
-                  itemCount: _messages.length,
+                  itemCount: _chats.length,
                   shrinkWrap: true,
                   padding: EdgeInsets.only(top: 16),
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
+
+                    //Get the latestmessage in that chat; had to edit out for video but make sure to get it done by demo
+                    getLatestMessage(getChatId(_chats[index]));
                     //Message list entry shows the first message from every chat, initialized in initState()
                     return MessageListEntry(
-                      name: _messages[index].author,
-                      text: _messages[index].content,
+                      name: _chats[index].recipients.firstWhere((element) => element != username),
+                      //first message here
+                      text: latestMessage.content,
                       //TO DO:
                       profilePicture: groupInstance
-                              .getUser(_messages[index].author)
+                              .getUser(_chats[index].recipients.firstWhere((element) => element != username && element != 'test123', orElse: ()=> 'infuhnit'))
                               ?.profilePicture ??
                           null,
                       time: timeago.format(
                           DateTime.fromMillisecondsSinceEpoch(
-                              (_messages[index].lastUpdated.seconds * 1000)
+                              (Timestamp.fromDateTime(DateTime.utc(2022, 4, 21, 12, 30)).seconds * 1000)
                                   .toInt()),
                           locale: 'en_short'),
                       isMessageRead: false,
-                      chat_id: "test1232",//(index == 0 || index == 3) ? true : false,
+                      //Put chatid in here once its figured out
+                      chat_id: getChatId(_chats[index]),//(index == 0 || index == 3) ? true : false,
                     );
                   },
                 ),

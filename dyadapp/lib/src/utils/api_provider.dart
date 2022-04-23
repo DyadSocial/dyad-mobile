@@ -52,7 +52,7 @@ class APIProvider {
   static Future<Map<String, dynamic>> fetchMessages (
       Map<String, String> formData) async {
         try {
-          final response = 
+          final response =
             await http.post(Uri.parse('$_chatURL/chat/api/fetchmessages/'), body: {
               "chatid": formData['chatid']
             }).timeout(Duration(seconds: 2));
@@ -63,4 +63,19 @@ class APIProvider {
             return jsonDecode(json);
         }
       }
+
+  static Future<Map<String, dynamic>> fetchChats (
+      Map<String, String> formData) async {
+    try {
+      final response =
+      await http.post(Uri.parse('$_chatURL/chat/api/getchats/'), body: {
+        "username": formData['username']
+      }).timeout(Duration(seconds: 2));
+      return {"status": response.statusCode, "body": response.body};
+    } catch(e) {
+      var obj = {"status": 400, "body": "Timeout Exception"};
+      var json = jsonEncode(obj);
+      return jsonDecode(json);
+    }
+  }
 }

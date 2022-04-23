@@ -31,7 +31,7 @@ class MessageListEntry extends StatefulWidget {
 class _MessageListEntryState extends State<MessageListEntry> {
   @override
   Widget build(BuildContext context) {
-    print("Message list received: " + widget.name);
+    //print("Message list received: " + widget.name);
     return GestureDetector(
       onTap: () {
         Navigator.push(

@@ -32,6 +32,7 @@ class _MessagePageState extends State<MessagePage> {
   //late Stream broadCast;
   //late Timer refresh;
   final _msgController = TextEditingController();
+  var username;
 
 
   //List<Message> messages = []; //get last 10 messages from backend database 
@@ -209,12 +210,12 @@ void dispose() {
                     onPressed: () async {
                       //Make a message object to be saved to local database
                       print(latestID + 'ID TEST');
-                      Message message = Message(id: latestID, author: 'test123', content: _msgController.value.text, lastUpdated: null, created: null, image: null);
+                      Message message = Message(id: latestID, author: username, content: _msgController.value.text, lastUpdated: Timestamp.fromDateTime(DateTime.now().toUtc()), created: null, image: null);
                       DatabaseHandler().insertMessage(message, widget.chat_id);
                       //Send to websocket so other user can get message too
                       var jsonString = {
                         'roomname': widget.chat_id,
-                        'username': 'test123',
+                        'username': username,
                         'message': _msgController.value.text,
                         'command': 'new_message',
                       };
@@ -245,19 +246,24 @@ void dispose() {
 
   addToMessages(List<Message> messageList) async
   {
-    if(messageList != null){
+    if(messageList != []){
       for (var message in messageList) {
         DatabaseHandler().insertMessage(message, widget.chat_id);
       }
     }
+    //Get new set of messages after adding to db
     final messagelist = await DatabaseHandler().getMessages(widget.chat_id);
-    var temp = int.parse(messageList[messageList.length-1].id);
-    temp = temp + 1;
-    var latest = temp.toString();
-    setState((){
-      widget.messages = messagelist;
-      latestID = latest;
-    });
+    if(messageList != []){
+      var temp = int.parse(messageList[0].id);
+      temp = temp + 1;
+      var latest = temp.toString();
+      var user = await UserSession().get("username");
+      setState((){
+        username = user;
+        widget.messages = messagelist;
+        latestID = latest;
+      });
+    }
   }
 
 //TO DO: grab 10 messages from api endpoint 
