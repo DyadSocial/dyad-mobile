@@ -41,6 +41,13 @@ UNR Comp Sci & Engineering 22"
 🌃 - [ Composer | Singer-Songwriter | Mix Engineer ]''',
     profilePicture: NetworkImage(
         'https://media-exp1.licdn.com/dms/image/C5603AQHvXGtCb_kI6w/profile-displayphoto-shrink_800_800/0/1603825712378?e=1654732800&v=beta&t=ShDzRtDI_Zwh5CFw4FrL-U3ozbf4gHil0j2UdS0kvg4'),
+  )
+  ..addUser(
+  username: 'test123',
+  nickname: 'mr test',
+  biography: '''i am just a test user!''',
+  profilePicture: NetworkImage(
+  'https://media-exp1.licdn.com/dms/image/C5603AQHvXGtCb_kI6w/profile-displayphoto-shrink_800_800/0/1603825712378?e=1654732800&v=beta&t=ShDzRtDI_Zwh5CFw4FrL-U3ozbf4gHil0j2UdS0kvg4'),
   );
 
 class Group {

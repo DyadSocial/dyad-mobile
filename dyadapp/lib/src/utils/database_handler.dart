@@ -25,15 +25,18 @@ class DatabaseHandler {
     } catch (_) {}
     return await openDatabase(
       path,
-      version: 1,
+      version: 4,
       onCreate: _onCreate,
       onOpen: _onOpen,
     );
   }
 
-  FutureOr<void> _onOpen(Database db) async {}
+  FutureOr<void> _onOpen(Database db) async {
+
+  }
 
   Future<void> _onCreate(Database db, int version) async {
+    print("tables created");
     await db.execute('''
       CREATE TABLE posts(
         id INTEGER PRIMARY KEY,
@@ -46,7 +49,7 @@ class DatabaseHandler {
         id INTEGER PRIMARY KEY,
         author TEXT,
         data BLOB,
-        chat_id TEXT
+        chatid TEXT
       )
     ''');
     await db.execute('''
@@ -144,7 +147,7 @@ class DatabaseHandler {
     );
   }
 
-  Future<void> insertMessage(Message message, String chat_id) async {
+  Future<void> insertMessage(Message message, String chatid) async {
     final db = await _helperInstance.database;
     await db.insert(
         'messages',
@@ -152,7 +155,7 @@ class DatabaseHandler {
           "id": message.id,
           "author": message.author,
           "data": message.writeToBuffer(),
-          "chat_id": chat_id
+          "chatid": chatid
         },
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
@@ -168,15 +171,15 @@ class DatabaseHandler {
     if (queryId == null) return [];
     final db = await _helperInstance.database;
     final List<Map<String, dynamic>> maps =
-        await db.query('messages', where: 'chat_id = ?', whereArgs: [queryId]);
+        await db.query('messages', where: 'chatid = ?', whereArgs: [queryId]);
     return List.generate(maps.length, (idx) {
       var message = Message.fromBuffer(maps[idx]['data']);
-      message.id = maps[idx]['id'];
+      message.id = maps[idx]['id'].toString();
       return message;
     });
   }
 
-  Future<void> updateMessage(Message message, String chat_id) async {
+  Future<void> updateMessage(Message message, String chatid) async {
     final db = await _helperInstance.database;
     await db.update(
       'messages',
@@ -184,7 +187,7 @@ class DatabaseHandler {
         'id': message.id,
         'author': message.author,
         'data': message.writeToBuffer(),
-        'chat_id': chat_id
+        'chatid': chatid
       },
       where: 'id = ?',
       whereArgs: [message.id],

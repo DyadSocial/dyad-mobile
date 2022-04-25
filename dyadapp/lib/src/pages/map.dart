@@ -51,9 +51,10 @@ class _MapScreenState extends State<MapScreen> {
 
   //Asynchronous function to get the current city from location.dart, then draw a circle around it.
   getPos() async {
+    //await Future.delayed(const Duration(seconds: 5), (){});
     await LocationDyad().getUserPosition();
     //Dyad only stores the city, instead of the latitude and longitude or direct location of the user
-    UserSession().set("city", LocationDyad.currentAddress);
+    await UserSession().set("city", LocationDyad.currentAddress);
     _MapScreenState.latitude = LocationDyad.latitude;
     _MapScreenState.longitude = LocationDyad.longitude;
     //Redraw the circle; Purely for user visual, any user within the city displayed at top of screen will see your posts and vice versa

@@ -29,9 +29,10 @@ class MessageListEntry extends StatefulWidget {
 }
 
 class _MessageListEntryState extends State<MessageListEntry> {
+  var set;
   @override
   Widget build(BuildContext context) {
-    print("Message list received: " + widget.name);
+    //print("Message list received: " + widget.name);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -44,7 +45,11 @@ class _MessageListEntryState extends State<MessageListEntry> {
                 //This was for demo purposes only
                 chat_id: widget.chat_id,
               ),
-            ));
+            )).then((value) {
+          setState(() {
+            widget.isMessageRead = true;
+          });
+        });
       },
       child: Container(
         padding: EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
