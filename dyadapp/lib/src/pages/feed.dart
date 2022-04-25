@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dyadapp/src/utils/api_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dyadapp/src/data.dart';
@@ -146,12 +147,13 @@ class _FeedScreenState extends State<FeedScreen>
   onWritePostCallback(postForm) async {
     var currentTime = DateTime.now();
     String currentCity = await UserSession().get("city");
+    String username = await UserSession().get("username");
     var postToAdd = Post(
         title: postForm.title,
         content: Content(
           text: postForm.content,
         ),
-        author: await UserSession().get("username"),
+        author: username,
         created: Timestamp.fromDateTime(currentTime),
         lastUpdated: Timestamp.fromDateTime(currentTime),
         group: currentCity);
@@ -159,15 +161,19 @@ class _FeedScreenState extends State<FeedScreen>
     int newPostID = await DatabaseHandler().insertPost(postToAdd);
     if (postForm.imageFile != null) {
       // Get Path
-      final imageFilePath = await getFilePath(
-          hash3(newPostID, postToAdd.author, currentTime.millisecondsSinceEpoch)
-              .toString());
+      final uuid = hash3(
+          newPostID, postToAdd.author, currentTime.millisecondsSinceEpoch);
+      final imageFilePath = await getFilePath("$uuid.png");
       File imageFile = File(imageFilePath);
       print(imageFile.path);
       // Write image to file
-      imageFile.writeAsBytes((postForm.imageFile as File).readAsBytesSync());
+      await imageFile
+          .writeAsBytes((postForm.imageFile as File).readAsBytesSync());
+      await APIProvider.uploadImageFile(imageFilePath, username, uuid.toString());
       // Update Post entry with file path
-      postToAdd.content.image = imageFilePath;
+      //postToAdd.content.image = imageFilePath;
+      postToAdd.content.image =
+          "https://api.dyadsocial.com/media/username_${postToAdd.author}/$uuid.png";
     }
     postToAdd.id = newPostID;
     await DatabaseHandler().updatePost(newPostID, postToAdd);

@@ -6,7 +6,10 @@ import 'package:dyadapp/src/widgets/fade_transition_page.dart';
 import 'package:dyadapp/src/data.dart';
 import 'package:dyadapp/src/pages/feed.dart';
 import 'package:dyadapp/src/pages/inbox.dart';
+import 'package:provider/provider.dart';
 import 'package:quiver/collection.dart';
+
+import '../utils/location.dart';
 /*
 Class DyadScaffold
 Description: Stateless widget with build() creating a navigation bar
@@ -22,33 +25,38 @@ class DyadScaffold extends StatelessWidget {
     final routeState = RouteStateScope.of(context);
     final selectedIndex = _getSelectedIndex(routeState.route.pathTemplate);
 
-    return Scaffold(
-      body: AdaptiveNavigationScaffold(
-        selectedIndex: selectedIndex,
-        body: const DyadScaffoldBody(),
-        onDestinationSelected: (idx) {
-          if (idx == 0) {
-            routeState.go('/feed/all');
-          } else if (idx == 1) {
-            routeState.go('/map');
-          } else if (idx == 2) {
-            routeState.go('/inbox');
-          }
-        },
-        destinations: const [
-          AdaptiveScaffoldDestination(
-            title: 'Feed',
-            icon: Icons.feed,
-          ),
-          AdaptiveScaffoldDestination(
-            title: 'Map',
-            icon: Icons.map,
-          ),
-          AdaptiveScaffoldDestination(
-            title: 'Inbox',
-            icon: Icons.inbox,
-          ),
-        ],
+    return MultiProvider(
+      providers: [ChangeNotifierProvider<LocationDyad>(
+        create: (context) => LocationDyad()
+      )],
+      child: Scaffold(
+        body: AdaptiveNavigationScaffold(
+          selectedIndex: selectedIndex,
+          body: const DyadScaffoldBody(),
+          onDestinationSelected: (idx) {
+            if (idx == 0) {
+              routeState.go('/feed/all');
+            } else if (idx == 1) {
+              routeState.go('/map');
+            } else if (idx == 2) {
+              routeState.go('/inbox');
+            }
+          },
+          destinations: const [
+            AdaptiveScaffoldDestination(
+              title: 'Feed',
+              icon: Icons.feed,
+            ),
+            AdaptiveScaffoldDestination(
+              title: 'Map',
+              icon: Icons.map,
+            ),
+            AdaptiveScaffoldDestination(
+              title: 'Inbox',
+              icon: Icons.inbox,
+            ),
+          ],
+        ),
       ),
     );
   }

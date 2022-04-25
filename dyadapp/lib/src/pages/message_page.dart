@@ -230,7 +230,7 @@ void dispose() {
   getLatestMessages() async
   {
     final response = await APIProvider.fetchMessages({'chatid': widget.chat_id});
-    if (response['status'] == 200 {
+    if (response['status'] == 200) {
       List<Message> messageList = response['body'];
     }
    

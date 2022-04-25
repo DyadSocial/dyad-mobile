@@ -6,10 +6,10 @@ import 'package:dart_ipify/dart_ipify.dart';
 import 'dart:convert';
 import 'package:provider/provider.dart';
 
-class LocationDyad extends ChangeNotifier {
+class LocationDyad with ChangeNotifier {
   static var currentAddress;
-  static var latitude;
-  static var longitude;
+  static double latitude = 0;
+  static double longitude = 0;
 
   getUserPosition() async {
     try{

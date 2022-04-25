@@ -18,7 +18,7 @@ class _MapScreenState extends State<MapScreen> {
   //Default latitude and longitude to display if location services are disabled and geo ip doesn't work; Rare
   static double latitude = 25.0;
   static double longitude = 25.0;
-  late Timer mapRefresh;
+  static late Timer mapRefresh;
 
   //Initial camera load, will be random position. Ideally, this won't happen because we are using Futurebuilder
   static CameraPosition _InitialPosition = CameraPosition(
@@ -27,9 +27,13 @@ class _MapScreenState extends State<MapScreen> {
   @override
   initState() {
     //Map refreshes every minute
-    mapRefresh = Timer.periodic(Duration(seconds: 60), (timer) {
-      getPos();
-    });
+    print(longitude);
+    print(latitude);
+    if (latitude == 25.0) {
+      mapRefresh = Timer.periodic(Duration(seconds: 60), (timer) {
+        getPos();
+      });
+    }
   }
 
   //Default circle around location
@@ -47,7 +51,6 @@ class _MapScreenState extends State<MapScreen> {
 
   //Asynchronous function to get the current city from location.dart, then draw a circle around it.
   getPos() async {
-    await Future.delayed(const Duration(seconds: 5), (){});
     await LocationDyad().getUserPosition();
     //Dyad only stores the city, instead of the latitude and longitude or direct location of the user
     UserSession().set("city", LocationDyad.currentAddress);
@@ -103,74 +106,84 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     //Use future builder to show the loading screen while location information is grabbed. See future: getPos(), is waiting for this to complete
-    return ChangeNotifierProvider(
-      create: (context) => LocationDyad(),
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          toolbarHeight: 60,
-          title: Center(
-              child: Column(children: [
-                Text("Dyad", style: TextStyle(fontSize: 30, color: Color(0xFFECEFF4))),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 5),
-                  child: FutureBuilder<dynamic>(
-                      future: UserSession().get("city"),
-                      builder:
-                          (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                        return snapshot.hasData
-                            ? Text(snapshot.data ?? "Error getting location",
-                            style: TextStyle(
-                                fontSize: 14, color: Color(0xFFECEFF4)))
-                            : Text('Loading..',
-                            style: TextStyle(
-                                fontSize: 14, color: Color(0xFFE5E9F0)));
-                      }),
-                )
-              ])),
-        ),
-        body: FutureBuilder<dynamic>(
-          future: getPos(),
-          builder: (context, AsyncSnapshot<dynamic> snapshot) {
-            if (snapshot.hasData) {
-              //If getPos returns with data, then create GoogleMap instance
-              return GoogleMap(
-                initialCameraPosition: _InitialPosition,
-                scrollGesturesEnabled: true,
-                tiltGesturesEnabled: false,
-                rotateGesturesEnabled: false,
-                zoomControlsEnabled: false,
-                zoomGesturesEnabled: true,
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                },
-                onCameraMove: null,
-                circles: circles,
-              );
-            } else {
-              //Loading while waiting for getPos to return
-              return Center(
-                  child: SizedBox(
-                    child: CircularProgressIndicator(backgroundColor: Colors.white),
-                    height: 25.0,
-                    width: 25.0,
-                  ));
-            }
-          },
-        ),
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            FloatingActionButton(
-                onPressed: () async => {_toCurrentLocation()},
-                child: Icon(Icons.refresh)),
-            SizedBox(height: 6),
-            FloatingActionButton(
-                onPressed: () async => {showMapDialog()}, child: Icon(Icons.help))
-          ],
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        toolbarHeight: 60,
+        title: Center(
+            child: Column(children: [
+              Text("Dyad", style: TextStyle(fontSize: 30, color: Color(0xFFECEFF4))),
+              Padding(
+                padding: EdgeInsets.only(bottom: 5),
+                child: FutureBuilder<dynamic>(
+                    future: UserSession().get("city"),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                      return snapshot.hasData
+                          ? Text(snapshot.data ?? "Error getting location",
+                          style: TextStyle(
+                              fontSize: 14, color: Color(0xFFECEFF4)))
+                          : Text('Loading..',
+                          style: TextStyle(
+                              fontSize: 14, color: Color(0xFFE5E9F0)));
+                    }),
+              )
+            ])),
       ),
+      body: (latitude == 0 || latitude == 25.0) ? FutureBuilder<dynamic>(
+        future: getPos(),
+        builder: (context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.hasData) {
+            //If getPos returns with data, then create GoogleMap instance
+            return GoogleMap(
+              initialCameraPosition: _InitialPosition,
+              scrollGesturesEnabled: true,
+              tiltGesturesEnabled: false,
+              rotateGesturesEnabled: false,
+              zoomControlsEnabled: false,
+              zoomGesturesEnabled: true,
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+              },
+              onCameraMove: null,
+              circles: circles,
+            );
+          } else {
+            //Loading while waiting for getPos to return
+            return Center(
+                child: SizedBox(
+                  child: CircularProgressIndicator(backgroundColor: Colors.white),
+                  height: 25.0,
+                  width: 25.0,
+                ));
+          }
+        },
+      ) : GoogleMap(
+      initialCameraPosition: _InitialPosition,
+      scrollGesturesEnabled: true,
+      tiltGesturesEnabled: false,
+      rotateGesturesEnabled: false,
+      zoomControlsEnabled: false,
+      zoomGesturesEnabled: true,
+      onMapCreated: (GoogleMapController controller) {
+        _controller.complete(controller);
+      },
+      onCameraMove: null,
+      circles: circles,
+    )
+    ,
+    floatingActionButton: Column(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+          FloatingActionButton(
+              onPressed: () async => {_toCurrentLocation()},
+              child: Icon(Icons.refresh)),
+          SizedBox(height: 6),
+          FloatingActionButton(
+              onPressed: () async => {showMapDialog()}, child: Icon(Icons.help))
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

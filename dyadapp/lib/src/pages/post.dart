@@ -215,7 +215,7 @@ class _PostScreenState extends State<PostScreen> {
                 ),
                 child: Visibility(
                   visible: _post.content.hasImage(),
-                  child: Image.file(File(_post.content.image)),
+                  child: Image.network(_post.content.image),
                 )),
           ),
           Divider(color: Colors.white, thickness: 1),

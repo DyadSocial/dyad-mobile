@@ -53,13 +53,10 @@ class _FeedListState extends State<FeedList> {
     return RefreshIndicator(
       strokeWidth: 1,
       onRefresh: widget.refreshCallback,
-      child: ListView.separated(
-        separatorBuilder: (context, index) => SizedBox(height: 11),
+      child: ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
         itemCount: widget.posts.length,
         itemBuilder: (context, index) {
-          if (index == 0) return SizedBox(height: 15);
-          if (index == widget.posts.length + 1) return SizedBox(height: 300);
-          index = index - 1;
           return PostTile(
             postNavigatorCallback: widget.postNavigatorCallback,
             onDeleteCallback: widget.onDeleteCallback,
@@ -70,8 +67,8 @@ class _FeedListState extends State<FeedList> {
                         (user) => user.username == widget.posts[index].author)
                     ?.profilePicture ??
                 null,
-            image: widget.posts[index].content.hasImage()
-                ? Image.file(File(widget.posts[index].content.image))
+            imageURL: widget.posts[index].content.hasImage()
+                ? widget.posts[index].content.image
                 : null,
             title: widget.posts[index].title,
             author: widget.posts[index].author,

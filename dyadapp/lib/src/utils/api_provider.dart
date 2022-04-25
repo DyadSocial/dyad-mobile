@@ -7,6 +7,7 @@ import 'package:dyadapp/src/data.dart';
 
 class APIProvider {
   static final _baseURL = 'https://api.dyadsocial.com';
+  static final _chatURL = '74.207.251.32';
   final http.Client httpClient;
   APIProvider(this.httpClient);
 
@@ -18,6 +19,16 @@ class APIProvider {
       List<User> userList = [];
     }
     return [];
+  }
+
+  static Future<int> uploadImageFile(String filepath, String author, String id) async {
+    print("Uploading Image file ($author:$id) $filepath");
+    var request = http.MultipartRequest('POST', Uri.parse('$_baseURL/images/upload/'));
+    request.fields['image_id'] = id;
+    request.fields['author'] = author;
+    request.files.add(await http.MultipartFile.fromPath("image", filepath));
+    var response = await request.send();
+    return response.statusCode;
   }
 
   static Future<Map<String, dynamic>> postUserSignup(
@@ -52,7 +63,7 @@ class APIProvider {
       Map<String, String> formData) async {
         try {
           final response = 
-            await http.post(Uri.parse('$_baseURL/chat/api/fetchmessages'), body: {
+            await http.post(Uri.parse('$_chatURL/chat/api/fetchmessages'), body: {
               "chatid": formData['chat_id']
             });
             return {"status": response.statusCode, "body": response.body};

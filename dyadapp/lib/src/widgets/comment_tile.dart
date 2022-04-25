@@ -83,9 +83,10 @@ class _CommentTileState extends State<CommentTile> {
                     Visibility(
                       visible: _collapsed,
                       child: SizedBox(
+                        width: 80,
                         child: Text(commentThread.text, style: TextStyle(
                           color: Color(0xFFC1C6CE)
-                        ), textAlign: TextAlign.start),
+                        ), textAlign: TextAlign.start, overflow: TextOverflow.ellipsis),
                       ),
 
                     ),

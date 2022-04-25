@@ -1,13 +1,26 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/data.dart';
 import 'package:dyadapp/src/pages/settings.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+
+import '../utils/api_provider.dart';
+import '../utils/user_session.dart';
 
 class ProfileScreen extends StatelessWidget {
   final User user;
+  String? username = null;
+
   ProfileScreen(
     this.user, {
     Key? key,
   }) : super(key: key);
+
+  Future<String?> getUsername() async {
+    username = await UserSession().get("username");
+    return username;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +41,6 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildPage() {
-    print(user.profilePicture);
     return Padding(
       padding: const EdgeInsets.all(14.0),
       child: Column(
@@ -40,11 +52,44 @@ class ProfileScreen extends StatelessWidget {
               radius: 120,
             ),
           ),
+          SizedBox(height: 15),
+          FutureBuilder<String?>(
+              future: getUsername(),
+              builder: (context, snapshot) {
+                return Visibility(
+                  visible: snapshot.data == user.username,
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        ElevatedButton(
+                          child: Text("Change Profile Picture"),
+                          onPressed: () async {
+                            print("Uploading");
+                            ImagePicker _picker = ImagePicker();
+                            final XFile? imageMem = await _picker.pickImage(
+                                source: ImageSource.gallery);
+                            print(imageMem);
+                            if (imageMem != null) {
+                              await APIProvider.uploadImageFile(
+                                  imageMem.path, snapshot.data!, "profile");
+                            }
+                          },
+                        ),
+                        ElevatedButton(
+                          child: Text("Change Profile Details"),
+                          onPressed: () {},
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              }),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12.0),
             child: Center(
               child: Text(
-                '${user.username} (${user.nickname})',
+                '${user.username}',
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w900,
