@@ -29,9 +29,8 @@ class MessagePage extends StatefulWidget {
 class _MessagePageState extends State<MessagePage> {
   var channel;
   var latestID;
-  //late Stream broadCast;
-  //late Timer refresh;
   final _msgController = TextEditingController();
+  ScrollController _scrollController = new ScrollController();
   var username;
 
 
@@ -42,12 +41,6 @@ class _MessagePageState extends State<MessagePage> {
         Uri.parse('ws://74.207.251.32:8000/ws/chat/' + widget.chat_id + '/')
     );
     latestID = "";
-    //broadCast = channel.stream.asBroadcastStream();
-    //getMessages();
-    //refresh = Timer.periodic(Duration(seconds: 5), (timer) {
-    //  setState(() {
-    //  });
-    //});
     getLatestMessages();
     super.initState();
   }
@@ -150,7 +143,7 @@ void dispose() {
                     latestID = latestID.toString();
                   });
                 });
-                Message msg = Message(content: jsonString['message'], author: jsonString['author'], id: jsonString['message_id'].toString(), lastUpdated: null);
+                Message msg = Message(content: jsonString['message'], author: jsonString['author'], id: jsonString['message_id'].toString(), lastUpdated: Timestamp.fromDateTime(DateTime.parse(jsonString['timestamp'])));
                 DatabaseHandler().insertMessage(msg, widget.chat_id);
                 setMessages();
               }
@@ -212,10 +205,20 @@ void dispose() {
                       print(latestID + 'ID TEST');
                       Message message = Message(id: latestID, author: username, content: _msgController.value.text, lastUpdated: Timestamp.fromDateTime(DateTime.now().toUtc()), created: null, image: null);
                       DatabaseHandler().insertMessage(message, widget.chat_id);
+                      List<String> tempRecList = [];
+                      //Put recipients in alphabetical order
+                      tempRecList.add(username);
+                      tempRecList.add(widget.nickname);
+                      tempRecList.sort();
+                      Chat newChat = Chat(recipients: [], messages: []);
+                      for(var recipient in tempRecList){
+                        newChat.recipients.add(recipient);
+                      }
                       //Send to websocket so other user can get message too
                       var jsonString = {
                         'roomname': widget.chat_id,
                         'username': username,
+                        'recipients': newChat.recipients,
                         'message': _msgController.value.text,
                         'command': 'new_message',
                       };
@@ -269,19 +272,19 @@ void dispose() {
 //TO DO: grab 10 messages from api endpoint 
   getLatestMessages() async
   {
-    final response = await APIProvider.fetchMessages({'chatid': widget.chat_id});
+    final response = await APIProvider.fetchMessages({'chatid': widget.chat_id, 'command': "10"});
     List<Message> messageList = [];
     if (response['status'] == 200) {
       //List of obj
       var res = json.decode(response['body']);
       for(var msg in res){
         String msg_id = msg['message_id'].toString();
-        Message message = Message(id: msg_id, content: msg['content'], author: msg['author_name'], lastUpdated: null);
+        Message message = Message(id: msg_id, content: msg['content'], author: msg['author_name'], lastUpdated: Timestamp.fromDateTime(DateTime.parse(msg['timestamp'])));
         messageList.add(message);
       }
     }
     else{
-      print("TIMEOUT EXCEPTION");
+      print("TIMEOUT EXCEPTION: MESSAGES");
     }
     addToMessages(messageList);
   }
@@ -293,21 +296,23 @@ void dispose() {
     });
   }
 
-  setLatestID(dynamic jsonString) {
-
-  }
 
   //Method for rendering list of messages using ListViewBuilder.
   buildMessages(String sender){
+    //Reverse the list as it starts from the bottom.
+    var messages = new List.from(widget.messages.reversed);
 
     return ListView.builder(
-      itemCount: widget.messages.length,
+
+      itemCount: messages.length,
       shrinkWrap: true,
       padding: EdgeInsets.only(top: 10, bottom: 10),
-      physics: ClampingScrollPhysics(),
+      physics: BouncingScrollPhysics(),
+      reverse: true,
       itemBuilder: (context, index) {
+
         //If the author is the other user, then the messages should be appended to the listview and display on the left
-        if (widget.messages[index].author == sender) {
+        if (messages[index].author == sender) {
           return Container(
             padding: EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
             child: Align(
@@ -319,7 +324,7 @@ void dispose() {
                 ),
                 padding: EdgeInsets.all(16),
                 child: Text(
-                  widget.messages[index].content,
+                  messages[index].content,
                   style: TextStyle(fontSize: 15, color: Colors.black),
                 ),
               ),
@@ -338,14 +343,16 @@ void dispose() {
                 ),
                 padding: EdgeInsets.all(16),
                 child: Text(
-                  widget.messages[index].content,
+                  messages[index].content,
                   style: TextStyle(fontSize: 15, color: Colors.black),
                 ),
               ),
             ),
           );
         }
+
       },
     );
+
   }
 }

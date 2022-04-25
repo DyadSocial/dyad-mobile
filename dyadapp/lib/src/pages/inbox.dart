@@ -14,6 +14,8 @@ import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:dyadapp/src/utils/api_provider.dart';
 import '../utils/data/group.dart';
+import 'dart:math';
+import 'package:dyadapp/src/pages/message_page.dart';
 
 Chat chattest = Chat(recipients: ["infuhnit", "goobygrooves"], messages: []);
 
@@ -33,14 +35,16 @@ class _InboxPageState extends State<InboxPage>
   List<Chat> _chats = [];
   List<ImageProvider> profilePictures = [];
   var latestID;
-  var latestMessage;
-
-
+  var latestMessage = Message(id: "0", author: "temp", content: "temp", lastUpdated: Timestamp.fromDateTime(DateTime.now()));
+  String buttonText = "SEND";
+  bool isButtonDisabled = false;
 
   @override
   void initState() {
-    getUser();
+    //getUser();
     getChats();
+
+    //setLatestMessagePerChat();
     super.initState();
     /*for (var chat in _chats) {
       if (chat.messages.length > 0) {
@@ -72,51 +76,59 @@ class _InboxPageState extends State<InboxPage>
         var participants = new List<String>.from(msg['participants']);
         //print(participants);
         Chat tempchat = Chat(recipients: participants, messages: []);
-        //print(tempchat);
+        Chat copy = Chat(recipients: participants, messages: []);
+        final response2 = await APIProvider.fetchLatestMessage({'chatid': getChatId(tempchat), 'command': "1"});
+        if (response2['status'] == 200){
+          var res2 = json.decode(response2['body']);
+          tempchat.messages.add(Message(id: res2[0]['message_id'].toString(), author: res2[0]['author_name'], content: res2[0]['content'], lastUpdated: Timestamp.fromDateTime(DateTime.parse(res2[0]['timestamp']))));
+        }
+        else{
+          print('TIMEOUT EXCEPTION: GETLATESTMESSAGE');
+        }
          setState(() {
-           _chats.add(tempchat);
+           var existingChat = _chats.firstWhere((element) => element.recipients == tempchat.recipients, orElse: () => Chat());
+           //Means it doesn't already exist, so add tempchat to the _chats
+           if(existingChat == Chat()){
+             _chats.add(tempchat);
+           }
+           else{
+             var i = _chats.indexOf(existingChat);
+             print(i.toString() + ' index of existing chat');
+             _chats[i].messages[0] = tempchat.messages[0];
+           }
          });
       }
     }
     else{
-      print("TIMEOUT : CHATS");
+      print("TIMEOUT : GETCHATS");
     }
 
     //get chats that user is a part of from api endpoint
   }
 
-  getLatestMessage(String chatid) async{
-    //Put chatid in here once its figured out
-    List<Message> messageList = await DatabaseHandler().getMessages(chatid);
-    if(messageList.length>0){
-      setState(() {
-        latestMessage = messageList[messageList.length-1];
-      });
-    }
-    else{
-      return "test";
+  addToMessages(List<Message> messageList, String chatid) async
+  {
+    if(messageList != []){
+      for (var message in messageList) {
+        DatabaseHandler().insertMessage(message, chatid);
+      }
     }
   }
 
-//grab ten latest messages
-  getLatestMessages(String chatid) async
-  {
-    //Put in chatid once we figure it out
-    final response = await APIProvider.fetchMessages({'chatid': chatid});
-    List<Message> messageList = [];
-    if (response['status'] == 200) {
-      //List of obj
-      var res = json.decode(response['body']);
-      for(var msg in res){
-        String msg_id = msg['message_id'].toString();
-        Message message = Message(id: msg_id, content: msg['content'], author: msg['author_name'], lastUpdated: null);
-        messageList.add(message);
-      }
-      return messageList;
+  checkUser(String user) async{
+    //request to check if user exists
+    final response = await APIProvider.checkUserExists({'username': user});
+    print("CHECK USER");
+    print(response['status']);
+    print(response['body']);
+
+    var res = json.decode(response['body']);
+
+    if(res['status'] == 200){
+      return true;
     }
     else{
-      print("TIMEOUT EXCEPTION : MESSAGES");
-      return [];
+      return false;
     }
   }
 
@@ -239,90 +251,80 @@ class _InboxPageState extends State<InboxPage>
                                               ),
                                             ),
                                             SizedBox(height: 50),
+
                                             TextButton(onPressed: () async {
-                                              //For id, first check if a chat exists, if it doesn't create a new message in a new chatroom. If it exists
-                                              //open the websocket connection and add in using latest_id.
-                                              //Would help if sam could send the chats with their latest message?
-                                              for(var chat in _chats){
-                                                //Already exists; add to websocket
-                                                if(chat.recipients.contains(username) && chat.recipients.contains(_toController.value.text)){
-                                                  final channel = WebSocketChannel.connect(
-                                                    //put in chatid once we figure it out
-                                                      Uri.parse('ws://74.207.251.32:8000/ws/chat/' + getChatId(chat) + '/')
-                                                  );
-                                                  var jsonString = {
-                                                    'roomname': getChatId(chat),
-                                                    'username': username,
-                                                    'message': _msgController.value.text,
-                                                    'command': 'new_message',
-                                                  };
-
-                                                  channel.sink.add(jsonEncode(jsonString));
-                                                  print(channel.stream.last);
-                                                  channel.sink.close();
-
-                                                  //Get latest ID from 10 chats or if sam sends back latest message in chat
-                                                  //Used for getting the latestID in a chat to display as an entry
-                                                  //Problem may arise from getting id like this, maybe have an id
-                                                  List<Message> _tenLatestMessages = getLatestMessages(getChatId(chat));
-                                                  var temp = int.parse(_tenLatestMessages[0].id);
-                                                  temp = temp + 1;
-                                                  latestID = temp.toString();
-                                                  Message message = Message(
-                                                      id: latestID,
-                                                      author: username,
-                                                      content: _msgController.value.text,
-                                                      lastUpdated: Timestamp.fromDateTime(DateTime.now().toUtc()),
-                                                      created: null,
-                                                      image: null);
-                                                  //Put in chatid once we figure it out
-                                                  DatabaseHandler().insertMessage(message, getChatId(chat));
-                                                  //Send to websocket so other user can get message too
-                                                }
-                                              }
-                                              //Make a new chat object with new chat
-                                              List<String> tempRecList = [];
-                                              //Put recipients in alphabetical order
-                                              tempRecList.add(username);
-                                              tempRecList.add(_toController.value.text);
-                                              tempRecList.sort();
-                                              Chat newChat = Chat(recipients: [], messages: []);
-                                              for(var recipient in tempRecList){
-                                                newChat.recipients.add(recipient);
-                                              }
-                                              //If it is a new chat and doesn't already exist; getChats one more time
-                                              getChats();
-                                              if(!_chats.contains(newChat)){
-                                                  //_chats.add(newChat);
-                                                  final channel = WebSocketChannel.connect(
-                                                    //put in chatid once we figure it out
-                                                      Uri.parse('ws://74.207.251.32:8000/ws/chat/' + getChatId(newChat) + '/')
-                                                  );
-                                                  //Send to websocket so other user can get message too
-                                                  var jsonString = {
-                                                    'roomname': getChatId(newChat),
-                                                    'username': username,
-                                                    'message': _msgController.value.text,
-                                                    'command': 'new_message',
-                                                  };
-                                                  channel.sink.add(jsonEncode(jsonString));
-                                                  print(await channel.stream.last);
-                                                  channel.sink.close();
-                                                  //LatestID should be 1 because its a new chatroom
-                                                  latestID = "1";
-                                                  Message message = Message(
-                                                      id: latestID,
-                                                      author: username,
-                                                      content: _msgController.value.text,
-                                                      lastUpdated: Timestamp.fromDateTime(DateTime.now().toUtc()),
-                                                      created: null,
-                                                      image: null);
-                                                  //Chatid for inserting into database can be like currentuser-touser?
-                                                  //put in chatid once we figure it out
-                                                  DatabaseHandler().insertMessage(message, getChatId(newChat));
-                                              }
+                                              //Put away the alert dialog so user doesn't spam press send.
                                               Navigator.pop(context);
-                                            }, child: Text("SEND"))
+                                              //Check if other user exists first
+                                              if(await checkUser(_toController.value.text) == false){
+                                                _msgController.clear();
+                                                _toController.clear();
+                                                return showDialog(context: context, builder: (BuildContext context){
+                                                  return AlertDialog(
+                                                      title: Text("Could not send!"),
+                                                      insetPadding: EdgeInsets.all(8.0),
+                                                      content: Column(
+                                                        children: [
+                                                          Text("Could not send a message because that user does not exist."),
+                                                          TextButton(onPressed: () => Navigator.pop(context), child: Text("OK"))
+                                                        ],
+                                                      ));
+                                                });
+                                              }
+                                              else{
+                                                //For id, first check if a chat exists, if it doesn't create a new message in a new chatroom. If it exists
+                                                //open the websocket connection and add in using latest_id.
+                                                //Would help if sam could send the chats with their latest message?
+                                                //Make a new chat object with new chat
+                                                List<String> tempRecList = [];
+                                                //Put recipients in alphabetical order
+                                                tempRecList.add(username);
+                                                tempRecList.add(_toController.value.text);
+                                                tempRecList.sort();
+                                                Chat newChat = Chat(recipients: [], messages: []);
+                                                for(var recipient in tempRecList){
+                                                  newChat.recipients.add(recipient);
+                                                }
+
+                                                final channel = WebSocketChannel.connect(
+                                                  //put in chatid once we figure it out
+                                                    Uri.parse('ws://74.207.251.32:8000/ws/chat/' + getChatId(newChat) + '/'));
+                                                //Send to websocket so other user can get message too
+                                                var jsonString = {
+                                                  'roomname': getChatId(newChat),
+                                                  'username': username,
+                                                  'recipients': newChat.recipients,
+                                                  'message': _msgController.value.text,
+                                                  'command': 'new_message',
+                                                };
+                                                channel.sink.add(jsonEncode(jsonString));
+                                                await Future.delayed(Duration(seconds: 1));
+                                                //Seeing if we could get message id from this
+                                                channel.stream.listen((event) {
+                                                  var jsonString = json.decode(event);
+                                                  if(this.mounted){
+                                                    latestID = jsonString['message_id'].toString();
+                                                    print(latestID);
+                                                  }
+                                                });
+                                                await Future.delayed(Duration(seconds: 2));
+                                                print("SENT");
+                                                channel.sink.close();
+                                                Message message = Message(
+                                                    id: latestID,
+                                                    author: username,
+                                                    content: _msgController.value.text,
+                                                    lastUpdated: Timestamp.fromDateTime(DateTime.now().toUtc()),
+                                                    created: null,
+                                                    image: null);
+                                                //Chatid for inserting into database can be like currentuser-touser?
+                                                //put in chatid once we figure it out
+                                                DatabaseHandler().insertMessage(message, getChatId(newChat));
+                                                getChats();
+                                                _msgController.clear();
+                                                _toController.clear();
+                                              }
+                                            }, child: Text(buttonText))
                                           ],
                                         )
                                       ]
@@ -368,26 +370,88 @@ class _InboxPageState extends State<InboxPage>
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
 
-                    //Get the latestmessage in that chat; had to edit out for video but make sure to get it done by demo
-                    getLatestMessage(getChatId(_chats[index]));
-                    //Message list entry shows the first message from every chat, initialized in initState()
-                    return MessageListEntry(
-                      name: _chats[index].recipients.firstWhere((element) => element != username),
-                      //first message here
-                      text: latestMessage.content,
-                      //TO DO:
-                      profilePicture: groupInstance
-                              .getUser(_chats[index].recipients.firstWhere((element) => element != username && element != 'test123', orElse: ()=> 'infuhnit'))
-                              ?.profilePicture ??
-                          null,
-                      time: timeago.format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              (Timestamp.fromDateTime(DateTime.utc(2022, 4, 21, 12, 30)).seconds * 1000)
-                                  .toInt()),
-                          locale: 'en_short'),
-                      isMessageRead: false,
-                      //Put chatid in here once its figured out
-                      chat_id: getChatId(_chats[index]),//(index == 0 || index == 3) ? true : false,
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MessagePage(
+                                profilePicture: groupInstance
+                                           .getUser(_chats[index].recipients.firstWhere((element) => element != username, orElse: ()=> 'infuhnit'))
+                                           ?.profilePicture ??
+                                       null,
+                                nickname: _chats[index].recipients.firstWhere((element) => element != username, orElse: ()=> 'temp'),
+                                //As said above, might want to instead pass in a Chat between the current user and widget.name instead of a list of messages
+                                //This was for demo purposes only
+                                chat_id: getChatId(_chats[index]),
+                              ),
+                            )).then((value) {
+                          getChats();
+                        });
+                      },
+                      child: Container(
+                        padding: EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Row(
+                                children: <Widget>[
+                                  CircleAvatar(
+                                      backgroundImage: groupInstance
+                                      .getUser(_chats[index].recipients.firstWhere((element) => element != username, orElse: ()=> 'infuhnit'))
+                                        ?.profilePicture ??
+                                          null,
+                                      foregroundColor: Colors.black12,
+                                      backgroundColor: Colors.white70,
+                                      maxRadius: 30,
+                                      child: Text(_chats[index].recipients.firstWhere((element) => element != username, orElse: ()=> 'temp'
+                                          .substring(0, min(4, 5))))),
+                                  SizedBox(
+                                    width: 16,
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      color: Colors.transparent,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                    _chats[index].recipients.firstWhere((element) => element != username, orElse: ()=> 'temp'),
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                          SizedBox(
+                                            height: 6,
+                                          ),
+                                          Text(
+                                            _chats[index].messages[0].content,
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.grey.shade600,
+                                                fontWeight: false
+                                                    ? FontWeight.bold
+                                                    : FontWeight.normal),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              timeago.format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                               (_chats[index].messages[0].lastUpdated.seconds * 1000).toInt()),
+                                  locale: 'en_short'),
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: false
+                                      ? FontWeight.bold
+                                      : FontWeight.normal),
+                            ),
+                          ],
+                        ),
+                      ),
                     );
                   },
                 ),

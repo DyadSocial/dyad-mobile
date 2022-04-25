@@ -49,12 +49,13 @@ class APIProvider {
     }
   }
   
-  static Future<Map<String, dynamic>> fetchMessages (
+  static Future<Map<String, dynamic>> fetchMessages(
       Map<String, String> formData) async {
         try {
           final response =
             await http.post(Uri.parse('$_chatURL/chat/api/fetchmessages/'), body: {
-              "chatid": formData['chatid']
+              "chatid": formData['chatid'],
+              "command": formData['command']
             }).timeout(Duration(seconds: 2));
             return {"status": response.statusCode, "body": response.body};
         } catch(e) {
@@ -64,16 +65,47 @@ class APIProvider {
         }
       }
 
+  static Future<Map<String, dynamic>> fetchLatestMessage (
+      Map<String, String> formData) async {
+    try {
+      final response =
+      await http.post(Uri.parse('$_chatURL/chat/api/fetchmessages/'), body: {
+        "chatid": formData['chatid'],
+        "command": formData['command']
+      }).timeout(Duration(seconds: 2));
+      return {"status": response.statusCode, "body": response.body};
+    } catch(e) {
+      var obj = {"status": 400, "body": "Timeout Exception"};
+      var json = jsonEncode(obj);
+      return jsonDecode(json);
+    }
+  }
+
   static Future<Map<String, dynamic>> fetchChats (
       Map<String, String> formData) async {
     try {
       final response =
       await http.post(Uri.parse('$_chatURL/chat/api/getchats/'), body: {
-        "username": formData['username']
+        "username": formData['username'],
       }).timeout(Duration(seconds: 2));
       return {"status": response.statusCode, "body": response.body};
     } catch(e) {
       var obj = {"status": 400, "body": "Timeout Exception"};
+      var json = jsonEncode(obj);
+      return jsonDecode(json);
+    }
+  }
+
+  static Future<Map<String, dynamic>> checkUserExists (
+      Map<String, String> formData) async {
+    try {
+      final response =
+      await http.post(Uri.parse('$_chatURL/chat/api/checkuserexist/'), body: {
+        "username": formData['username']
+      }).timeout(Duration(seconds: 2));
+      return {"status": response.statusCode, "body": response.body};
+    } catch(e) {
+      var obj = {"status": 404, "body": "User does not exist."};
       var json = jsonEncode(obj);
       return jsonDecode(json);
     }
