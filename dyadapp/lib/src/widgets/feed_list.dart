@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/widgets/post_tile.dart';
 import 'package:dyadapp/src/data.dart';
-
+import 'package:dyadapp/src/utils/suggestive_list.dart';
 import '../utils/data/group.dart';
 
 class FeedList extends StatefulWidget {
@@ -77,6 +77,7 @@ class _FeedListState extends State<FeedList> {
                 return SizedBox(height: 250);
               }
               Post post = widget.posts[idx];
+              SuggestiveList.addUser(widget.posts[idx].author);
               return PostTile(
                 postNavigatorCallback: widget.postNavigatorCallback,
                 onDeleteCallback: widget.onDeleteCallback,

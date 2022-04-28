@@ -39,7 +39,7 @@ class APIProvider {
   }
 
   static Future<Map<String, dynamic>> updateUserProfile(String username) async {
-    String token = await UserSession().("access");
+    String token = await UserSession().get("access");
     final response = await http.get(Uri.parse('$_baseURL/profile/get-user-profile'), headers: {"jwt" : token});
     print(response.body);
     return {};

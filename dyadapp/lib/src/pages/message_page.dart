@@ -15,7 +15,6 @@ import 'package:dyadapp/src/utils/api_provider.dart';
 class MessagePage extends StatefulWidget {
   ImageProvider<Object>? profilePicture;
   String nickname;
-  //As mentioned in message_list_entry, might just want to pass in a Chat object to this page which can then render instead of a list of messages
   String chat_id;
   List<Message> messages = [];
 
@@ -30,13 +29,11 @@ class _MessagePageState extends State<MessagePage> {
   var channel;
   var latestID;
   final _msgController = TextEditingController();
-  ScrollController _scrollController = new ScrollController();
   var username;
 
-
-  //List<Message> messages = []; //get last 10 messages from backend database 
   @override
   void initState() {
+    //Connect to the websocket for responsive messaging
     channel = WebSocketChannel.connect(
         Uri.parse('ws://74.207.251.32:8000/ws/chat/' + widget.chat_id + '/')
     );
@@ -45,15 +42,14 @@ class _MessagePageState extends State<MessagePage> {
     super.initState();
   }
 
-@override
-void dispose() {
-  channel.sink.close();
-  super.dispose();
-}
+  @override
+  void dispose() {
+    channel.sink.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    //getMessages();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -75,20 +71,6 @@ void dispose() {
                 SizedBox(
                   width: 2,
                 ),
-                /*
-                FutureBuilder<ImageProvider?>(
-                    future: widget.profilePicture,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<ImageProvider?> image) {
-                      return CircleAvatar(
-                          backgroundImage: image.data,
-                          foregroundColor: Colors.black12,
-                          backgroundColor: Colors.white70,
-                          maxRadius: 30,
-                          child: Text(widget.nickname
-                              .substring(0, min(4, widget.nickname.length))));
-                    }),
-                 */
                 SizedBox(
                   width: 12,
                 ),
@@ -101,18 +83,12 @@ void dispose() {
                       Text(
                         widget.nickname,
                         style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 20,
                             fontWeight: FontWeight.w600,
                             color: Colors.white),
                       ),
                       SizedBox(
                         height: 6,
-                      ),
-                      //No online functionality. Maybe implement or just take out?
-                      Text(
-                        "Online",
-                        style: TextStyle(
-                            color: Colors.grey.shade800, fontSize: 13),
                       ),
                     ],
                   ),
@@ -126,29 +102,29 @@ void dispose() {
           ),
         ),
       ),
-      body: 
+      body:
       Stack(
         children: <Widget>[
-        //Build messages will display a list view of the messages between current user and other
+          //Build messages will display a list view of the messages between current user and other
           Container(padding: EdgeInsets.only(bottom: 36), child: buildMessages(widget.nickname),),
-          //buildMessages(widget.nickname),
+          //Streambuilder grabs latest message from the websocket, then rebuilds the widget of messages after adding to local cache of messages
           StreamBuilder(
-            stream: channel.stream,
-            builder: (context, snapshot){
-              if (snapshot.hasData) {
-                var jsonString = json.decode(snapshot.data.toString());
-                Future.delayed(Duration.zero, () async {
-                  setState(() {
-                    latestID = jsonString['message_id'] + 1;
-                    latestID = latestID.toString();
+              stream: channel.stream,
+              builder: (context, snapshot){
+                if (snapshot.hasData) {
+                  var jsonString = json.decode(snapshot.data.toString());
+                  Future.delayed(Duration.zero, () async {
+                    setState(() {
+                      latestID = jsonString['message_id'] + 1;
+                      latestID = latestID.toString();
+                    });
                   });
-                });
-                Message msg = Message(content: jsonString['message'], author: jsonString['author'], id: jsonString['message_id'].toString(), lastUpdated: Timestamp.fromDateTime(DateTime.parse(jsonString['timestamp'])));
-                DatabaseHandler().insertMessage(msg, widget.chat_id);
-                setMessages();
+                  Message msg = Message(content: jsonString['message'], author: jsonString['author'], id: jsonString['message_id'].toString(), lastUpdated: Timestamp.fromDateTime(DateTime.parse(jsonString['timestamp'])));
+                  DatabaseHandler().insertMessage(msg, widget.chat_id);
+                  setMessages();
+                }
+                return Text("");
               }
-              return Text("");
-            }
           ),
           //Begin view of bottom bar for sending message
           Align(
@@ -162,7 +138,7 @@ void dispose() {
 
                 children: <Widget>[
                   GestureDetector(
-                    //Needs functionality to be added. Adding media?
+                    //Media functionality not yet added.
                     onTap: () {},
                     child: Container(
                       height: 30,
@@ -182,9 +158,6 @@ void dispose() {
                     width: 15,
                   ),
                   Expanded(
-
-                    //Need to add a controller for this textfield, which then should append to the chat object and POST to the server. Then messages should be rendered
-                    //again to show updated
                     child: TextFormField(
                       style: TextStyle(color: Colors.black),
                       decoration: InputDecoration(
@@ -198,7 +171,7 @@ void dispose() {
                   SizedBox(
                     width: 15,
                   ),
-                  //Send button is where you would POST to the server and rerender
+                  //This is the send button, should add to local cache/db and also send to the websocket
                   FloatingActionButton(
                     onPressed: () async {
                       //Make a message object to be saved to local database
@@ -227,6 +200,7 @@ void dispose() {
                       setState((){
                         widget.messages = messageList;
                       });
+                      //Clear text controller and reset keyboard
                       _msgController.clear();
                       FocusManager.instance.primaryFocus?.unfocus();
                     },
@@ -243,10 +217,11 @@ void dispose() {
             ),
           ),
         ],
-      ), 
+      ),
     );
   }
 
+  //Helper function for adding to local database and finding out what the latestID will be
   addToMessages(List<Message> messageList) async
   {
     if(messageList != []){
@@ -258,6 +233,7 @@ void dispose() {
     final messagelist = await DatabaseHandler().getMessages(widget.chat_id);
     if(messageList != []){
       var temp = int.parse(messageList[0].id);
+      print("TEMP: " + temp.toString());
       temp = temp + 1;
       var latest = temp.toString();
       var user = await UserSession().get("username");
@@ -269,7 +245,7 @@ void dispose() {
     }
   }
 
-//TO DO: grab 10 messages from api endpoint 
+//Function to grab 10 messages from api endpoint
   getLatestMessages() async
   {
     final response = await APIProvider.fetchMessages({'chatid': widget.chat_id, 'command': "10"});
@@ -289,6 +265,7 @@ void dispose() {
     addToMessages(messageList);
   }
 
+  //Get the latest messages from the local cache. Call whenever we get something from streambuilder or websocket
   setMessages() async{
     List<Message> messageList = await DatabaseHandler().getMessages(widget.chat_id);
     messageList.sort((a, b) {
@@ -316,6 +293,7 @@ void dispose() {
       shrinkWrap: true,
       padding: EdgeInsets.only(top: 10, bottom: 10),
       physics: BouncingScrollPhysics(),
+      reverse: true,
       itemBuilder: (context, index) {
 
         //If the author is the other user, then the messages should be appended to the listview and display on the left
@@ -327,7 +305,7 @@ void dispose() {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: Colors.grey.shade200,
+                  color: Colors.grey.shade500,
                 ),
                 padding: EdgeInsets.all(16),
                 child: Text(
@@ -346,7 +324,7 @@ void dispose() {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: Colors.blue.shade50,
+                  color: Colors.blue.shade200,
                 ),
                 padding: EdgeInsets.all(16),
                 child: Text(
