@@ -222,8 +222,7 @@ class _FeedScreenState extends State<FeedScreen>
                 child: Text("Dyad",
                     style: TextStyle(fontSize: 30, color: Color(0xFFECEFF4))),
                 onPressed: () {
-                  Navigator.of(context).push<void>(MaterialPageRoute<void>(
-                      builder: (context) => const MapScreen()));
+                  _onFeedRefreshCallback();
                 }),
             Padding(
               padding: EdgeInsets.only(bottom: 5),
@@ -249,7 +248,6 @@ class _FeedScreenState extends State<FeedScreen>
               onPressed: () => {
                 Navigator.of(context).push<void>(MaterialPageRoute<void>(
                     builder: (context) => const SettingsScreen()))
-                //Changed temporarily for inbox screen from SettingsScreen()
               },
               tooltip: 'About Dyad',
             ),
@@ -283,6 +281,7 @@ class _FeedScreenState extends State<FeedScreen>
                   child: Expanded(
                     child: Padding(
                       padding: EdgeInsets.only(bottom: 50),
+                      // Either get all post data or get data from only self
                       child: TabBarView(
                         controller: _tabController,
                         children: <Widget>[

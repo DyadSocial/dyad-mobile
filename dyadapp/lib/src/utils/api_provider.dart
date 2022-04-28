@@ -31,8 +31,29 @@ class APIProvider {
     return response.statusCode;
   }
 
+  static Future<Map<String, dynamic>> getUserProfile(String username) async {
+    String token = await UserSession().get("access");
+    final response = await http.get(Uri.parse('$_baseURL/profile/get-user-profile'));
+    print(response.body);
+    return {};
+  }
+
+  static Future<Map<String, dynamic>> updateUserProfile(String username) async {
+    String token = await UserSession().("access");
+    final response = await http.get(Uri.parse('$_baseURL/profile/get-user-profile'), headers: {"jwt" : token});
+    print(response.body);
+    return {};
+  }
+
   static Future<Map<String, dynamic>> postUserSignup(
       Map<String, String> formData) async {
+    await http.post(
+      Uri.parse('$_chatURL/core/register'),
+      body: {
+        "username": formData['username'],
+        "password": formData['password']
+      },
+    );
     final response = await http.post(
       Uri.parse('$_baseURL/core/register'),
       body: {

@@ -62,23 +62,30 @@ class ProfileScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        ElevatedButton(
-                          child: Text("Change Profile Picture"),
-                          onPressed: () async {
-                            print("Uploading");
-                            ImagePicker _picker = ImagePicker();
-                            final XFile? imageMem = await _picker.pickImage(
-                                source: ImageSource.gallery);
-                            print(imageMem);
-                            if (imageMem != null) {
-                              await APIProvider.uploadImageFile(
-                                  imageMem.path, snapshot.data!, "profile");
-                            }
-                          },
+                        Expanded(
+                          flex: 1,
+                          child: ElevatedButton(
+                            child: Text("Change Picture"),
+                            onPressed: () async {
+                              print("Uploading");
+                              ImagePicker _picker = ImagePicker();
+                              final XFile? imageMem = await _picker.pickImage(
+                                  source: ImageSource.gallery);
+                              print(imageMem);
+                              if (imageMem != null) {
+                                await APIProvider.uploadImageFile(
+                                    imageMem.path, snapshot.data!, "profile");
+                              }
+                            },
+                          ),
                         ),
-                        ElevatedButton(
-                          child: Text("Change Profile Details"),
-                          onPressed: () {},
+                        SizedBox(width: 20),
+                        Expanded(
+                          flex: 1,
+                          child: ElevatedButton(
+                            child: Text("Edit Profile"),
+                            onPressed: () {},
+                          ),
                         )
                       ],
                     ),

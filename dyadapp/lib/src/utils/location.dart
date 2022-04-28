@@ -10,6 +10,11 @@ class LocationDyad with ChangeNotifier {
   static var currentAddress;
   static double latitude = 0;
   static double longitude = 0;
+  static bool offline = false;
+
+  static toggleOffline() {
+    offline = !offline;
+  }
 
   getUserPosition() async {
     try{

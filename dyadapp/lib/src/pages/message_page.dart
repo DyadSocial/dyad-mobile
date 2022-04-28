@@ -290,7 +290,17 @@ void dispose() {
   }
 
   setMessages() async{
-    var messageList = await DatabaseHandler().getMessages(widget.chat_id);
+    List<Message> messageList = await DatabaseHandler().getMessages(widget.chat_id);
+    messageList.sort((a, b) {
+      if (a.lastUpdated.seconds < b.lastUpdated.seconds) {
+        return -1;
+      } else if (a.lastUpdated.seconds == b.lastUpdated.seconds) {
+        return 0;
+      } else {
+        return 1;
+      }
+    });
+
     setState(() {
       widget.messages = messageList;
     });
@@ -300,19 +310,16 @@ void dispose() {
   //Method for rendering list of messages using ListViewBuilder.
   buildMessages(String sender){
     //Reverse the list as it starts from the bottom.
-    var messages = new List.from(widget.messages.reversed);
-
     return ListView.builder(
 
-      itemCount: messages.length,
+      itemCount: widget.messages.length,
       shrinkWrap: true,
       padding: EdgeInsets.only(top: 10, bottom: 10),
       physics: BouncingScrollPhysics(),
-      reverse: true,
       itemBuilder: (context, index) {
 
         //If the author is the other user, then the messages should be appended to the listview and display on the left
-        if (messages[index].author == sender) {
+        if (widget.messages[index].author == sender) {
           return Container(
             padding: EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
             child: Align(
@@ -324,7 +331,7 @@ void dispose() {
                 ),
                 padding: EdgeInsets.all(16),
                 child: Text(
-                  messages[index].content,
+                  widget.messages[index].content,
                   style: TextStyle(fontSize: 15, color: Colors.black),
                 ),
               ),
@@ -343,7 +350,7 @@ void dispose() {
                 ),
                 padding: EdgeInsets.all(16),
                 child: Text(
-                  messages[index].content,
+                  widget.messages[index].content,
                   style: TextStyle(fontSize: 15, color: Colors.black),
                 ),
               ),

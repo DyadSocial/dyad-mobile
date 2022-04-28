@@ -17,25 +17,40 @@ class FeedList extends StatefulWidget {
   final Function(int, String, String) onEditCallback;
 
   const FeedList(
-      this.onUpdateCallback,
-      this.refreshCallback,
-      this.postNavigatorCallback,
-      this.posts,
-      this.onDeleteCallback,
-      this.onEditCallback, {
-        this.onTap,
-        Key? key,
-      }) : super(key: key);
+    this.onUpdateCallback,
+    this.refreshCallback,
+    this.postNavigatorCallback,
+    this.posts,
+    this.onDeleteCallback,
+    this.onEditCallback, {
+    this.onTap,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _FeedListState createState() => _FeedListState();
 }
 
 class _FeedListState extends State<FeedList> {
+  // Keep the controller for list view so we can fetch more post when a user
+  // scrolls past a certain extent
+  late ScrollController _controller;
+
+  void loadNextPage() async {
+    print(_controller.position.extentAfter);
+  }
+
   @override
   void initState() {
     super.initState();
+    _controller = new ScrollController();
+    _controller.addListener(loadNextPage);
+  }
 
+  @override
+  void dispose() {
+    _controller.removeListener(loadNextPage);
+    super.dispose();
   }
 
   @override
@@ -50,33 +65,36 @@ class _FeedListState extends State<FeedList> {
         return -1;
       }
     });
-    return RefreshIndicator(
-      strokeWidth: 1,
-      onRefresh: widget.refreshCallback,
-      child: ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: widget.posts.length,
-        itemBuilder: (context, index) {
-          return PostTile(
-            postNavigatorCallback: widget.postNavigatorCallback,
-            onDeleteCallback: widget.onDeleteCallback,
-            onUpdateCallback: widget.onUpdateCallback,
-            postId: widget.posts[index].id,
-            profilePicture: groupInstance.allUsers
-                    .firstWhereOrNull(
-                        (user) => user.username == widget.posts[index].author)
-                    ?.profilePicture ??
-                null,
-            imageURL: widget.posts[index].content.hasImage()
-                ? widget.posts[index].content.image
-                : null,
-            title: widget.posts[index].title,
-            author: widget.posts[index].author,
-            content: widget.posts[index].content.text,
-            datetime: DateTime.fromMillisecondsSinceEpoch(
-                (widget.posts[index].created.seconds * 1000).toInt()),
-          );
+    return Container(
+      child: RefreshIndicator(
+        onRefresh: () async {
+          widget.refreshCallback();
         },
+        child: ListView.builder(
+            physics: AlwaysScrollableScrollPhysics(),
+            itemBuilder: (context, idx) {
+              if (idx > widget.posts.length-1) {
+                return SizedBox(height: 250);
+              }
+              Post post = widget.posts[idx];
+              return PostTile(
+                postNavigatorCallback: widget.postNavigatorCallback,
+                onDeleteCallback: widget.onDeleteCallback,
+                onUpdateCallback: widget.onUpdateCallback,
+                postId: post.id,
+                profilePicture: groupInstance.allUsers
+                        .firstWhereOrNull(
+                            (user) => user.username == post.author)
+                        ?.profilePicture ??
+                    null,
+                imageURL: post.content.hasImage() ? post.content.image : null,
+                title: post.title,
+                author: post.author,
+                content: post.content.text,
+                datetime: DateTime.fromMillisecondsSinceEpoch(
+                    (post.created.seconds * 1000).toInt()),
+              );
+            }),
       ),
     );
   }

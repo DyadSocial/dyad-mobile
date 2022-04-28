@@ -25,14 +25,13 @@ class DatabaseHandler {
     } catch (_) {}
     return await openDatabase(
       path,
-      version: 4,
+      version: 6,
       onCreate: _onCreate,
       onOpen: _onOpen,
     );
   }
 
   FutureOr<void> _onOpen(Database db) async {
-
   }
 
   Future<void> _onCreate(Database db, int version) async {

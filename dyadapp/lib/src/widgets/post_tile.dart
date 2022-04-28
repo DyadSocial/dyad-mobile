@@ -147,7 +147,18 @@ class PostTile extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                Image.network(imageURL!),
+                                Image.network(imageURL!, loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? event) {
+                                  if (event == null) {
+                                    return child;
+                                  }
+                                  return Center(
+                                    child: LinearProgressIndicator(
+                                      value: event.expectedTotalBytes != null ?
+                                          event.cumulativeBytesLoaded / event.expectedTotalBytes! :
+                                          null
+                                    )
+                                  );
+                                }),
                               ],
                             )
                           : Padding(

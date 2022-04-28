@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:dyadapp/src/utils/theme_model.dart';
 
+import '../pages/profile.dart';
+
 class PostBar extends StatelessWidget {
   const PostBar(
     this.profilePicture,
@@ -30,12 +32,16 @@ class PostBar extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Container(
-                child: CircleAvatar(
-                  radius: 50,
-                  foregroundImage: profilePicture,
-                  backgroundColor: Colors.white70,
-                  foregroundColor: Colors.black12,
-                  child: Text(author.substring(0, min(4, author.length))),
+                child: GestureDetector(
+                  onTap: () {
+                  },
+                  child: CircleAvatar(
+                    radius: 50,
+                    foregroundImage: profilePicture,
+                    backgroundColor: Colors.white70,
+                    foregroundColor: Colors.black12,
+                    child: Text(author.substring(0, min(4, author.length))),
+                  ),
                 ),
               ),
             ),
