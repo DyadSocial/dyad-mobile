@@ -8,6 +8,7 @@ import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:dyadapp/src/data.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/api_provider.dart';
 import '../utils/theme_model.dart';
 
 class PostTile extends StatelessWidget {
@@ -40,10 +41,10 @@ class PostTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return Padding(
-        padding: const EdgeInsets.fromLTRB(5,10,5,10),
+        padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
         child: TextButton(
             onLongPress: () async {
-              if (author == await UserSession().get("username"))
+              if (author == await UserSession().get("username")) {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -55,6 +56,7 @@ class PostTile extends StatelessWidget {
                         children: [
                           ElevatedButton(
                               onPressed: () async {
+                                Navigator.pop(context);
                                 Post? post = await DatabaseHandler()
                                     .getPost(postId.toString());
                                 var username =
@@ -64,8 +66,7 @@ class PostTile extends StatelessWidget {
                                       .push(MaterialPageRoute<void>(
                                     builder: (context) => PostScreen(
                                         onUpdateCallback,
-                                        groupInstance.allUsers.firstWhere(
-                                            (user) => user.username == author),
+                                        Provider.of<Group>(context).getUser(author),
                                         post,
                                         username == author),
                                   ));
@@ -83,6 +84,100 @@ class PostTile extends StatelessWidget {
                         ],
                       );
                     });
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SimpleDialog(
+                        title: const Text('Post Options',
+                            style: TextStyle(fontSize: 20)),
+                        contentPadding:
+                        EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                        children: [
+                          ElevatedButton(
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                                Post? post = await DatabaseHandler()
+                                    .getPost(postId.toString());
+                                var username =
+                                await UserSession().get("username");
+                                if (post != null) {
+                                  Navigator.of(context)
+                                      .push(MaterialPageRoute<void>(
+                                    builder: (context) => PostScreen(
+                                        onUpdateCallback,
+                                        Provider.of<Group>(context).getUser(author),
+                                        post,
+                                        username == author),
+                                  ));
+                                }
+                              },
+                              child: const Text('View Post',
+                                  style: TextStyle(fontSize: 14))),
+                          // Show report form if user presses report
+                          ElevatedButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    TextEditingController _reasonController = TextEditingController();
+                                    return SimpleDialog(
+                                      title: const Text('Report Form', style: TextStyle(fontSize: 20)),
+                                      contentPadding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text("User:", style: TextStyle(fontWeight: FontWeight.bold)),
+                                        ),
+                                        Text(this.author),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text("Offending Title:", style: TextStyle(fontWeight: FontWeight.bold)),
+                                        ),
+                                        Text(this.title),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text("Offending Content:", style: TextStyle(fontWeight: FontWeight.bold)),
+                                        ),
+                                        Text(this.content),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text("Image:", style: TextStyle(fontWeight: FontWeight.bold)),
+                                        ),
+                                        (this.imageURL != null) ?
+                                            Image.network(this.imageURL!):
+                                            Text("No Image"),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: TextField(controller: _reasonController,
+                                          decoration: InputDecoration(labelText: 'Reason', hintMaxLines: 20), maxLines: 2, minLines: 1),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            String offender = this.author;
+                                            String offendingTitle = this.title;
+                                            String offendingContent = this.content;
+                                            String reporter = await UserSession().get("username");
+                                            String image = imageURL ?? "noimg";
+                                            DateTime postUpdatedTime = this.datetime;
+                                            DateTime reportTime = DateTime.now();
+                                            Navigator.of(context).pop();
+                                            //APIProvider.sendReport
+                                          },
+                                          child: Text("Submit Report")
+                                        )
+                                      ]
+                                    );
+                                  }
+                                );
+                              },
+                              child: const Text('Report',
+                                  style: TextStyle(fontSize: 14)))
+                        ],
+                      );
+                    });
+
+              }
             },
             onPressed: () async {
               Post? post = await DatabaseHandler().getPost(postId.toString());
@@ -91,8 +186,7 @@ class PostTile extends StatelessWidget {
                 Navigator.of(context).push(MaterialPageRoute<void>(
                   builder: (context) => PostScreen(
                       onUpdateCallback,
-                      groupInstance.allUsers
-                          .firstWhere((user) => user.username == author),
+                      Provider.of<Group>(context).getUser(author),
                       post,
                       username == author),
                 ));
@@ -119,7 +213,7 @@ class PostTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   PostBar(
-                    profilePicture,
+                    null,
                     author,
                     title,
                     datetime,
@@ -147,17 +241,19 @@ class PostTile extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                Image.network(imageURL!, loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? event) {
+                                Image.network(imageURL!, loadingBuilder:
+                                    (BuildContext context, Widget child,
+                                        ImageChunkEvent? event) {
                                   if (event == null) {
                                     return child;
                                   }
                                   return Center(
-                                    child: LinearProgressIndicator(
-                                      value: event.expectedTotalBytes != null ?
-                                          event.cumulativeBytesLoaded / event.expectedTotalBytes! :
-                                          null
-                                    )
-                                  );
+                                      child: LinearProgressIndicator(
+                                          value: event.expectedTotalBytes !=
+                                                  null
+                                              ? event.cumulativeBytesLoaded /
+                                                  event.expectedTotalBytes!
+                                              : null));
                                 }),
                               ],
                             )

@@ -57,9 +57,9 @@ class _FeedListState extends State<FeedList> {
   Widget build(BuildContext context) {
     // Sort chronologically
     widget.posts.sort((a, b) {
-      if (a.lastUpdated.seconds < b.lastUpdated.seconds) {
+      if (a.created.seconds < b.created.seconds) {
         return 1;
-      } else if (a.lastUpdated.seconds == b.lastUpdated.seconds) {
+      } else if (a.created.seconds == b.created.seconds) {
         return 0;
       } else {
         return -1;
@@ -83,11 +83,7 @@ class _FeedListState extends State<FeedList> {
                 onDeleteCallback: widget.onDeleteCallback,
                 onUpdateCallback: widget.onUpdateCallback,
                 postId: post.id,
-                profilePicture: groupInstance.allUsers
-                        .firstWhereOrNull(
-                            (user) => user.username == post.author)
-                        ?.profilePicture ??
-                    null,
+                profilePicture: null,
                 imageURL: post.content.hasImage() ? post.content.image : null,
                 title: post.title,
                 author: post.author,

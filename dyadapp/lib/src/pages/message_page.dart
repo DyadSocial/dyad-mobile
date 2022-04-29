@@ -16,7 +16,6 @@ class MessagePage extends StatefulWidget {
   ImageProvider<Object>? profilePicture;
   String nickname;
   String chat_id;
-  List<Message> messages = [];
 
   MessagePage({Key? key, required this.profilePicture, required this.nickname, required this.chat_id})
       : super(key: key);
@@ -30,6 +29,7 @@ class _MessagePageState extends State<MessagePage> {
   var latestID;
   final _msgController = TextEditingController();
   var username;
+  List<Message> messages = [];
 
   @override
   void initState() {
@@ -198,7 +198,7 @@ class _MessagePageState extends State<MessagePage> {
                       channel.sink.add(jsonEncode(jsonString));
                       final messageList = await DatabaseHandler().getMessages(widget.chat_id);
                       setState((){
-                        widget.messages = messageList;
+                        messages = messageList;
                       });
                       //Clear text controller and reset keyboard
                       _msgController.clear();
@@ -231,6 +231,7 @@ class _MessagePageState extends State<MessagePage> {
     }
     //Get new set of messages after adding to db
     final messagelist = await DatabaseHandler().getMessages(widget.chat_id);
+
     if(messageList != []){
       var temp = int.parse(messageList[0].id);
       print("TEMP: " + temp.toString());
@@ -239,8 +240,17 @@ class _MessagePageState extends State<MessagePage> {
       var user = await UserSession().get("username");
       setState((){
         username = user;
-        widget.messages = messagelist;
+        messages = messagelist;
         latestID = latest;
+        messages.sort((a, b) {
+          if (a.lastUpdated.seconds < b.lastUpdated.seconds) {
+            return 1;
+          } else if (a.lastUpdated.seconds == b.lastUpdated.seconds) {
+            return 0;
+          } else {
+            return -1;
+          }
+        });
       });
     }
   }
@@ -270,16 +280,15 @@ class _MessagePageState extends State<MessagePage> {
     List<Message> messageList = await DatabaseHandler().getMessages(widget.chat_id);
     messageList.sort((a, b) {
       if (a.lastUpdated.seconds < b.lastUpdated.seconds) {
-        return -1;
+        return 1;
       } else if (a.lastUpdated.seconds == b.lastUpdated.seconds) {
         return 0;
       } else {
-        return 1;
+        return -1;
       }
     });
-
     setState(() {
-      widget.messages = messageList;
+      messages = messageList;
     });
   }
 
@@ -289,7 +298,7 @@ class _MessagePageState extends State<MessagePage> {
     //Reverse the list as it starts from the bottom.
     return ListView.builder(
 
-      itemCount: widget.messages.length,
+      itemCount: messages.length,
       shrinkWrap: true,
       padding: EdgeInsets.only(top: 10, bottom: 10),
       physics: BouncingScrollPhysics(),
@@ -297,7 +306,7 @@ class _MessagePageState extends State<MessagePage> {
       itemBuilder: (context, index) {
 
         //If the author is the other user, then the messages should be appended to the listview and display on the left
-        if (widget.messages[index].author == sender) {
+        if (messages[index].author == sender) {
           return Container(
             padding: EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
             child: Align(
@@ -309,7 +318,7 @@ class _MessagePageState extends State<MessagePage> {
                 ),
                 padding: EdgeInsets.all(16),
                 child: Text(
-                  widget.messages[index].content,
+                  messages[index].content,
                   style: TextStyle(fontSize: 15, color: Colors.black),
                 ),
               ),
@@ -328,7 +337,7 @@ class _MessagePageState extends State<MessagePage> {
                 ),
                 padding: EdgeInsets.all(16),
                 child: Text(
-                  widget.messages[index].content,
+                  messages[index].content,
                   style: TextStyle(fontSize: 15, color: Colors.black),
                 ),
               ),

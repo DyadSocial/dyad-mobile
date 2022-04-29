@@ -8,14 +8,29 @@ import 'package:path_provider/path_provider.dart';
 import '../utils/api_provider.dart';
 import '../utils/user_session.dart';
 
-class ProfileScreen extends StatelessWidget {
+// Shows details of User's profile description, their profile image, nickname,
+// and list of their posts that are currently in the current user's feed
+// Vincent
+class ProfileScreen extends StatefulWidget {
   final User user;
-  String? username = null;
 
-  ProfileScreen(
-    this.user, {
+  ProfileScreen(this.user, {
     Key? key,
   }) : super(key: key);
+
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen>{
+  late final User user;
+  String? username = null;
+
+  @override
+  void initState() {
+    super.initState();
+    user = widget.user;
+  }
 
   Future<String?> getUsername() async {
     username = await UserSession().get("username");
@@ -48,7 +63,7 @@ class ProfileScreen extends StatelessWidget {
         children: [
           Center(
             child: CircleAvatar(
-              backgroundImage: user.profilePicture,
+              backgroundImage: null,
               radius: 120,
             ),
           ),
@@ -106,7 +121,7 @@ class ProfileScreen extends StatelessWidget {
           ),
           Center(
             child: Text(
-              user.biography,
+              user.biography ?? "",
               style: TextStyle(
                 fontSize: 16,
               ),

@@ -18,45 +18,49 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     //Consumer is wrapped to update the theme on button press
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Settings'),
-        ),
-        body: ListView(
-          padding: const EdgeInsets.all(8),
-          children: <Widget>[
-            Container(
-              child: ElevatedButton(
-                child: Text("Change theme"),
-                onPressed: () {
-                  themeNotifier.isDark
-                      ? themeNotifier.isDark = false
-                      : themeNotifier.isDark = true;
-                },
+      return Consumer<Group>(
+        builder: (context, group, child) => Scaffold(
+          appBar: AppBar(
+            title: const Text('Settings'),
+          ),
+          body: ListView(
+            padding: const EdgeInsets.all(8),
+            children: <Widget>[
+              Container(
+                child: ElevatedButton(
+                  child: Text("Change theme"),
+                  onPressed: () {
+                    themeNotifier.isDark
+                        ? themeNotifier.isDark = false
+                        : themeNotifier.isDark = true;
+                  },
+                ),
               ),
-            ),
-            //Brings user to their profile page
-            Container(
-              child: ElevatedButton(
-                child: Text("View Profile"),
-                onPressed: () async {
-                  final currentUsername = await UserSession().get("username");
-                  var user = groupInstance.allUsers
-                      .firstWhere((user) => user.username == currentUsername);
-                  Navigator.of(context).push<void>(MaterialPageRoute<void>(
-                      builder: (context) => ProfileScreen(user)));
-                },
+              //Brings user to their profile page
+              Container(
+                child: ElevatedButton(
+                  child: Text("View Profile"),
+                  onPressed: () async {
+                    final currentUsername = await UserSession().get("username");
+                    var user =
+                        Provider.of<Group>(context, listen: false).getUser("vncp");
+                    if (user != null) {
+                      Navigator.of(context).push<void>(MaterialPageRoute<void>(
+                          builder: (context) => ProfileScreen(user)));
+                    }
+                  },
+                ),
               ),
-            ),
-            Container(
-              child: ElevatedButton(
-                child: Text("Logout"),
-                onPressed: () {
-                  DyadAuthScope.of(context).signOut();
-                },
+              Container(
+                child: ElevatedButton(
+                  child: Text("Logout"),
+                  onPressed: () {
+                    DyadAuthScope.of(context).signOut();
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     });

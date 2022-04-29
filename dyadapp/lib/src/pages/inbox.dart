@@ -495,12 +495,7 @@ class _InboxPageState extends State<InboxPage>
                             context,
                             MaterialPageRoute(
                               builder: (context) => MessagePage(
-                                profilePicture: groupInstance
-                                    .getUser(_chats[index].recipients.firstWhere(
-                                        (element) => element != username,
-                                    orElse: ()=> 'infuhnit'))
-                                    ?.profilePicture ??
-                                    null,
+                                profilePicture: null,
                                 nickname: _chats[index].recipients.firstWhere(
                                         (element) => element != username,
                                     orElse: ()=> 'temp'),
@@ -520,15 +515,7 @@ class _InboxPageState extends State<InboxPage>
                               child: Row(
                                 children: <Widget>[
                                   CircleAvatar(
-                                      backgroundImage: groupInstance
-                                          .getUser(_chats[index]
-                                          .recipients
-                                          .firstWhere(
-                                              (element) =>
-                                          element != username,
-                                          orElse: () => 'infuhnit'))
-                                          ?.profilePicture ??
-                                          null,
+                                      backgroundImage: null,
                                       foregroundColor: Colors.black12,
                                       backgroundColor: Colors.white70,
                                       maxRadius: 30,

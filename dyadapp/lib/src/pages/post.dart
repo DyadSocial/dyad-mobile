@@ -11,7 +11,7 @@ import 'package:dyadapp/src/widgets/comment_list.dart';
 
 class PostScreen extends StatefulWidget {
   final Future<Post?> Function(Post) onUpdateCallback;
-  final User author;
+  final User? author;
   late Post post;
   late bool editable;
 
@@ -99,7 +99,7 @@ class _PostScreenState extends State<PostScreen> {
   @override
   void initState() {
     super.initState();
-    _author = widget.author;
+    _author = widget.author ?? User.getDefault();
     _post = widget.post;
     _isTextEditable = widget.editable;
     _isEditingText = false;

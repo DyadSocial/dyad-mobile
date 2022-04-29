@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class User {
   final String username;
-  final String nickname;
-  final ImageProvider<Object> profilePicture;
-  final String biography;
+  String? nickname;
+  String? profilePicture;
+  String? biography;
   List<int> posts = [];
 
   User(
-    this.username,
+    final this.username,
     this.nickname,
     this.biography,
     this.profilePicture,
@@ -27,4 +27,11 @@ class User {
         json['profilePicture'],
         json['biography'],
       );
+
+  static User getDefault() => User(
+    "unknown",
+    null,
+    null,
+    null
+  );
 }

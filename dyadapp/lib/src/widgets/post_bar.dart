@@ -16,7 +16,7 @@ class PostBar extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final ImageProvider<Object>? profilePicture;
+  final String? profilePicture;
   final String title;
   final String author;
   final DateTime datetime;
@@ -33,11 +33,12 @@ class PostBar extends StatelessWidget {
               flex: 2,
               child: Container(
                 child: GestureDetector(
-                  onTap: () {
-                  },
+                  onTap: () {},
                   child: CircleAvatar(
                     radius: 50,
-                    foregroundImage: profilePicture,
+                    foregroundImage: (profilePicture != null)
+                        ? Image.network(profilePicture!).image
+                        : null,
                     backgroundColor: Colors.white70,
                     foregroundColor: Colors.black12,
                     child: Text(author.substring(0, min(4, author.length))),

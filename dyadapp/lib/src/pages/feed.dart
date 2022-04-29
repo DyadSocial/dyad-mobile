@@ -74,6 +74,7 @@ class _FeedScreenState extends State<FeedScreen>
       DatabaseHandler().clearData();
       for (var post
           in await _grpcClient.runRefreshPosts(0, currentUser, currentCity)) {
+        print(await APIProvider.getUserProfile(post.author));
         setState(() {
           DatabaseHandler().insertPost(post);
         });
@@ -105,11 +106,11 @@ class _FeedScreenState extends State<FeedScreen>
     // Sort chronologically
     _posts.sort((a, b) {
       if (a.lastUpdated.seconds < b.lastUpdated.seconds) {
-        return 1;
+        return -1;
       } else if (a.lastUpdated.seconds == b.lastUpdated.seconds) {
         return 0;
       } else {
-        return -1;
+        return 1;
       }
     });
     Post lastPost = _posts[_posts.length];

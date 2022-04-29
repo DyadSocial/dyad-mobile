@@ -9,6 +9,7 @@ import 'package:dyadapp/src/pages/inbox.dart';
 import 'package:provider/provider.dart';
 import 'package:quiver/collection.dart';
 
+import '../utils/data/group.dart';
 import '../utils/location.dart';
 /*
 Class DyadScaffold
@@ -26,9 +27,13 @@ class DyadScaffold extends StatelessWidget {
     final selectedIndex = _getSelectedIndex(routeState.route.pathTemplate);
 
     return MultiProvider(
-      providers: [ChangeNotifierProvider<LocationDyad>(
+      providers: [
+      ChangeNotifierProvider<LocationDyad>(
         create: (context) => LocationDyad()
-      )],
+      ),
+      ChangeNotifierProvider<Group>(
+        create: (context) => Group()
+      ) ],
       child: Scaffold(
         body: AdaptiveNavigationScaffold(
           selectedIndex: selectedIndex,
@@ -39,7 +44,8 @@ class DyadScaffold extends StatelessWidget {
             } else if (idx == 1) {
               routeState.go('/map');
             } else if (idx == 2) {
-              routeState.go('/inbox');
+              routeState.
+              go('/inbox');
             }
           },
           destinations: const [
