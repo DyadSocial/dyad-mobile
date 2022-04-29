@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+message Count {
+  int32 count = 1;
+}
+
+message ActiveQuery {
+  string requestor = 1;
+}
+
+service ActiveUsers {
+  rpc getRecentlyActive(ActiveQuery) returns (stream Count);
+}
