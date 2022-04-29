@@ -126,6 +126,7 @@ class PostTile extends StatelessWidget {
                                                   const EdgeInsets.all(8.0),
                                               child: Text("User:",
                                                   style: TextStyle(
+                                                      color: Color(0xffd3d3d3),
                                                       fontWeight:
                                                           FontWeight.bold)),
                                             ),
@@ -135,6 +136,7 @@ class PostTile extends StatelessWidget {
                                                   const EdgeInsets.all(8.0),
                                               child: Text("Offending Title:",
                                                   style: TextStyle(
+                                                      color: Color(0xffd3d3d3),
                                                       fontWeight:
                                                           FontWeight.bold)),
                                             ),
@@ -144,6 +146,7 @@ class PostTile extends StatelessWidget {
                                                   const EdgeInsets.all(8.0),
                                               child: Text("Offending Content:",
                                                   style: TextStyle(
+                                                      color: Color(0xffd3d3d3),
                                                       fontWeight:
                                                           FontWeight.bold)),
                                             ),
@@ -153,6 +156,7 @@ class PostTile extends StatelessWidget {
                                                   const EdgeInsets.all(8.0),
                                               child: Text("Image:",
                                                   style: TextStyle(
+                                                      color: Color(0xffd3d3d3),
                                                       fontWeight:
                                                           FontWeight.bold)),
                                             ),
@@ -177,17 +181,15 @@ class PostTile extends StatelessWidget {
                                                       this.title;
                                                   String offendingContent =
                                                       this.content;
-                                                  String reporter =
-                                                      await UserSession()
-                                                          .get("username");
                                                   String image =
                                                       imageURL ?? "noimg";
-                                                  DateTime postUpdatedTime =
-                                                      this.datetime;
-                                                  DateTime reportTime =
-                                                      DateTime.now();
+                                                  APIProvider.reportContent(
+                                                      offender,
+                                                      offendingContent,
+                                                      offendingTitle,
+                                                      image,
+                                                      _reasonController.text);
                                                   Navigator.of(context).pop();
-                                                  //APIProvider.sendReport
                                                 },
                                                 child: Text("Submit Report"))
                                           ]);

@@ -94,14 +94,13 @@ class _InboxPageState extends State<InboxPage>
               content: res2[0]['content'],
               lastUpdated: Timestamp.fromDateTime(
                   DateTime.parse(res2[0]['timestamp']))));
-        }
-        else {
+        } else {
           print('TIMEOUT EXCEPTION: GETLATESTMESSAGE');
         }
         setState(() {
           //If the chat already exists, firstWhere gets the chat object in the list of chats. If it doesn't exist, it is an empty chat object
           var existingChat = _chats.firstWhere(
-                  (element) => element.recipients == tempchat.recipients,
+              (element) => element.recipients == tempchat.recipients,
               orElse: () => Chat());
           //Means it doesn't already exist, so add tempchat to the _chats
           if (existingChat == Chat()) {
@@ -173,9 +172,8 @@ class _InboxPageState extends State<InboxPage>
     String current_user = await UserSession().get("username");
     for (var recipient in chat.recipients) {
       if (recipient != current_user) {
-        return Image
-            .network(
-            "https://th.bing.com/th/id/OIP.Nen6j3vBZdl8g8kzNfoEHQAAAA?pid=ImgDet&rs=1")
+        return Image.network(
+                "https://th.bing.com/th/id/OIP.Nen6j3vBZdl8g8kzNfoEHQAAAA?pid=ImgDet&rs=1")
             .image;
       }
     }
@@ -192,8 +190,7 @@ class _InboxPageState extends State<InboxPage>
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: () =>
-            {
+            onPressed: () => {
               Navigator.of(context).push<void>(MaterialPageRoute<void>(
                   builder: (context) => const SettingsScreen()))
               //Changed temporarily for inbox screen from SettingsScreen()
@@ -210,304 +207,301 @@ class _InboxPageState extends State<InboxPage>
               children: <Widget>[
                 SafeArea(
                     child: Padding(
-                      padding: EdgeInsets.only(left: 16, right: 16, top: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            "Messages",
-                            style: TextStyle(
-                                fontSize: 32, fontWeight: FontWeight.bold),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(left: 4, right: 4),
-                            height: 30,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Colors.grey,
+                  padding: EdgeInsets.only(left: 16, right: 16, top: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "Messages",
+                        style: TextStyle(
+                            fontSize: 32, fontWeight: FontWeight.bold),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 4, right: 4),
+                        height: 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.grey,
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.add,
+                              color: Colors.blueGrey,
+                              size: 20,
                             ),
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.add,
-                                  color: Colors.blueGrey,
-                                  size: 20,
-                                ),
-                                //The new button brings up an alert dialog to send a message to someone
-                                TextButton(onPressed: () =>
-                                {
-                                  if(suggestiveList.length > 0){
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          //Stateful builder is used in conjunction with Dropdown button to choose user from list
-                                          return StatefulBuilder(
-                                              builder: (context, setState) {
-                                                return AlertDialog(
-                                                  insetPadding: EdgeInsets.all(
-                                                      8.0),
-                                                  content: Stack(
-                                                      children: <Widget>[
-                                                        Column(
-                                                          mainAxisSize: MainAxisSize
-                                                              .min,
-                                                          mainAxisAlignment: MainAxisAlignment
-                                                              .center,
-                                                          children: [
-                                                            Container(
-                                                                padding: EdgeInsets
-                                                                    .all(5.0),
+                            //The new button brings up an alert dialog to send a message to someone
+                            TextButton(
+                                onPressed: () => {
+                                      if (suggestiveList.length > 0)
+                                        {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                //Stateful builder is used in conjunction with Dropdown button to choose user from list
+                                                return StatefulBuilder(builder:
+                                                    (context, setState) {
+                                                  return AlertDialog(
+                                                    insetPadding:
+                                                        EdgeInsets.all(8.0),
+                                                    content: Stack(
+                                                        children: <Widget>[
+                                                          Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Container(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .all(
+                                                                              5.0),
+                                                                  height: 50,
+                                                                  width: 200,
+                                                                  //Dropdown button is for choosing a list of available users to message.
+                                                                  //There is no typing in the box because you should only be able to message people who have posted recently,
+                                                                  //to help protect anonymity
+                                                                  child:
+                                                                      DropdownButton<
+                                                                          String>(
+                                                                    items: suggestiveList.map<
+                                                                        DropdownMenuItem<
+                                                                            String>>((String
+                                                                        value) {
+                                                                      return DropdownMenuItem<
+                                                                          String>(
+                                                                        value:
+                                                                            value,
+                                                                        child: Text(
+                                                                            value),
+                                                                      );
+                                                                    }).toList(),
+                                                                    isExpanded:
+                                                                        true,
+                                                                    icon: const Icon(
+                                                                        Icons
+                                                                            .arrow_downward),
+                                                                    elevation:
+                                                                        16,
+                                                                    value:
+                                                                        dropdownvalue,
+                                                                    onChanged:
+                                                                        (newValue) {
+                                                                      setState(
+                                                                          () {
+                                                                        dropdownvalue =
+                                                                            newValue.toString();
+                                                                        _toController.text =
+                                                                            newValue.toString();
+                                                                      });
+                                                                      print(
+                                                                          dropdownvalue);
+                                                                    },
+                                                                  )),
+                                                              Container(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            5.0),
                                                                 height: 50,
                                                                 width: 200,
-                                                                //Dropdown button is for choosing a list of available users to message.
-                                                                //There is no typing in the box because you should only be able to message people who have posted recently,
-                                                                //to help protect anonymity
-                                                                child: DropdownButton<
-                                                                    String>(
-                                                                  items: suggestiveList
-                                                                      .map<
-                                                                      DropdownMenuItem<
-                                                                          String>>((
-                                                                      String value) {
-                                                                    return DropdownMenuItem<
-                                                                        String>(
-                                                                      value: value,
-                                                                      child: Text(
-                                                                          value),
-                                                                    );
-                                                                  }).toList(),
-                                                                  isExpanded: true,
-                                                                  icon: const Icon(
-                                                                      Icons
-                                                                          .arrow_downward),
-                                                                  elevation: 16,
-                                                                  value: dropdownvalue,
-                                                                  onChanged: (
-                                                                      newValue) {
-                                                                    setState(() {
-                                                                      dropdownvalue =
-                                                                          newValue
-                                                                              .toString();
-                                                                      _toController
-                                                                          .text =
-                                                                          newValue
-                                                                              .toString();
-                                                                    });
-                                                                    print(
-                                                                        dropdownvalue);
-                                                                  },
-                                                                )),
-                                                            Container(
-                                                              padding: EdgeInsets
-                                                                  .all(5.0),
-                                                              height: 50,
-                                                              width: 200,
-                                                              child: TextFormField(
-                                                                decoration: InputDecoration(
-                                                                  icon: Icon(
-                                                                      Icons
-                                                                          .edit),
-                                                                  hintText: 'Message',
+                                                                child:
+                                                                    TextFormField(
+                                                                  decoration:
+                                                                      InputDecoration(
+                                                                    icon: Icon(
+                                                                        Icons
+                                                                            .edit),
+                                                                    hintText:
+                                                                        'Message',
+                                                                  ),
+                                                                  keyboardType:
+                                                                      TextInputType
+                                                                          .multiline,
+                                                                  controller:
+                                                                      _msgController,
                                                                 ),
-                                                                keyboardType: TextInputType
-                                                                    .multiline,
-                                                                controller: _msgController,
                                                               ),
-                                                            ),
-                                                            SizedBox(
-                                                                height: 50),
-
-                                                            TextButton(
-                                                                onPressed: () async {
-                                                                  //Put away the alert dialog so user doesn't spam press send.
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                  //Check if other user exists first
-                                                                  if (await checkUser(
-                                                                      _toController
-                                                                          .value
-                                                                          .text) ==
-                                                                      false) {
-                                                                    _msgController
-                                                                        .clear();
-                                                                    _toController
-                                                                        .clear();
-                                                                    return showDialog(
-                                                                        context: context,
-                                                                        builder: (
-                                                                            BuildContext context) {
-                                                                          return AlertDialog(
-                                                                              title: Text(
-                                                                                  "Could not send!"),
-                                                                              insetPadding: EdgeInsets
-                                                                                  .all(
-                                                                                  8.0),
-                                                                              content: Column(
-                                                                                children: [
-                                                                                  Text(
-                                                                                      "Could not send a message because that user does not exist."),
-                                                                                  TextButton(
-                                                                                      onPressed: () =>
-                                                                                          Navigator
-                                                                                              .pop(
-                                                                                              context),
-                                                                                      child: Text(
-                                                                                          "OK"))
-                                                                                ],
-                                                                              ));
-                                                                        });
-                                                                  }
-                                                                  else {
-                                                                    //For id, first check if a chat exists, if it doesn't create a new message in a new chatroom. If it exists
-                                                                    //open the websocket connection and add in using latest_id.
-                                                                    //Make a new chat object with new chat
-                                                                    List<
-                                                                        String> tempRecList = [
-                                                                    ];
-                                                                    //Put recipients in alphabetical order
-                                                                    tempRecList
-                                                                        .add(
-                                                                        username);
-                                                                    tempRecList
-                                                                        .add(
-                                                                        _toController
+                                                              SizedBox(
+                                                                  height: 50),
+                                                              TextButton(
+                                                                  onPressed:
+                                                                      () async {
+                                                                    //Put away the alert dialog so user doesn't spam press send.
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                    //Check if other user exists first
+                                                                    if (await checkUser(_toController
                                                                             .value
-                                                                            .text);
-                                                                    tempRecList
-                                                                        .sort();
-                                                                    Chat newChat = Chat(
-                                                                        recipients: [
-                                                                        ],
-                                                                        messages: [
-                                                                        ]);
-                                                                    for (var recipient in tempRecList) {
-                                                                      newChat
-                                                                          .recipients
+                                                                            .text) ==
+                                                                        false) {
+                                                                      _msgController
+                                                                          .clear();
+                                                                      _toController
+                                                                          .clear();
+                                                                      return showDialog(
+                                                                          context:
+                                                                              context,
+                                                                          builder:
+                                                                              (BuildContext context) {
+                                                                            return AlertDialog(
+                                                                                title: Text("Could not send!"),
+                                                                                insetPadding: EdgeInsets.all(8.0),
+                                                                                content: Column(
+                                                                                  children: [
+                                                                                    Text("Could not send a message because that user does not exist."),
+                                                                                    TextButton(onPressed: () => Navigator.pop(context), child: Text("OK"))
+                                                                                  ],
+                                                                                ));
+                                                                          });
+                                                                    } else {
+                                                                      //For id, first check if a chat exists, if it doesn't create a new message in a new chatroom. If it exists
+                                                                      //open the websocket connection and add in using latest_id.
+                                                                      //Make a new chat object with new chat
+                                                                      List<String>
+                                                                          tempRecList =
+                                                                          [];
+                                                                      //Put recipients in alphabetical order
+                                                                      tempRecList
                                                                           .add(
-                                                                          recipient);
-                                                                    }
-                                                                    //Open a ws channel to send the message, then close the connection
-                                                                    final channel = WebSocketChannel
-                                                                        .connect(
-                                                                        Uri
-                                                                            .parse(
-                                                                            'ws://74.207.251.32:8000/ws/chat/' +
-                                                                                getChatId(
-                                                                                    newChat) +
-                                                                                '/'));
-                                                                    //Send to websocket so other user can get message too
-                                                                    var jsonString = {
-                                                                      'roomname': getChatId(
-                                                                          newChat),
-                                                                      'username': username,
-                                                                      'recipients': newChat
-                                                                          .recipients,
-                                                                      'message': _msgController
+                                                                              username);
+                                                                      tempRecList.add(_toController
                                                                           .value
-                                                                          .text,
-                                                                      'command': 'new_message',
-                                                                    };
-                                                                    channel.sink
-                                                                        .add(
-                                                                        jsonEncode(
-                                                                            jsonString));
-                                                                    await Future
-                                                                        .delayed(
-                                                                        Duration(
-                                                                            seconds: 1));
-                                                                    //Get the message id from the latest websocket message so we can add to our local cache
-                                                                    channel
-                                                                        .stream
-                                                                        .listen((
-                                                                        event) {
-                                                                      var jsonString = json
-                                                                          .decode(
-                                                                          event);
-                                                                      if (this
-                                                                          .mounted) {
-                                                                        latestID =
-                                                                            jsonString['message_id']
-                                                                                .toString();
-                                                                        print(
-                                                                            latestID);
+                                                                          .text);
+                                                                      tempRecList
+                                                                          .sort();
+                                                                      Chat newChat = Chat(
+                                                                          recipients: [],
+                                                                          messages: []);
+                                                                      for (var recipient
+                                                                          in tempRecList) {
+                                                                        newChat
+                                                                            .recipients
+                                                                            .add(recipient);
                                                                       }
-                                                                    });
-                                                                    await Future
-                                                                        .delayed(
-                                                                        Duration(
-                                                                            seconds: 2));
-                                                                    print(
-                                                                        "SENT");
-                                                                    channel.sink
-                                                                        .close();
-                                                                    Message message = Message(
-                                                                        id: latestID,
-                                                                        author: username,
-                                                                        content: _msgController
+                                                                      //Open a ws channel to send the message, then close the connection
+                                                                      final channel = WebSocketChannel.connect(Uri.parse('ws://74.207.251.32:8000/ws/chat/' +
+                                                                          getChatId(
+                                                                              newChat) +
+                                                                          '/'));
+                                                                      //Send to websocket so other user can get message too
+                                                                      var jsonString =
+                                                                          {
+                                                                        'roomname':
+                                                                            getChatId(newChat),
+                                                                        'username':
+                                                                            username,
+                                                                        'recipients':
+                                                                            newChat.recipients,
+                                                                        'message': _msgController
                                                                             .value
                                                                             .text,
-                                                                        lastUpdated: Timestamp
-                                                                            .fromDateTime(
-                                                                            DateTime
-                                                                                .now()
-                                                                                .toUtc()),
-                                                                        created: null,
-                                                                        image: null);
-                                                                    //Insert into our local cache so we have the message even when we leave websocket connection
-                                                                    DatabaseHandler()
-                                                                        .insertMessage(
-                                                                        message,
-                                                                        getChatId(
-                                                                            newChat));
-                                                                    getChats();
-                                                                    _msgController
-                                                                        .clear();
-                                                                    _toController
-                                                                        .clear();
-                                                                  }
-                                                                },
-                                                                child: Text(
-                                                                    buttonText))
-                                                          ],
-                                                        )
-                                                      ]
-                                                  ),
-                                                  title: Text(
-                                                      'Send a new message'),
-                                                );
-                                              }
-                                          );
+                                                                        'command':
+                                                                            'new_message',
+                                                                      };
+                                                                      channel
+                                                                          .sink
+                                                                          .add(jsonEncode(
+                                                                              jsonString));
+                                                                      await Future.delayed(Duration(
+                                                                          seconds:
+                                                                              1));
+                                                                      //Get the message id from the latest websocket message so we can add to our local cache
+                                                                      channel
+                                                                          .stream
+                                                                          .listen(
+                                                                              (event) {
+                                                                        var jsonString =
+                                                                            json.decode(event);
+                                                                        if (this
+                                                                            .mounted) {
+                                                                          latestID =
+                                                                              jsonString['message_id'].toString();
+                                                                          print(
+                                                                              latestID);
+                                                                        }
+                                                                      });
+                                                                      await Future.delayed(Duration(
+                                                                          seconds:
+                                                                              2));
+                                                                      print(
+                                                                          "SENT");
+                                                                      channel
+                                                                          .sink
+                                                                          .close();
+                                                                      Message message = Message(
+                                                                          id:
+                                                                              latestID,
+                                                                          author:
+                                                                              username,
+                                                                          content: _msgController
+                                                                              .value
+                                                                              .text,
+                                                                          lastUpdated: Timestamp.fromDateTime(DateTime.now()
+                                                                              .toUtc()),
+                                                                          created:
+                                                                              null,
+                                                                          image:
+                                                                              null);
+                                                                      //Insert into our local cache so we have the message even when we leave websocket connection
+                                                                      DatabaseHandler().insertMessage(
+                                                                          message,
+                                                                          getChatId(
+                                                                              newChat));
+                                                                      getChats();
+                                                                      _msgController
+                                                                          .clear();
+                                                                      _toController
+                                                                          .clear();
+                                                                    }
+                                                                  },
+                                                                  child: Text(
+                                                                      buttonText))
+                                                            ],
+                                                          )
+                                                        ]),
+                                                    title: Text(
+                                                        'Send a new message'),
+                                                  );
+                                                });
+                                              })
                                         }
-                                    )}
-                                  else
-                                    {
-                                      //If there is nobody in the suggestive message list, means there is nobody online. Can only message someone you have talked to before,
-                                      //or wait for someone to post
-                                      showDialog(context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                                title: Text(
-                                                    "Could not compose a message!"),
-                                                insetPadding: EdgeInsets.all(
-                                                    8.0),
-                                                content: Column(
-                                                  children: [
-                                                    Text(
-                                                        "There doesn't seem to be anybody nearby to send a message to. Wait for someone to post!"),
-                                                    TextButton(onPressed: () =>
-                                                        Navigator.pop(context),
-                                                        child: Text("OK"))
-                                                  ],
-                                                ));
-                                          })
-                                    }
-                                }, child: Text("New")),
-                              ],
-                            ),
-                          ),
-                        ],
+                                      else
+                                        {
+                                          //If there is nobody in the suggestive message list, means there is nobody online. Can only message someone you have talked to before,
+                                          //or wait for someone to post
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                    title: Text(
+                                                        "Could not compose a message!"),
+                                                    insetPadding:
+                                                        EdgeInsets.all(8.0),
+                                                    content: Column(
+                                                      children: [
+                                                        Text(
+                                                            "There doesn't seem to be anybody nearby to send a message to. Wait for someone to post!"),
+                                                        TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                    context),
+                                                            child: Text("OK"))
+                                                      ],
+                                                    ));
+                                              })
+                                        }
+                                    },
+                                child: Text("New")),
+                          ],
+                        ),
                       ),
-                    )),
+                    ],
+                  ),
+                )),
                 //Listview builder builds a inbox full of the latest message between the user and others
                 ListView.builder(
                   itemCount: _chats.length,
@@ -521,15 +515,13 @@ class _InboxPageState extends State<InboxPage>
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  MessagePage(
-                                    profilePicture: null,
-                                    nickname: _chats[index].recipients
-                                        .firstWhere(
-                                            (element) => element != username,
-                                        orElse: () => 'temp'),
-                                    chat_id: getChatId(_chats[index]),
-                                  ),
+                              builder: (context) => MessagePage(
+                                profilePicture: null,
+                                nickname: _chats[index].recipients.firstWhere(
+                                    (element) => element != username,
+                                    orElse: () => 'temp'),
+                                chat_id: getChatId(_chats[index]),
+                              ),
                             )).then((value) {
                           //Refreshes the chats when leaving message page
                           getChats();
@@ -544,7 +536,15 @@ class _InboxPageState extends State<InboxPage>
                               child: Row(
                                 children: <Widget>[
                                   CircleAvatar(
-                                      backgroundImage: null,
+                                      backgroundImage:
+                                          groupInstance.getUser(_chats[index].recipients[0]) !=
+                                                  null
+                                              ? Image.network((groupInstance
+                                                      .getUser(_chats[index]
+                                                          .recipients[0])
+                                                      ?.profilePicture)!)
+                                                  .image
+                                              : null,
                                       foregroundColor: Colors.black12,
                                       backgroundColor: Colors.white70,
                                       maxRadius: 30,
@@ -552,8 +552,7 @@ class _InboxPageState extends State<InboxPage>
                                           .recipients
                                           .firstWhere(
                                               (element) => element != username,
-                                          orElse: () =>
-                                              'temp'
+                                              orElse: () => 'temp'
                                                   .substring(0, min(4, 5))))),
                                   SizedBox(
                                     width: 16,
@@ -563,12 +562,12 @@ class _InboxPageState extends State<InboxPage>
                                       color: Colors.transparent,
                                       child: Column(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             _chats[index].recipients.firstWhere(
-                                                    (element) =>
-                                                element != username,
+                                                (element) =>
+                                                    element != username,
                                                 orElse: () => 'temp'),
                                             style: TextStyle(fontSize: 16),
                                           ),
@@ -595,10 +594,10 @@ class _InboxPageState extends State<InboxPage>
                               timeago.format(
                                   DateTime.fromMillisecondsSinceEpoch(
                                       (_chats[index]
-                                          .messages[0]
-                                          .lastUpdated
-                                          .seconds *
-                                          1000)
+                                                  .messages[0]
+                                                  .lastUpdated
+                                                  .seconds *
+                                              1000)
                                           .toInt()),
                                   locale: 'en_short'),
                               style: TextStyle(

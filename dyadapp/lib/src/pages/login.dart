@@ -9,6 +9,7 @@ import 'package:dyadapp/src/pages/map.dart';
 import '../routing.dart';
 import '../utils/auth_token.dart';
 import '../utils/dyad_auth.dart';
+import 'newprofile.dart';
 
 // Login Info Class
 class Credentials {

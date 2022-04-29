@@ -23,6 +23,7 @@ class APIProvider {
   }
 
   // Uploads an image file to the Django Static image server
+  // Vincent
   static Future<String?> uploadImageFile(
       String filepath, String author, String id) async {
     print("Uploading Image file ($author:$id) $filepath");
@@ -38,13 +39,53 @@ class APIProvider {
     return "";
   }
 
+  // Reports user and adds entry to the backend database
+  static Future<void> reportContent(
+      String offender,
+      String offending_content,
+      String offending_title,
+      String image_url,
+      String report_reason
+      ) async {
+    var body = {
+      "offender": offender,
+      "offending_content": offending_content,
+      "offending_title": offending_title,
+      "image_url": image_url,
+      "report_reason": report_reason
+    };
+    Map<String, String> headers = {"jwt": await UserSession().get("access")};
+    final response = await http.post(
+      Uri.parse('$_baseURL/core/report'),
+      headers: headers,
+      body: body);
+    print(response.statusCode.toString() + response.body);
+  }
+
   // Gets user profile using a query parameter
+  // Vincent
   static Future<Map<String, dynamic>> getUserProfile(String username) async {
     String token = await UserSession().get("access");
     final response = await http.get(
         Uri.parse('$_baseURL/core/profile/get-user-profile?username=$username'),
         headers: {"jwt": token});
-    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    return {};
+  }
+
+  // Calls the first instantiation of UserProfile on the backend
+  // Vincent
+  static Future<Map<String, dynamic>> createUserProfile(String? biography, String? nickname) async {
+    String token = await UserSession().get("access");
+    final response = await http.post(
+        Uri.parse('$_baseURL/core/profile/create-user-profile'),
+        headers: {"jwt": token},
+        body: {
+          "display_name": nickname ?? "",
+          "profile_description": biography ?? ""
+        });
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     }

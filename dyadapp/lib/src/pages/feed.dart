@@ -183,12 +183,13 @@ class _FeedScreenState extends State<FeedScreen>
       // Write image to file
       await imageFile
           .writeAsBytes((postForm.imageFile as File).readAsBytesSync());
-      await APIProvider.uploadImageFile(
+      String? imgURL = await APIProvider.uploadImageFile(
           imageFilePath, username, uuid.toString());
       // Update Post entry with file path
       //postToAdd.content.image = imageFilePath;
-      postToAdd.content.image =
-      "https://api.dyadsocial.com/media/username_${postToAdd.author}/$uuid.jpg";
+      if (imgURL != null) {
+        postToAdd.content.image = "https://api.dyadsocial.com" + imgURL;
+      }
     }
     postToAdd.id = newPostID;
     await DatabaseHandler().updatePost(newPostID, postToAdd);

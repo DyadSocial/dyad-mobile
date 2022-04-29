@@ -30,7 +30,7 @@ class DyadAuth extends ChangeNotifier {
     if (resp['status'] == 200) {
       _isSignedIn = true;
       await UserSession().set("username", username);
-      AuthToken.storeToken(jsonDecode(resp['body'])['jwt']);
+      await AuthToken.storeToken(jsonDecode(resp['body'])['jwt']);
     }
     notifyListeners();
     return _isSignedIn;

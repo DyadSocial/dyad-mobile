@@ -7,10 +7,12 @@ import 'package:grpc/grpc.dart';
 import 'package:dyadapp/src/utils/data/protos/content.pb.dart';
 import 'package:dyadapp/src/utils/data/protos/posts.pb.dart';
 import 'package:dyadapp/src/utils/data/protos/posts.pbgrpc.dart';
-import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
+import 'package:dyadapp/src/utils/data/protos/count.pb.dart';
+import 'package:dyadapp/src/utils/data/protos/count.pbgrpc.dart';
 import 'package:dyadapp/src/utils/data/protos/google/protobuf/timestamp.pb.dart';
 
 class grpcClient {
+  late ActiveUsersClient activePostStub;
   late PostsSyncClient postStub;
   late ClientChannel channel;
 
@@ -21,9 +23,21 @@ class grpcClient {
   grpcClient._internal() {
     final channelCredentials = new ChannelCredentials.insecure();
     final channelOptions = new ChannelOptions(credentials: channelCredentials);
-    channel = ClientChannel('data.dyadsocial.com', port: 50051, options: channelOptions);
+    channel = ClientChannel(
+        'data.dyadsocial.com', port: 50051, options: channelOptions);
     postStub = PostsSyncClient(channel,
         options: CallOptions(timeout: Duration(minutes: 1)));
+    activePostStub = ActiveUsersClient(
+        channel, options: CallOptions(timeout: Duration(minutes: 1)));
+  }
+
+  Future<int> runGetActiveUsers() async {
+    ActiveQuery query = ActiveQuery(requestor: "dummy");
+    int sum = 0;
+    await for (Count c in activePostStub.getRecentlyActive(query)) {
+      sum += c.count;
+    }
+    return sum;
   }
 
   Future<List<Post>> runRefreshPosts(

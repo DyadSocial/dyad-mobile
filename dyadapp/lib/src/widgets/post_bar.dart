@@ -6,6 +6,8 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:dyadapp/src/utils/theme_model.dart';
 
 import '../pages/profile.dart';
+import '../utils/api_provider.dart';
+import '../utils/data/group.dart';
 
 class PostBar extends StatelessWidget {
   const PostBar(
@@ -34,14 +36,31 @@ class PostBar extends StatelessWidget {
               child: Container(
                 child: GestureDetector(
                   onTap: () {},
-                  child: CircleAvatar(
-                    radius: 50,
-                    foregroundImage: (profilePicture != null)
-                        ? Image.network(profilePicture!).image
-                        : null,
-                    backgroundColor: Colors.white70,
-                    foregroundColor: Colors.black12,
-                    child: Text(author.substring(0, min(4, author.length))),
+                  child: InkWell(
+                    customBorder: CircleBorder(),
+                    onTap: () async {
+                      var data = await APIProvider.getUserProfile(author);
+                      Provider.of<Group>(context, listen: false).updateUser(
+                          username: author,
+                          imageURL: data['picture_URL'],
+                          biography: data['Profile_Description'],
+                          nickname: data["Display_name"]);
+                      var user = Provider.of<Group>(context, listen: false)
+                          .getUser(author);
+                      if (user != null) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: ((context) => ProfileScreen(user))));
+                      }
+                    },
+                    child: CircleAvatar(
+                      radius: 45,
+                      foregroundImage: (profilePicture != null)
+                          ? Image.network(profilePicture!).image
+                          : null,
+                      backgroundColor: Colors.white70,
+                      foregroundColor: Colors.black12,
+                      child: Text(author.substring(0, min(4, author.length))),
+                    ),
                   ),
                 ),
               ),

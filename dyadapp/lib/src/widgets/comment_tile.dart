@@ -7,6 +7,8 @@ import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:dyadapp/src/utils/theme_model.dart';
 import 'package:dyadapp/src/utils/data/protos/posts.pb.dart';
 
+import '../utils/api_provider.dart';
+
 // Widget that shows a single comment thread
 class CommentTile extends StatefulWidget {
   final Future<void> Function(CommentThread) onUpdateCallback;
@@ -21,6 +23,53 @@ class CommentTile extends StatefulWidget {
 
   @override
   _CommentTileState createState() => _CommentTileState();
+}
+
+void report(context, content, author) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        TextEditingController _reasonController = TextEditingController();
+        return SimpleDialog(
+            title: const Text('Report Form', style: TextStyle(fontSize: 20)),
+            contentPadding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("User:",
+                    style: TextStyle(
+                        color: Color(0xffd3d3d3), fontWeight: FontWeight.bold)),
+              ),
+              Text(author),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("Offending Content:",
+                    style: TextStyle(
+                        color: Color(0xffd3d3d3), fontWeight: FontWeight.bold)),
+              ),
+              Text(content),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                    controller: _reasonController,
+                    decoration:
+                        InputDecoration(labelText: 'Reason', hintMaxLines: 20),
+                    maxLines: 2,
+                    minLines: 1),
+              ),
+              ElevatedButton(
+                  onPressed: () async {
+                    String offender = author;
+                    String offendingTitle = "COMMENT";
+                    String offendingContent = content;
+                    String image = "noimg";
+                    APIProvider.reportContent(offender, offendingContent,
+                        offendingTitle, image, _reasonController.text);
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Submit Report"))
+            ]);
+      });
 }
 
 // State of PostTile which has states for expanding comments in thread or hiding them
@@ -84,11 +133,11 @@ class _CommentTileState extends State<CommentTile> {
                       visible: _collapsed,
                       child: SizedBox(
                         width: 80,
-                        child: Text(commentThread.text, style: TextStyle(
-                          color: Color(0xFFC1C6CE)
-                        ), textAlign: TextAlign.start, overflow: TextOverflow.ellipsis),
+                        child: Text(commentThread.text,
+                            style: TextStyle(color: Color(0xFFC1C6CE)),
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.ellipsis),
                       ),
-
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -131,20 +180,20 @@ class _CommentTileState extends State<CommentTile> {
                               color: Color(0xFFC1C6CE), size: 20),
                           onSelected: (value) {
                             if (value == 1) {
-                              // TODO: Call deleteCommentCallback
                             } else if (value == 0) {
                               // TODO: Call updateCommentCallback
                             } else if (value == 2) {
-                              // TODO: Call reportCommentCallback
+                              report(context, commentThread.text,
+                                  commentThread.author);
                             }
                           },
                           itemBuilder: (context) => currentUser ==
                                   commentThread.author
                               ? [
+                                /*
                                   PopupMenuItem(child: Text("Edit"), value: 0),
                                   PopupMenuItem(
-                                      child: Text("Delete"), value: 1),
-                                  PopupMenuItem(child: Text("Report"), value: 2)
+                                      child: Text("Delete"), value: 1),*/
                                 ]
                               : [
                                   PopupMenuItem(child: Text("Report"), value: 2)
@@ -225,21 +274,19 @@ class _CommentTileState extends State<CommentTile> {
                                         } else if (value == 0) {
                                           // TODO: Call updateCommentCallback
                                         } else if (value == 2) {
-                                          // TODO: Call reportCommentCallback
+                                          report(context, comment.text,
+                                              comment.author);
                                         }
                                       },
                                       itemBuilder: (context) =>
-                                          currentUser == commentThread.author
+                                          currentUser == comment.author
                                               ? [
-                                                  PopupMenuItem(
+                                                  /*PopupMenuItem(
                                                       child: Text("Edit"),
                                                       value: 0),
                                                   PopupMenuItem(
                                                       child: Text("Delete"),
-                                                      value: 1),
-                                                  PopupMenuItem(
-                                                      child: Text("Report"),
-                                                      value: 2)
+                                                      value: 1) */
                                                 ]
                                               : [
                                                   PopupMenuItem(

@@ -53,6 +53,7 @@ class SettingsScreen extends StatelessWidget {
                       user = Provider.of<Group>(context, listen: false).getUser(currentUsername);
                     }
                     var profileData = await APIProvider.getUserProfile(currentUsername);
+                    print("Profile Data: $profileData");
                     Provider.of<Group>(context, listen: false).updateUser(
                       username: currentUsername,
                       imageURL: profileData['picture_URL'],
