@@ -127,6 +127,7 @@ class _NewProfileScreenState extends State<NewProfileScreen> {
                     }
                   }
                 }
+                Navigator.of(context).pop();
               })
         ]),
       ),

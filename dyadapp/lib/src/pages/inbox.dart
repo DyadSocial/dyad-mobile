@@ -536,15 +536,7 @@ class _InboxPageState extends State<InboxPage>
                               child: Row(
                                 children: <Widget>[
                                   CircleAvatar(
-                                      backgroundImage:
-                                          groupInstance.getUser(_chats[index].recipients[0]) !=
-                                                  null
-                                              ? Image.network((groupInstance
-                                                      .getUser(_chats[index]
-                                                          .recipients[0])
-                                                      ?.profilePicture)!)
-                                                  .image
-                                              : null,
+                                      backgroundImage: null,
                                       foregroundColor: Colors.black12,
                                       backgroundColor: Colors.white70,
                                       maxRadius: 30,
