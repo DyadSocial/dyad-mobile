@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:dyadapp/src/app.dart';
 import 'package:dyadapp/src/utils/data/group.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,8 @@ import 'package:dyadapp/src/pages/profile.dart';
 import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:dyadapp/src/data.dart';
 import 'package:dyadapp/src/utils/dyad_auth.dart';
+
+import '../utils/api_provider.dart';
 
 //The settings will allow the user to change themes or look at their profile.
 class SettingsScreen extends StatelessWidget {
@@ -43,11 +47,20 @@ class SettingsScreen extends StatelessWidget {
                   onPressed: () async {
                     final currentUsername = await UserSession().get("username");
                     var user =
-                        Provider.of<Group>(context, listen: false).getUser("vncp");
-                    if (user != null) {
-                      Navigator.of(context).push<void>(MaterialPageRoute<void>(
-                          builder: (context) => ProfileScreen(user)));
+                        Provider.of<Group>(context, listen: false).getUser(currentUsername);
+                    if (user == null) {
+                      Provider.of<Group>(context, listen: false).addUser(username: currentUsername);
+                      user = Provider.of<Group>(context, listen: false).getUser(currentUsername);
                     }
+                    var profileData = await APIProvider.getUserProfile(currentUsername);
+                    Provider.of<Group>(context, listen: false).updateUser(
+                      username: currentUsername,
+                      imageURL: profileData['picture_URL'],
+                      biography: profileData['Profile_Description'],
+                      nickname: profileData['Display_name']);
+
+                    Navigator.of(context).push<void>(MaterialPageRoute<void>(
+                        builder: (context) => ProfileScreen(user!)));
                   },
                 ),
               ),

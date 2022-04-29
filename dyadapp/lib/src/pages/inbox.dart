@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'package:provider/provider.dart';
+
 import '../utils/data/group.dart';
 import 'package:dyadapp/src/pages/settings.dart';
 import 'package:flutter/material.dart';
@@ -58,14 +60,14 @@ class _InboxPageState extends State<InboxPage>
   }
 
   //Function for removing current user from the suggestive list. Shouldn't be able to message self!
-  removeUserFromSL() async{
+  removeUserFromSL() async {
     await Future.delayed(Duration(seconds: 1));
     suggestiveList.remove(username);
     //print(username);
   }
 
   //Function for getting all the chats from API endpoint the user is apart of
-  getChats() async{
+  getChats() async {
     //get username
     var user = await UserSession().get("username");
     setState(() {
@@ -77,27 +79,29 @@ class _InboxPageState extends State<InboxPage>
       //List of obj
       var res = json.decode(response['body']);
       //Go through every chat (res)
-      for(var msg in res){
+      for (var msg in res) {
         var participants = new List<String>.from(msg['participants']);
         Chat tempchat = Chat(recipients: participants, messages: []);
         //Get the latest message for a specific chatroom, chatid is built from a chat object's recipients, hence use of tempchat
-        final response2 = await APIProvider.fetchLatestMessage({'chatid': getChatId(tempchat), 'command': "1"});
-        if (response2['status'] == 200){
+        final response2 = await APIProvider.fetchLatestMessage(
+            {'chatid': getChatId(tempchat), 'command': "1"});
+        if (response2['status'] == 200) {
           var res2 = json.decode(response2['body']);
           //Make the tempchat have the latest message of the chat
           tempchat.messages.add(Message(
               id: res2[0]['message_id'].toString(),
               author: res2[0]['author_name'],
               content: res2[0]['content'],
-              lastUpdated: Timestamp.fromDateTime(DateTime.parse(res2[0]['timestamp']))));
+              lastUpdated: Timestamp.fromDateTime(
+                  DateTime.parse(res2[0]['timestamp']))));
         }
-        else{
+        else {
           print('TIMEOUT EXCEPTION: GETLATESTMESSAGE');
         }
         setState(() {
           //If the chat already exists, firstWhere gets the chat object in the list of chats. If it doesn't exist, it is an empty chat object
           var existingChat = _chats.firstWhere(
-              (element) => element.recipients == tempchat.recipients,
+                  (element) => element.recipients == tempchat.recipients,
               orElse: () => Chat());
           //Means it doesn't already exist, so add tempchat to the _chats
           if (existingChat == Chat()) {
@@ -136,7 +140,7 @@ class _InboxPageState extends State<InboxPage>
   }
 
   //Function to check if a user exists in the database. Since we are using suggestive messaging, or you can only message people who are online/posted recently this should always work.
-  checkUser(String user) async{
+  checkUser(String user) async {
     //request to check if user exists
     final response = await APIProvider.checkUserExists({'username': user});
 
@@ -150,7 +154,7 @@ class _InboxPageState extends State<InboxPage>
   }
 
   //Function for chatID which will be a concatenation of all recipients usernames in alphabetical order, like goobygroovesprimchi or infuhnitvncp
-  getChatId(Chat chat){
+  getChatId(Chat chat) {
     //print(chat.recipients);
     List<String> chatIdList = [];
     for (var recipient in chat.recipients) {
@@ -169,7 +173,8 @@ class _InboxPageState extends State<InboxPage>
     String current_user = await UserSession().get("username");
     for (var recipient in chat.recipients) {
       if (recipient != current_user) {
-        return Image.network(
+        return Image
+            .network(
             "https://th.bing.com/th/id/OIP.Nen6j3vBZdl8g8kzNfoEHQAAAA?pid=ImgDet&rs=1")
             .image;
       }
@@ -179,6 +184,7 @@ class _InboxPageState extends State<InboxPage>
 
   @override
   Widget build(BuildContext context) {
+    final groupInstance = Provider.of<Group>(context);
     return Scaffold(
       appBar: AppBar(
         title: Center(child: const Text('Dyad')),
@@ -186,7 +192,8 @@ class _InboxPageState extends State<InboxPage>
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: () => {
+            onPressed: () =>
+            {
               Navigator.of(context).push<void>(MaterialPageRoute<void>(
                   builder: (context) => const SettingsScreen()))
               //Changed temporarily for inbox screen from SettingsScreen()
@@ -227,7 +234,8 @@ class _InboxPageState extends State<InboxPage>
                                   size: 20,
                                 ),
                                 //The new button brings up an alert dialog to send a message to someone
-                                TextButton(onPressed: ()=>{
+                                TextButton(onPressed: () =>
+                                {
                                   if(suggestiveList.length > 0){
                                     showDialog(
                                         context: context,
@@ -236,7 +244,8 @@ class _InboxPageState extends State<InboxPage>
                                           return StatefulBuilder(
                                               builder: (context, setState) {
                                                 return AlertDialog(
-                                                  insetPadding: EdgeInsets.all(8.0),
+                                                  insetPadding: EdgeInsets.all(
+                                                      8.0),
                                                   content: Stack(
                                                       children: <Widget>[
                                                         Column(
@@ -279,7 +288,10 @@ class _InboxPageState extends State<InboxPage>
                                                                       dropdownvalue =
                                                                           newValue
                                                                               .toString();
-                                                                      _toController.text = newValue.toString();
+                                                                      _toController
+                                                                          .text =
+                                                                          newValue
+                                                                              .toString();
                                                                     });
                                                                     print(
                                                                         dropdownvalue);
@@ -293,7 +305,8 @@ class _InboxPageState extends State<InboxPage>
                                                               child: TextFormField(
                                                                 decoration: InputDecoration(
                                                                   icon: Icon(
-                                                                      Icons.edit),
+                                                                      Icons
+                                                                          .edit),
                                                                   hintText: 'Message',
                                                                 ),
                                                                 keyboardType: TextInputType
@@ -301,7 +314,8 @@ class _InboxPageState extends State<InboxPage>
                                                                 controller: _msgController,
                                                               ),
                                                             ),
-                                                            SizedBox(height: 50),
+                                                            SizedBox(
+                                                                height: 50),
 
                                                             TextButton(
                                                                 onPressed: () async {
@@ -351,9 +365,11 @@ class _InboxPageState extends State<InboxPage>
                                                                         String> tempRecList = [
                                                                     ];
                                                                     //Put recipients in alphabetical order
-                                                                    tempRecList.add(
+                                                                    tempRecList
+                                                                        .add(
                                                                         username);
-                                                                    tempRecList.add(
+                                                                    tempRecList
+                                                                        .add(
                                                                         _toController
                                                                             .value
                                                                             .text);
@@ -373,7 +389,8 @@ class _InboxPageState extends State<InboxPage>
                                                                     //Open a ws channel to send the message, then close the connection
                                                                     final channel = WebSocketChannel
                                                                         .connect(
-                                                                        Uri.parse(
+                                                                        Uri
+                                                                            .parse(
                                                                             'ws://74.207.251.32:8000/ws/chat/' +
                                                                                 getChatId(
                                                                                     newChat) +
@@ -399,7 +416,8 @@ class _InboxPageState extends State<InboxPage>
                                                                         Duration(
                                                                             seconds: 1));
                                                                     //Get the message id from the latest websocket message so we can add to our local cache
-                                                                    channel.stream
+                                                                    channel
+                                                                        .stream
                                                                         .listen((
                                                                         event) {
                                                                       var jsonString = json
@@ -418,7 +436,8 @@ class _InboxPageState extends State<InboxPage>
                                                                         .delayed(
                                                                         Duration(
                                                                             seconds: 2));
-                                                                    print("SENT");
+                                                                    print(
+                                                                        "SENT");
                                                                     channel.sink
                                                                         .close();
                                                                     Message message = Message(
@@ -453,27 +472,35 @@ class _InboxPageState extends State<InboxPage>
                                                         )
                                                       ]
                                                   ),
-                                                  title: Text('Send a new message'),
+                                                  title: Text(
+                                                      'Send a new message'),
                                                 );
                                               }
                                           );
                                         }
                                     )}
-                                  else{
-                                    //If there is nobody in the suggestive message list, means there is nobody online. Can only message someone you have talked to before,
-                                    //or wait for someone to post
-                                    showDialog(context: context, builder: (BuildContext context){
-                                      return AlertDialog(
-                                          title: Text("Could not compose a message!"),
-                                          insetPadding: EdgeInsets.all(8.0),
-                                          content: Column(
-                                            children: [
-                                              Text("There doesn't seem to be anybody nearby to send a message to. Wait for someone to post!"),
-                                              TextButton(onPressed: () => Navigator.pop(context), child: Text("OK"))
-                                            ],
-                                          ));
-                                    })
-                                  }
+                                  else
+                                    {
+                                      //If there is nobody in the suggestive message list, means there is nobody online. Can only message someone you have talked to before,
+                                      //or wait for someone to post
+                                      showDialog(context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                                title: Text(
+                                                    "Could not compose a message!"),
+                                                insetPadding: EdgeInsets.all(
+                                                    8.0),
+                                                content: Column(
+                                                  children: [
+                                                    Text(
+                                                        "There doesn't seem to be anybody nearby to send a message to. Wait for someone to post!"),
+                                                    TextButton(onPressed: () =>
+                                                        Navigator.pop(context),
+                                                        child: Text("OK"))
+                                                  ],
+                                                ));
+                                          })
+                                    }
                                 }, child: Text("New")),
                               ],
                             ),
@@ -494,13 +521,15 @@ class _InboxPageState extends State<InboxPage>
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MessagePage(
-                                profilePicture: null,
-                                nickname: _chats[index].recipients.firstWhere(
-                                        (element) => element != username,
-                                    orElse: ()=> 'temp'),
-                                chat_id: getChatId(_chats[index]),
-                              ),
+                              builder: (context) =>
+                                  MessagePage(
+                                    profilePicture: null,
+                                    nickname: _chats[index].recipients
+                                        .firstWhere(
+                                            (element) => element != username,
+                                        orElse: () => 'temp'),
+                                    chat_id: getChatId(_chats[index]),
+                                  ),
                             )).then((value) {
                           //Refreshes the chats when leaving message page
                           getChats();
@@ -523,8 +552,9 @@ class _InboxPageState extends State<InboxPage>
                                           .recipients
                                           .firstWhere(
                                               (element) => element != username,
-                                          orElse: () => 'temp'
-                                              .substring(0, min(4, 5))))),
+                                          orElse: () =>
+                                              'temp'
+                                                  .substring(0, min(4, 5))))),
                                   SizedBox(
                                     width: 16,
                                   ),
@@ -537,8 +567,9 @@ class _InboxPageState extends State<InboxPage>
                                         children: <Widget>[
                                           Text(
                                             _chats[index].recipients.firstWhere(
-                                                    (element) => element != username,
-                                                orElse: ()=> 'temp'),
+                                                    (element) =>
+                                                element != username,
+                                                orElse: () => 'temp'),
                                             style: TextStyle(fontSize: 16),
                                           ),
                                           SizedBox(

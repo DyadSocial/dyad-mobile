@@ -8,20 +8,17 @@ class Group extends ChangeNotifier {
   final List<User> allUsers = [];
 
   Group() {
-    () async {
-      addUser(username: await UserSession().get("username"));
-    } ();
   }
 
-  void addUser({
+  int addUser({
     required String username,
     String? nickname,
     String? biography,
     String? imageURL,
   }) {
-    var user =
-    User(username, nickname, biography, imageURL);
+    var user = User(username, nickname, biography, imageURL);
     allUsers.add(user);
+    return allUsers.indexWhere((user) => user.username == username);
   }
 
   // Get users
@@ -38,14 +35,17 @@ class Group extends ChangeNotifier {
   }
 
   // Updates the user object on various parameters if found
-  void updateUser({
-    required String username,
-    String? nickname,
-    String? biography,
-    String? imageURL}) {
+  void updateUser(
+      {required String username,
+      String? nickname,
+      String? biography,
+      String? imageURL}) {
     int idx = allUsers.indexWhere((user) => user.username == username);
     // Don't want error trying to access idx = -1
-    if (idx == -1) return;
+    // If user not found add it
+    if (idx == -1) {
+      idx = addUser(username: username);
+    }
     if (nickname != null) {
       allUsers[idx].nickname = nickname;
     }

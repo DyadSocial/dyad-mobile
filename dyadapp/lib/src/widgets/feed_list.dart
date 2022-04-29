@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:dyadapp/src/widgets/post_tile.dart';
 import 'package:dyadapp/src/data.dart';
 import 'package:dyadapp/src/utils/suggestive_list.dart';
+import 'package:provider/provider.dart';
 import '../utils/data/group.dart';
 
 class FeedList extends StatefulWidget {
@@ -65,33 +66,35 @@ class _FeedListState extends State<FeedList> {
         return -1;
       }
     });
-    return Container(
-      child: RefreshIndicator(
-        onRefresh: () async {
-          widget.refreshCallback();
-        },
-        child: ListView.builder(
-            physics: AlwaysScrollableScrollPhysics(),
-            itemBuilder: (context, idx) {
-              if (idx > widget.posts.length-1) {
-                return SizedBox(height: 250);
-              }
-              Post post = widget.posts[idx];
-              SuggestiveList.addUser(widget.posts[idx].author);
-              return PostTile(
-                postNavigatorCallback: widget.postNavigatorCallback,
-                onDeleteCallback: widget.onDeleteCallback,
-                onUpdateCallback: widget.onUpdateCallback,
-                postId: post.id,
-                profilePicture: null,
-                imageURL: post.content.hasImage() ? post.content.image : null,
-                title: post.title,
-                author: post.author,
-                content: post.content.text,
-                datetime: DateTime.fromMillisecondsSinceEpoch(
-                    (post.created.seconds * 1000).toInt()),
-              );
-            }),
+    return Consumer<Group>(
+      builder: (context, group, child) => Container(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            widget.refreshCallback();
+          },
+          child: ListView.builder(
+              physics: AlwaysScrollableScrollPhysics(),
+              itemBuilder: (context, idx) {
+                if (idx > widget.posts.length-1) {
+                  return SizedBox(height: 250);
+                }
+                Post post = widget.posts[idx];
+                SuggestiveList.addUser(widget.posts[idx].author);
+                return PostTile(
+                  postNavigatorCallback: widget.postNavigatorCallback,
+                  onDeleteCallback: widget.onDeleteCallback,
+                  onUpdateCallback: widget.onUpdateCallback,
+                  postId: post.id,
+                  profilePicture: group.getUser(post.author)?.profilePicture ?? null,
+                  imageURL: post.content.hasImage() ? post.content.image : null,
+                  title: post.title,
+                  author: post.author,
+                  content: post.content.text,
+                  datetime: DateTime.fromMillisecondsSinceEpoch(
+                      (post.created.seconds * 1000).toInt()),
+                );
+              }),
+        ),
       ),
     );
   }

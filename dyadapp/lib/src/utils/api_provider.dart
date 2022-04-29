@@ -23,7 +23,7 @@ class APIProvider {
   }
 
   // Uploads an image file to the Django Static image server
-  static Future<int> uploadImageFile(
+  static Future<String?> uploadImageFile(
       String filepath, String author, String id) async {
     print("Uploading Image file ($author:$id) $filepath");
     var request =
@@ -31,8 +31,11 @@ class APIProvider {
     request.fields['image_id'] = id;
     request.fields['author'] = author;
     request.files.add(await http.MultipartFile.fromPath("image", filepath));
-    var response = await request.send();
-    return response.statusCode;
+    var response = await http.Response.fromStream(await request.send());
+    if (response.statusCode == 200) {
+     return jsonDecode(response.body)["image"];
+    }
+    return "";
   }
 
   // Gets user profile using a query parameter
@@ -54,15 +57,29 @@ class APIProvider {
       {String? imageURL, String? nickname, String? description}) async {
     try {
       String token = await UserSession().get("access");
-      final response = await http
-          .post(Uri.parse('$_baseURL/core/update-user-profile'), body: {
-        "picture_url": imageURL,
-        "profile_description": description,
-        "display_name": nickname
-      }, headers: {
-        "jwt": token
-      }).timeout(Duration(seconds: 5));
-      return jsonDecode(response.body);
+      print(token);
+      if (imageURL != null)
+        await http
+            .put(Uri.parse('$_baseURL/core/profile/update-user-profile'), body: {
+          "new_image": imageURL,
+        }, headers: {
+          "jwt": token
+        }).timeout(Duration(seconds: 5));
+      if (description != null)
+        await http
+            .put(Uri.parse('$_baseURL/core/profile/update-user-profile'), body: {
+          "new_description": description,
+        }, headers: {
+          "jwt": token
+        }).timeout(Duration(seconds: 5));
+      if (description != null)
+        await http
+            .put(Uri.parse('$_baseURL/core/profile/update-user-profile'), body: {
+          "new_display_name": nickname
+        }, headers: {
+          "jwt": token
+        }).timeout(Duration(seconds: 5));
+      return {"status": 200, "body": "Profile updated!"};
     } catch (e) {
       return {"status": 400, "body": "Could not send POST to server."};
     }

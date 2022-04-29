@@ -15,7 +15,10 @@ import 'package:dyadapp/src/utils/data/protos/posts.pb.dart';
 import 'package:dyadapp/src/utils/network_handler.dart';
 import 'package:dyadapp/src/pages/map.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:quiver/core.dart';
+
+import '../utils/data/group.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({
@@ -41,7 +44,8 @@ class _FeedScreenState extends State<FeedScreen>
       initialIndex: 0,
       length: 2,
       vsync: this,
-    )..addListener(_handleTabIndexChanged);
+    )
+      ..addListener(_handleTabIndexChanged);
     _grpcClient = grpcClient();
     _onFeedRefreshCallback();
   }
@@ -58,12 +62,14 @@ class _FeedScreenState extends State<FeedScreen>
     });
   }
 
+  // gets the filepath of the app
   Future<String> getFilePath(String hash) async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String documentsDirectoryPath = documentsDirectory.path;
     return '$documentsDirectoryPath/$hash';
   }
 
+  // refreshes the feed
   Future<void> _onFeedRefreshCallback() async {
     // setState posts
     print("Refreshing Feed..");
@@ -73,8 +79,15 @@ class _FeedScreenState extends State<FeedScreen>
     if (currentCity != null) {
       DatabaseHandler().clearData();
       for (var post
-          in await _grpcClient.runRefreshPosts(0, currentUser, currentCity)) {
-        print(await APIProvider.getUserProfile(post.author));
+      in await _grpcClient.runRefreshPosts(0, currentUser, currentCity)) {
+        var profile = await APIProvider.getUserProfile(post.author);
+        print(profile);
+        Provider.of<Group>(context, listen: false).updateUser(
+            username: post.author,
+            imageURL: profile['picture_URL'],
+            biography: profile['Profile_Description'],
+            nickname: profile['Display_name']);
+        print(Provider.of<Group>(context,listen: false).allUsers.map((user) {print(user.username);}));
         setState(() {
           DatabaseHandler().insertPost(post);
         });
@@ -170,11 +183,12 @@ class _FeedScreenState extends State<FeedScreen>
       // Write image to file
       await imageFile
           .writeAsBytes((postForm.imageFile as File).readAsBytesSync());
-      await APIProvider.uploadImageFile(imageFilePath, username, uuid.toString());
+      await APIProvider.uploadImageFile(
+          imageFilePath, username, uuid.toString());
       // Update Post entry with file path
       //postToAdd.content.image = imageFilePath;
       postToAdd.content.image =
-          "https://api.dyadsocial.com/media/username_${postToAdd.author}/$uuid.png";
+      "https://api.dyadsocial.com/media/username_${postToAdd.author}/$uuid.jpg";
     }
     postToAdd.id = newPostID;
     await DatabaseHandler().updatePost(newPostID, postToAdd);
@@ -207,7 +221,8 @@ class _FeedScreenState extends State<FeedScreen>
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) =>
+      Scaffold(
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.post_add),
@@ -219,34 +234,37 @@ class _FeedScreenState extends State<FeedScreen>
           ),
           title: Center(
               child: Column(children: [
-            TextButton(
-                child: Text("Dyad",
-                    style: TextStyle(fontSize: 30, color: Color(0xFFECEFF4))),
-                onPressed: () {
-                  _onFeedRefreshCallback();
-                }),
-            Padding(
-              padding: EdgeInsets.only(bottom: 5),
-              child: FutureBuilder<dynamic>(
-                  future: UserSession().get("city"),
-                  builder:
-                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                    return snapshot.hasData
-                        ? Text(snapshot.data ?? "Error getting location",
+                TextButton(
+                    child: Text("Dyad",
+                        style: TextStyle(
+                            fontSize: 30, color: Color(0xFFECEFF4))),
+                    onPressed: () {
+                      _onFeedRefreshCallback();
+                    }),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 5),
+                  child: FutureBuilder<dynamic>(
+                      future: UserSession().get("city"),
+                      builder:
+                          (BuildContext context,
+                          AsyncSnapshot<dynamic> snapshot) {
+                        return snapshot.hasData
+                            ? Text(snapshot.data ?? "Error getting location",
                             style: TextStyle(
                                 fontSize: 14, color: Color(0xFFECEFF4)))
-                        : Text('Loading..',
+                            : Text('Loading..',
                             style: TextStyle(
                                 fontSize: 14, color: Color(0xFFE5E9F0)));
-                  }),
-            )
-          ])),
+                      }),
+                )
+              ])),
           toolbarHeight: _postWriterActive ? 80 : 60,
           bottomOpacity: 1,
           actions: [
             IconButton(
               icon: const Icon(Icons.settings),
-              onPressed: () => {
+              onPressed: () =>
+              {
                 Navigator.of(context).push<void>(MaterialPageRoute<void>(
                     builder: (context) => const SettingsScreen()))
               },
@@ -276,7 +294,7 @@ class _FeedScreenState extends State<FeedScreen>
                 Visibility(
                   visible: _postWriterActive,
                   child:
-                      PostWriter(onWritePostCallback, postWriterCloseCallback),
+                  PostWriter(onWritePostCallback, postWriterCloseCallback),
                 ),
                 Container(
                   child: Expanded(
@@ -291,16 +309,16 @@ class _FeedScreenState extends State<FeedScreen>
                             builder: (context, snapshot) {
                               return snapshot.hasData
                                   ? FeedList(
-                                      _onUpdatePostCallback,
-                                      _onFeedRefreshCallback,
-                                      _onPostNavigatorCallback,
-                                      snapshot.data!,
-                                      onDeletePostCallback,
-                                      onEditPostCallback,
-                                      onTap: _handlePostTapped,
-                                    )
+                                _onUpdatePostCallback,
+                                _onFeedRefreshCallback,
+                                _onPostNavigatorCallback,
+                                snapshot.data!,
+                                onDeletePostCallback,
+                                onEditPostCallback,
+                                onTap: _handlePostTapped,
+                              )
                                   : Center(
-                                      child: new CircularProgressIndicator());
+                                  child: new CircularProgressIndicator());
                             },
                           ),
                           FutureBuilder<List<Post>>(
@@ -308,16 +326,16 @@ class _FeedScreenState extends State<FeedScreen>
                             builder: (context, snapshot) {
                               return snapshot.hasData
                                   ? FeedList(
-                                      _onUpdatePostCallback,
-                                      _onFeedRefreshCallback,
-                                      _onPostNavigatorCallback,
-                                      snapshot.data!,
-                                      onDeletePostCallback,
-                                      onEditPostCallback,
-                                      onTap: _handlePostTapped,
-                                    )
+                                _onUpdatePostCallback,
+                                _onFeedRefreshCallback,
+                                _onPostNavigatorCallback,
+                                snapshot.data!,
+                                onDeletePostCallback,
+                                onEditPostCallback,
+                                onTap: _handlePostTapped,
+                              )
                                   : Center(
-                                      child: new CircularProgressIndicator());
+                                  child: new CircularProgressIndicator());
                             },
                           ),
                         ],
