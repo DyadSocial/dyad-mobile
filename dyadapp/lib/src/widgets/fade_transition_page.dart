@@ -1,3 +1,5 @@
+// Author: Vincent
+// extends page to push on a fade effect during transition
 import 'package:flutter/material.dart';
 
 class FadeTransitionPage<T> extends Page<T> {

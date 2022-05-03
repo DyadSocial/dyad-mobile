@@ -20,11 +20,15 @@ const Post$json = const {
     const {'1': 'title', '3': 6, '4': 1, '5': 9, '10': 'title'},
     const {'1': 'group', '3': 7, '4': 1, '5': 9, '10': 'group'},
     const {'1': 'comments', '3': 8, '4': 3, '5': 11, '6': '.CommentThread', '10': 'comments'},
+    const {'1': 'event_time', '3': 9, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '9': 0, '10': 'eventTime', '17': true},
+  ],
+  '8': const [
+    const {'1': '_event_time'},
   ],
 };
 
 /// Descriptor for `Post`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List postDescriptor = $convert.base64Decode('CgRQb3N0Eg4KAmlkGAEgASgFUgJpZBIWCgZhdXRob3IYAiABKAlSBmF1dGhvchIiCgdjb250ZW50GAMgASgLMgguQ29udGVudFIHY29udGVudBI9CgxsYXN0X3VwZGF0ZWQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgtsYXN0VXBkYXRlZBI0CgdjcmVhdGVkGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIHY3JlYXRlZBIUCgV0aXRsZRgGIAEoCVIFdGl0bGUSFAoFZ3JvdXAYByABKAlSBWdyb3VwEioKCGNvbW1lbnRzGAggAygLMg4uQ29tbWVudFRocmVhZFIIY29tbWVudHM=');
+final $typed_data.Uint8List postDescriptor = $convert.base64Decode('CgRQb3N0Eg4KAmlkGAEgASgFUgJpZBIWCgZhdXRob3IYAiABKAlSBmF1dGhvchIiCgdjb250ZW50GAMgASgLMgguQ29udGVudFIHY29udGVudBI9CgxsYXN0X3VwZGF0ZWQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgtsYXN0VXBkYXRlZBI0CgdjcmVhdGVkGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIHY3JlYXRlZBIUCgV0aXRsZRgGIAEoCVIFdGl0bGUSFAoFZ3JvdXAYByABKAlSBWdyb3VwEioKCGNvbW1lbnRzGAggAygLMg4uQ29tbWVudFRocmVhZFIIY29tbWVudHMSPgoKZXZlbnRfdGltZRgJIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAFIJZXZlbnRUaW1liAEBQg0KC19ldmVudF90aW1l');
 @$core.Deprecated('Use commentDescriptor instead')
 const Comment$json = const {
   '1': 'Comment',

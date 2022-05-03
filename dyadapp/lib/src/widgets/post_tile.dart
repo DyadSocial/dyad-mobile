@@ -1,6 +1,10 @@
+// Author: Vincent
+// Creates a single post tile for feed using post bar and displaying content
+
 import 'package:dyadapp/src/utils/data/group.dart';
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/widgets/post_bar.dart';
+import 'package:dyadapp/src/widgets/schedule.dart';
 import 'package:dyadapp/src/routing.dart';
 import 'package:dyadapp/src/pages/post.dart';
 import 'package:dyadapp/src/utils/database_handler.dart';
@@ -24,11 +28,17 @@ class PostTile extends StatelessWidget {
     required this.content,
     required this.datetime,
     this.imageURL,
+    this.eventDateTime,
     Key? key,
   }) : super(key: key);
 
+  // Callback for entering post screen
   final Function(int) postNavigatorCallback;
+
+  // Callback for deleting post
   final Function(int, String) onDeleteCallback;
+
+  // Callback for update a post
   final Future<Post?> Function(Post) onUpdateCallback;
   final int postId;
   final String? profilePicture;
@@ -37,6 +47,7 @@ class PostTile extends StatelessWidget {
   final String content;
   final DateTime datetime;
   final String? imageURL;
+  final DateTime? eventDateTime;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +61,7 @@ class PostTile extends StatelessWidget {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
+                      // Shows a popup dialog with options the users have
                       return SimpleDialog(
                         title: const Text('Post Options',
                             style: TextStyle(fontSize: 20)),
@@ -106,7 +118,6 @@ class PostTile extends StatelessWidget {
                               },
                               child: const Text('View Author Profile',
                                   style: TextStyle(fontSize: 14))),
-                          // Show report form if user presses report
                           // Show report form if user presses report
                           ElevatedButton(
                               onPressed: () {
@@ -250,18 +261,26 @@ class PostTile extends StatelessWidget {
                       child: imageURL != null
                           ? Column(
                               children: [
-                                Padding(
+                                Container(
                                   padding: const EdgeInsets.only(
-                                      left: 10, right: 10, bottom: 8),
-                                  child: Text(
-                                    content,
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: themeNotifier.isDark
-                                          ? Color(0xFFE5E9F0)
-                                          : Color(0xFF6A808F),
-                                    ),
+                                      left: 10, right: 10, bottom: 10),
+                                  child: Row(
+                                    children: [
+                                      eventDateTime != null ?
+                                      Schedule(eventDateTime!) : Container(),
+                                      Expanded(
+                                        child: Text(
+                                          content,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: themeNotifier.isDark
+                                                ? Color(0xFFE5E9F0)
+                                                : Color(0xFF6A808F),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 Image.network(imageURL!, loadingBuilder:
@@ -280,15 +299,18 @@ class PostTile extends StatelessWidget {
                                 }),
                               ],
                             )
-                          : Padding(
-                              padding: EdgeInsets.only(
-                                  bottom: 20, left: 20, right: 20),
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 10, right: 10, bottom: 8),
-                                child: Text(
+                          : Row(
+                              children: [
+                                eventDateTime != null ?
+                                Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                                  child: Schedule(eventDateTime!),
+                                ) : Container(),
+                                Text(
                                   content,
-                                  textAlign: TextAlign.left,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.clip,
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: themeNotifier.isDark
@@ -296,7 +318,7 @@ class PostTile extends StatelessWidget {
                                         : Color(0xFF6A808F),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
                     ),
                   ),

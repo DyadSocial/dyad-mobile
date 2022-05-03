@@ -1,3 +1,6 @@
+// Author: Vincent
+// Outdated: Only text is used as the optional image is stored directly on Post
+
 syntax="proto3";
 
 message Content {

@@ -1,3 +1,6 @@
+// author: Vincent
+// Sets dynamic preferences based on type to avoid the need of converting
+// everything into strings
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 

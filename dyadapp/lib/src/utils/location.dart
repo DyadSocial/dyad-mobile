@@ -1,3 +1,7 @@
+// Authors: Jake & Vincent
+// Jake made the initial and rework of the location
+// Vincent made the class update listeners to be used with Consumers and Providers
+
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';

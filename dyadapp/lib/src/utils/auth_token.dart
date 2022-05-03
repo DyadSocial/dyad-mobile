@@ -1,3 +1,7 @@
+// Author: Vincent
+// Stores Auth Token in memory and tracks expiry
+// Singleton
+
 import 'dart:convert';
 import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:flutter/material.dart';

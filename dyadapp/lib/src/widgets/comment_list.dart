@@ -1,3 +1,6 @@
+// author: Vincent
+// Widget which stacks comment thread tiles or prints no comments
+
 import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';

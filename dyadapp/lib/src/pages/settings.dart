@@ -1,3 +1,7 @@
+// Author: Vincent & Jake
+// Jake added Change Theme button
+// Vincent added asynchronous view profile (gets user data) and logout buttons
+
 import 'dart:ffi';
 
 import 'package:dyadapp/src/app.dart';

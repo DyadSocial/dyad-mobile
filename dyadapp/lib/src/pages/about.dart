@@ -1,3 +1,4 @@
+// Author: Jake
 import 'package:flutter/material.dart';
 
 //The about page is where users can go to find out more about the application and its creators
@@ -59,7 +60,7 @@ class AboutScreen extends StatelessWidget {
                 ),
               ),
               const Text(
-                  'Vincent is a Computer Science undergraduate at the University of Nevada, Reno. He is from California, but now resides in Reno, NV.',
+                  'Vincent is a Computer Science undergraduate at the University of Nevada, Reno. He likes 3D Printing and works as a system administrator at UNR.',
                   style: _bodyStyle),
               Center(
                 child: Image.asset(

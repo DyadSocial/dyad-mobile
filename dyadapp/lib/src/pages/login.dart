@@ -1,3 +1,5 @@
+// Authors: Prim & Vincent
+
 import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:dyadapp/src/utils/api_provider.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +13,7 @@ import '../utils/auth_token.dart';
 import '../utils/dyad_auth.dart';
 import 'newprofile.dart';
 
-// Login Info Class
+// Login Info Class to return as form params
 class Credentials {
   late String userName;
   late String password;
@@ -79,6 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  // Route to page if about button is tapped
   void _handleAboutTapped() {
     Navigator.of(context).push<void>(
         MaterialPageRoute<void>(builder: (context) => AboutScreen()));
@@ -166,10 +169,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: ElevatedButton(
                   child: Text("Sign In"),
                   onPressed: () async {
+                    // Use callback with the current text
                     var signInStatus = await widget.onSignIn(Credentials(
                       _userNameController.value.text,
                       _passwordController.value.text,
                     ));
+                    // Set state based on signIn status (if successful, page will route to map page)
                     setState(() {
                       if (!signInStatus) {
                         _loginStatus = "ERROR";

@@ -1,4 +1,7 @@
-//NEED TO IMPLEMENT -> Navigate to feed after signed up + password confirmation
+// Author: Prim & Vincent
+// Prim implemented the UI and verification logic (WIP)
+// Vincent Implemented the login requests and credentials logic
+
 import 'package:dyadapp/src/data.dart';
 import 'package:flutter/material.dart';
 import 'package:dyadapp/src/pages/about.dart';

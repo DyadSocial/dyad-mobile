@@ -1,3 +1,8 @@
+// Author: Vincent
+// Tile for a single comment thread which consists of the comment itself and
+// list of replies.
+// Also allows for user actions for each comment or reply
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';

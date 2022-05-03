@@ -1,3 +1,7 @@
+// Page to set up the user's profile shown when user first creates their accounts
+// or does not have any profile information
+// author: Vincent
+
 import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -12,9 +16,6 @@ import '../utils/api_provider.dart';
 import '../utils/data/group.dart';
 import '../utils/user_session.dart';
 
-// Shows details of User's profile description, their profile image, nickname,
-// and list of their posts that are currently in the current user's feed
-// Vincent
 class NewProfileScreen extends StatefulWidget {
   NewProfileScreen({
     Key? key,

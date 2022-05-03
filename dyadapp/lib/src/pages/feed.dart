@@ -1,3 +1,7 @@
+// Authors: Vincent
+// Main Feed Screen
+// Delegates network and database tasks to api_provider and network_handler
+
 import 'dart:io';
 
 import 'package:dyadapp/src/utils/api_provider.dart';
@@ -25,10 +29,12 @@ class FeedScreen extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
+  // Vincent
   @override
   _FeedScreenState createState() => _FeedScreenState();
 }
 
+// Vincent
 class _FeedScreenState extends State<FeedScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
@@ -36,6 +42,7 @@ class _FeedScreenState extends State<FeedScreen>
   List<Post> _posts = [];
   late final grpcClient _grpcClient;
 
+  // Vincent
   @override
   void initState() {
     super.initState();
@@ -50,19 +57,22 @@ class _FeedScreenState extends State<FeedScreen>
     _onFeedRefreshCallback();
   }
 
+  // Vincent
   @override
   void dispose() {
     _tabController.removeListener(_handleTabIndexChanged);
     super.dispose();
   }
 
+  // Vincent
   postWriterCloseCallback() {
     setState(() {
       _postWriterActive = false;
     });
   }
 
-  // gets the filepath of the app
+  // gets the filepath of the app for storing images locally
+  // Vincent
   Future<String> getFilePath(String hash) async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String documentsDirectoryPath = documentsDirectory.path;
@@ -70,9 +80,9 @@ class _FeedScreenState extends State<FeedScreen>
   }
 
   // refreshes the feed
+  // Vincent
   Future<void> _onFeedRefreshCallback() async {
     // setState posts
-    print("Refreshing Feed..");
     String currentUser = await UserSession().get("username");
     //String currentCity = await UserSession().get("city");
     String? currentCity = await UserSession().get("city");
@@ -81,13 +91,11 @@ class _FeedScreenState extends State<FeedScreen>
       for (var post
       in await _grpcClient.runRefreshPosts(0, currentUser, currentCity)) {
         var profile = await APIProvider.getUserProfile(post.author);
-        print(profile);
         Provider.of<Group>(context, listen: false).updateUser(
             username: post.author,
             imageURL: profile['picture_URL'],
             biography: profile['Profile_Description'],
             nickname: profile['Display_name']);
-        print(Provider.of<Group>(context,listen: false).allUsers.map((user) {print(user.username);}));
         setState(() {
           DatabaseHandler().insertPost(post);
         });
@@ -95,8 +103,10 @@ class _FeedScreenState extends State<FeedScreen>
     }
   }
 
+  // Updates the post at the right ID in the database and updates accordingly
+  // on the backend gRPC server
+  // Vincent
   Future<Post?> _onUpdatePostCallback(Post post) async {
-    print("********UPDATE CALLBACK****");
     post.lastUpdated = Timestamp.fromDateTime(DateTime.now());
     await DatabaseHandler().updatePost(post.id, post);
     _grpcClient.runUploadPosts([post]);
@@ -111,6 +121,8 @@ class _FeedScreenState extends State<FeedScreen>
     }
   }
 
+  // Updates downward in post list
+  // Vincent
   Future<void> _onFeedQueryCallback() async {
     // Edge case
     if (_posts.isEmpty) {
@@ -139,6 +151,7 @@ class _FeedScreenState extends State<FeedScreen>
     }
   }
 
+  // Vincent
   onDeletePostCallback(int id, String author) async {
     print("CALL TO DELETE $id:$author");
     if (author == await UserSession().get("username")) {
@@ -154,11 +167,10 @@ class _FeedScreenState extends State<FeedScreen>
     }
   }
 
-  onEditPostCallback(int id, String author, String revision) {
-    _getPostData();
-  }
-
-  onWritePostCallback(postForm) async {
+  // Writes a post to server
+  // Vincent
+  onWritePostCallback(PostForm postForm) async {
+    // Create the base post (no event, image, or id)
     var currentTime = DateTime.now();
     String currentCity = await UserSession().get("city");
     String username = await UserSession().get("username");
@@ -172,7 +184,10 @@ class _FeedScreenState extends State<FeedScreen>
         lastUpdated: Timestamp.fromDateTime(currentTime),
         group: currentCity);
 
+    // Get a generated ID from the local database after inserting it
     int newPostID = await DatabaseHandler().insertPost(postToAdd);
+
+    // Add to image if it exists
     if (postForm.imageFile != null) {
       // Get Path
       final uuid = hash3(
@@ -191,21 +206,39 @@ class _FeedScreenState extends State<FeedScreen>
         postToAdd.content.image = "https://api.dyadsocial.com" + imgURL;
       }
     }
+
+    // Add event to new post if it exists
+    if (postForm.eventDateTime != null) {
+      postToAdd.eventTime = Timestamp.fromDateTime(postForm.eventDateTime!);
+    } else {
+      postToAdd.clearEventTime();
+    }
+
+    // Update post's ID with the ID we got from local database
     postToAdd.id = newPostID;
+
+    // Update the post with all the new content
     await DatabaseHandler().updatePost(newPostID, postToAdd);
+
+    // Update post's we see with the post's stored on database
     var newPostList = await _getPostData();
     setState(() {
       _posts = newPostList;
     });
-    print(newPostList.length);
-    var ack = await _grpcClient.runUploadPosts([postToAdd]);
-    print(ack);
+
+    // Finally upload the finalized post
+    await _grpcClient.runUploadPosts([postToAdd]);
+    print(postToAdd);
   }
 
-  _onPostNavigatorCallback(postId) async {
+  // Uses navigator parser to jump to the post
+  // Vincent
+  _onPostNavigatorCallback(postId) {
     _routeState.go('/post/$postId');
   }
 
+  // Gets posts data from database
+  // Vincent
   Future<List<Post>> _getPostData() async {
     await DatabaseHandler().posts().then((newPosts) {
       _posts = newPosts;
@@ -213,6 +246,8 @@ class _FeedScreenState extends State<FeedScreen>
     return _posts;
   }
 
+  // Gets post data from database filtered by the current user's post
+  // Vincent
   Future<List<Post>> _getSelfPostData() async {
     final currentUser = await UserSession().get("username");
     await DatabaseHandler().posts().then((newPosts) {
@@ -221,6 +256,7 @@ class _FeedScreenState extends State<FeedScreen>
     return _posts.where((post) => post.author == currentUser).toList();
   }
 
+  // Vincent
   @override
   Widget build(BuildContext context) =>
       Scaffold(
@@ -280,8 +316,8 @@ class _FeedScreenState extends State<FeedScreen>
                 icon: Icon(Icons.people),
               ),
               Tab(
-                text: 'Trusted Only',
-                icon: Icon(Icons.favorite),
+                text: 'Your Posts',
+                icon: Icon(Icons.person),
               ),
             ],
           ),
@@ -315,7 +351,6 @@ class _FeedScreenState extends State<FeedScreen>
                                 _onPostNavigatorCallback,
                                 snapshot.data!,
                                 onDeletePostCallback,
-                                onEditPostCallback,
                                 onTap: _handlePostTapped,
                               )
                                   : Center(
@@ -332,7 +367,6 @@ class _FeedScreenState extends State<FeedScreen>
                                 _onPostNavigatorCallback,
                                 snapshot.data!,
                                 onDeletePostCallback,
-                                onEditPostCallback,
                                 onTap: _handlePostTapped,
                               )
                                   : Center(

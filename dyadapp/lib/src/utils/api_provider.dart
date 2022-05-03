@@ -1,3 +1,6 @@
+// Authors: Vincent, Prim, and Jake
+// Various functions calling the Django HTTPS server using requests
+
 import 'dart:convert';
 import 'package:dyadapp/src/utils/user_session.dart';
 import 'package:http/http.dart' as http;
@@ -39,7 +42,8 @@ class APIProvider {
     return "";
   }
 
-  // Reports user and adds entry to the backend database
+  // Reports user and adddoes not yet works entry to the backend database
+  // Vincent
   static Future<void> reportContent(
       String offender,
       String offending_content,
@@ -126,6 +130,7 @@ class APIProvider {
     }
   }
 
+  // Signs up User
   // Prim
   static Future<Map<String, dynamic>> postUserSignup(
       Map<String, String> formData) async {
@@ -146,7 +151,8 @@ class APIProvider {
     return {"status": 200, "body": response.body};
   }
 
-  // Prim
+  // Logins in User
+  // Prim & Vincent
   static Future<Map<String, dynamic>> logIn(
       Map<String, String> formData) async {
     try {
@@ -162,7 +168,8 @@ class APIProvider {
     }
   }
 
-  // Jake/Prim
+  // Fetches messages from api (first-online retrieval)
+  // Jake & Prim
   static Future<Map<String, dynamic>> fetchMessages(
       Map<String, String> formData) async {
     try {
@@ -179,6 +186,7 @@ class APIProvider {
     }
   }
 
+  // calls fetch latest messages to get messages from a chat
   // Jake/Prim
   static Future<Map<String, dynamic>> fetchLatestMessage(
       Map<String, String> formData) async {
@@ -196,6 +204,7 @@ class APIProvider {
     }
   }
 
+  // calls fetch chat endpoint to get all available chats
   // Jake/Prim
   static Future<Map<String, dynamic>> fetchChats(
       Map<String, String> formData) async {
@@ -212,6 +221,7 @@ class APIProvider {
     }
   }
 
+  // Calls check user exists endpoint
   // Jake/Prim
   static Future<Map<String, dynamic>> checkUserExists(
       Map<String, String> formData) async {

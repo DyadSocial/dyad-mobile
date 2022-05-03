@@ -1,3 +1,5 @@
+// Author: Vincent
+// Shows user profile picture, biography, nickname, and allows editing
 import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';

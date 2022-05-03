@@ -1,3 +1,6 @@
+// author: Vincent
+// Default main app but we add an override for the HTTP client
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';

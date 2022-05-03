@@ -1,3 +1,6 @@
+// Authors: Vincent
+// Screen for showing post and comments
+
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:io';
@@ -8,6 +11,9 @@ import 'package:dyadapp/src/pages/settings.dart';
 import 'package:dyadapp/src/widgets/post_bar.dart';
 import 'package:dyadapp/src/utils/data/protos/content.pb.dart';
 import 'package:dyadapp/src/widgets/comment_list.dart';
+import 'package:intl/intl.dart';
+
+import '../widgets/schedule.dart';
 
 class PostScreen extends StatefulWidget {
   final Future<Post?> Function(Post) onUpdateCallback;
@@ -142,6 +148,7 @@ class _PostScreenState extends State<PostScreen> {
         body: _buildPage());
   }
 
+  // Widget showing a text field to replace the simple texxt content
   Widget _editPostContentField() {
     if (_isTextEditable && _isEditingText) {
       return TextField(
@@ -182,29 +189,46 @@ class _PostScreenState extends State<PostScreen> {
               _post.title,
               DateTime.fromMillisecondsSinceEpoch(
                   (_post.created.seconds * 1000).toInt())),
-          Visibility(
-            visible: _isTextEditable,
-            child: Container(
-                alignment: AlignmentDirectional.topEnd,
-                child: IconButton(
-                  icon: Icon(!_isEditingText ? Icons.mode_edit : Icons.done,
-                      size: 20),
-                  onPressed: () async {
-                    _post.content.text = _editingController.value.text;
-                    var updatedPost = await widget.onUpdateCallback(_post);
-                    setState(() {
-                      _isEditingText = !_isEditingText;
-                      if (updatedPost != null) {
-                        _post = updatedPost;
-                      }
-                    });
-                  },
-                )),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Show post date/time formatted if it exists
+              _post.hasEventTime()
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                          "${DateFormat("LLL d, EEEE").format(DateTime.fromMillisecondsSinceEpoch((_post.eventTime.seconds * 1000).toInt()))} ${DateFormat("jm").format(DateTime.fromMillisecondsSinceEpoch((_post.eventTime.seconds * 1000).toInt()))}",
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Color(0xFF81A1C1))),
+                    )
+                  : Container(),
+              // If text is editable show icon based on editing state
+              Visibility(
+                visible: _isTextEditable,
+                child: Container(
+                    alignment: AlignmentDirectional.topEnd,
+                    child: IconButton(
+                      icon: Icon(!_isEditingText ? Icons.mode_edit : Icons.done,
+                          size: 20),
+                      onPressed: () async {
+                        _post.content.text = _editingController.value.text;
+                        var updatedPost = await widget.onUpdateCallback(_post);
+                        setState(() {
+                          _isEditingText = !_isEditingText;
+                          if (updatedPost != null) {
+                            _post = updatedPost;
+                          }
+                        });
+                      },
+                    )),
+              ),
+            ],
           ),
+          // Show editable text field
           Padding(
             padding: const EdgeInsets.all(5),
             child: _editPostContentField(),
           ),
+          // If there's an image show it
           Visibility(
             visible: _post.content.hasImage(),
             child: Container(
@@ -219,6 +243,7 @@ class _PostScreenState extends State<PostScreen> {
                 )),
           ),
           Divider(color: Colors.white, thickness: 1),
+          // Show comment/reply section
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: SizedBox(
@@ -295,6 +320,7 @@ class _PostScreenState extends State<PostScreen> {
                     ),
             ),
           ),
+          // If writing a comment show the writer
           Visibility(
             visible: _isWritingComment,
             child: Padding(
@@ -309,6 +335,7 @@ class _PostScreenState extends State<PostScreen> {
                           " here.")),
             ),
           ),
+          // Show the actual list of comment threads
           CommentList(
               onUpdateCommentCallback, _onReplyCommentCallback, _post.comments),
         ],

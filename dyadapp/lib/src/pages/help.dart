@@ -1,3 +1,6 @@
+// Author: Prim
+// Account Recovery Screen for future implementation of SMS/SMTP servers
+// to allow users to recover their account
 import 'package:flutter/material.dart';
 
 class HelpScreen extends StatefulWidget {

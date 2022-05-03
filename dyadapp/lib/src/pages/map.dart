@@ -1,3 +1,8 @@
+// Authors: Jake and Vincent
+// Shows a map centered on current city and active users
+// Jake did the map and Vincent did the Active users
+// Also pushes the new profile screen if the current user doesn't have a profile
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:dyadapp/src/utils/user_session.dart';
@@ -30,6 +35,7 @@ class _MapScreenState extends State<MapScreen> {
   static CameraPosition _InitialPosition = CameraPosition(
       target: LatLng(latitude, longitude), zoom: 12.0, tilt: 15, bearing: 0);
 
+  // Get the user's username and if they don't have push new profile screen
   @override
   initState() {
     //Map refreshes every minute
@@ -41,11 +47,10 @@ class _MapScreenState extends State<MapScreen> {
             .push(MaterialPageRoute(builder: (context) => NewProfileScreen()));
       }
     }();
-    if (latitude == 25.0) {
-      mapRefresh = Timer.periodic(Duration(seconds: 60), (timer) {
-        getPos();
-      });
-    }
+    // Set a timer to refresh the map periodically
+    mapRefresh = Timer.periodic(Duration(seconds: 30), (timer) {
+      getPos();
+    });
   }
 
   //Default circle around location
@@ -142,20 +147,24 @@ class _MapScreenState extends State<MapScreen> {
                               fontSize: 14, color: Color(0xFFE5E9F0)));
                 }),
             FutureBuilder<int>(
-              future: grpcClient().runGetActiveUsers(),
-              initialData: 0,
-              builder: (context, snapshot) {
-              if (snapshot.hasData)
-              return snapshot.data == 0 ? Text("Querying active users..",
-                  style: TextStyle(fontSize: 12, color: Color(0xFFECEFF4)))
-                  : Text("${snapshot.data} recently active",
-                  style: TextStyle(fontSize: 12, color: Color(0xFFECEFF4)));
-              else
-                return SizedBox(height: 1);
-            }),
+                future: grpcClient().runGetActiveUsers(),
+                initialData: 0,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData)
+                    return snapshot.data == 0
+                        ? Text("Querying active users..",
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xFFECEFF4)))
+                        : Text("${snapshot.data} recently active",
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xFFECEFF4)));
+                  else
+                    return SizedBox(height: 1);
+                }),
             SizedBox(height: 10)
           ])),
         ),
+        // Show a loading screen while we get the currentPos
         body: (latitude == 0 || latitude == 25.0)
             ? FutureBuilder<dynamic>(
                 future: getPos(),
@@ -200,6 +209,7 @@ class _MapScreenState extends State<MapScreen> {
                 onCameraMove: null,
                 circles: circles,
               ),
+        // Show user's information about the map and manual refresh button
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [

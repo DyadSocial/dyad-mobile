@@ -1,3 +1,7 @@
+// Navigates using the parser and router delegates
+// Allows us to do stuff like routeState.go('/post/{id}') and the correct
+// post page will be pushed to the screen
+// Author: Vincent
 import 'dart:async';
 
 import 'package:dyadapp/src/pages/scaffold.dart';
@@ -42,11 +46,13 @@ class _DyadNavigatorState extends State<DyadNavigator> {
     final authState = DyadAuthScope.of(context);
     final pathTemplate = routeState.route.pathTemplate;
 
+    // Intended to jump to message
     //Message? selectedMessage;
     if (pathTemplate == '/message/:messageId') {
       // Route to messageId message
     }
 
+    // if the post exists and the route is /post then get the post
     Future<Post?>? selectedPost;
     if (pathTemplate == '/post/:postId') {
       selectedPost =
@@ -67,6 +73,7 @@ class _DyadNavigatorState extends State<DyadNavigator> {
         return route.didPop(result);
       },
       pages: [
+        // If logged in successfully jump to login page
         if (routeState.route.pathTemplate == '/login')
           FadeTransitionPage<void>(
             key: _signInKey,
@@ -82,6 +89,7 @@ class _DyadNavigatorState extends State<DyadNavigator> {
               },
             ),
           )
+        // Jump to the scaffold to delegate page loader
         else ...[
           FadeTransitionPage<void>(
             key: _scaffoldKey,

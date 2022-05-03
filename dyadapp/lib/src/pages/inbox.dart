@@ -1,3 +1,5 @@
+// Authors: Jake, Prim, Vincent
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
@@ -6,12 +8,8 @@ import 'package:provider/provider.dart';
 import '../utils/data/group.dart';
 import 'package:dyadapp/src/pages/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:dyadapp/src/widgets/message_list_entry.dart';
-import 'package:dyadapp/src/utils/data/test_message.dart';
 import 'package:dyadapp/src/utils/data/protos/messages.pb.dart';
 import 'package:dyadapp/src/utils/database_handler.dart';
-import 'package:dyadapp/src/utils/network_handler.dart';
 import 'package:dyadapp/src/utils/data/protos/google/protobuf/timestamp.pb.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:dyadapp/src/utils/user_session.dart';

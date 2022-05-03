@@ -1,3 +1,6 @@
+// Auhtor: Vincent Pham
+// Implements gRPC client which requests for posts streams and uploads
+// Commented code is the standalone test script
 import 'dart:io';
 import 'dart:convert';
 import 'dart:math';

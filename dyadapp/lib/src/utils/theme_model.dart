@@ -1,3 +1,7 @@
+// Authors: Jakob
+// Gives theme preferences and if the theme is currently light or dark
+// via change notifier - provider model (global state management)
+
 import 'package:flutter/cupertino.dart';
 import 'package:dyadapp/src/utils/theme_preferences.dart';
 

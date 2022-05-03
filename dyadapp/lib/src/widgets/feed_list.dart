@@ -1,3 +1,7 @@
+// Author: Vincent
+// Returns a list of posts
+// Posts currently scroll forever in order to prevent blocking due to
+// network image not able to give a widget a set size
 import 'dart:io';
 
 import 'package:collection/collection.dart';
@@ -15,15 +19,13 @@ class FeedList extends StatefulWidget {
   final List<Post> posts;
   final ValueChanged<Post>? onTap;
   final Function(int, String) onDeleteCallback;
-  final Function(int, String, String) onEditCallback;
 
   const FeedList(
     this.onUpdateCallback,
     this.refreshCallback,
     this.postNavigatorCallback,
     this.posts,
-    this.onDeleteCallback,
-    this.onEditCallback, {
+    this.onDeleteCallback, {
     this.onTap,
     Key? key,
   }) : super(key: key);
@@ -37,6 +39,10 @@ class _FeedListState extends State<FeedList> {
   // scrolls past a certain extent
   late ScrollController _controller;
 
+  // Custom page loading [WIP]
+  // For now we implement the list to be full sized
+  // This function needs to work with networking to account for the
+  // sized of the post_tiles *after* they've loaded their images
   void loadNextPage() async {
     print(_controller.position.extentAfter);
   }
@@ -56,7 +62,7 @@ class _FeedListState extends State<FeedList> {
 
   @override
   Widget build(BuildContext context) {
-    // Sort chronologically
+    // Sort posts chronologically
     widget.posts.sort((a, b) {
       if (a.created.seconds < b.created.seconds) {
         return 1;
@@ -66,6 +72,7 @@ class _FeedListState extends State<FeedList> {
         return -1;
       }
     });
+    // Consumes group so that it can update and read the current users
     return Consumer<Group>(
       builder: (context, group, child) => Container(
         child: RefreshIndicator(
@@ -79,6 +86,8 @@ class _FeedListState extends State<FeedList> {
                   return SizedBox(height: 250);
                 }
                 Post post = widget.posts[idx];
+                // Suggests lists for inbox
+                // TODO: Needs to be merged into Group implementation
                 SuggestiveList.addUser(widget.posts[idx].author);
                 return PostTile(
                   postNavigatorCallback: widget.postNavigatorCallback,
@@ -92,6 +101,8 @@ class _FeedListState extends State<FeedList> {
                   content: post.content.text,
                   datetime: DateTime.fromMillisecondsSinceEpoch(
                       (post.created.seconds * 1000).toInt()),
+                  eventDateTime: post.hasEventTime() ? DateTime.fromMillisecondsSinceEpoch(
+                      (post.eventTime.seconds * 1000).toInt()) : null,
                 );
               }),
         ),

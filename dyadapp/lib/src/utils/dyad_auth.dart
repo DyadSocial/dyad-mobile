@@ -1,3 +1,8 @@
+// Author: Vincent Pham
+// Handles the auth status of the application
+// Updates and handles logic with auth_token using API_Provider
+// Updates UserSession to store the token itself
+// On logout, clears database
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';

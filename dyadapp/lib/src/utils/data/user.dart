@@ -1,3 +1,7 @@
+// Author: Vincent
+// Simple User Model class to instantiate user's from networks
+// Used with groups in order to get user biography and profile picture information
+
 import 'package:flutter/material.dart';
 
 class User {

@@ -1,3 +1,6 @@
+// Simple Proto for getting the active user count (Globally)
+// Authors: Vincent
+
 syntax = "proto3";
 
 message Count {

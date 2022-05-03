@@ -1,3 +1,6 @@
+// Authors: Vincent
+// gRPC model for posts, comments, and RPCs
+
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
@@ -12,6 +15,7 @@ message Post {
   string title = 6;
   string group = 7;
   repeated CommentThread comments = 8;
+  optional google.protobuf.Timestamp event_time = 9;
 }
 
 message Comment {

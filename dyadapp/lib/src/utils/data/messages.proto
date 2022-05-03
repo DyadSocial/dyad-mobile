@@ -1,3 +1,5 @@
+// Author: Prim & Vincent
+
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";

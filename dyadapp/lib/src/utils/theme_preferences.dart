@@ -1,3 +1,5 @@
+// author: Jakob
+// helper class shared preferences
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemePreferences {

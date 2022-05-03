@@ -1,3 +1,8 @@
+// Author: Vincent
+// A global state management solution in which we get information
+// for all users.
+// Simple class that notifies listeners and stores users.
+
 import 'package:collection/collection.dart';
 
 import '../user_session.dart';

@@ -1,3 +1,6 @@
+// Author: Jake
+// Should be deprecated to use Group
+
 import 'dart:convert';
 import 'package:dyadapp/src/utils/user_session.dart';
 /*

@@ -1,3 +1,7 @@
+// Author: Vincent
+// Simple class representing expected JSON response
+// Allows for fromJson and toJson methods to handle network request.
+
 import 'user.dart';
 import 'package:quiver/core.dart';
 

@@ -1,3 +1,8 @@
+//Authors: Vincent
+// Shows the bar in post tiles and post page with author username, author picture
+// timeago, and title.
+// Keeps styling consistent
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -66,7 +71,7 @@ class PostBar extends StatelessWidget {
               ),
             ),
             Expanded(
-              flex: 9,
+              flex: 8,
               child: Container(
                 padding: EdgeInsets.only(left: 16),
                 child: Column(

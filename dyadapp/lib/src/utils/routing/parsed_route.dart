@@ -1,3 +1,5 @@
+// Simple router code taken from official examples of usage.
+
 // Copyright 2014 The Chromium Authors. All rights reserved. See LICENSE file.
 
 import 'package:collection/collection.dart';

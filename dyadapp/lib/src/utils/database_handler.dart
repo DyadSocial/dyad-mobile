@@ -1,3 +1,9 @@
+// Authors: Vincent & Prim
+// Vincent worked on the main database implementation
+// Database was implemented as a singleton
+// Vincent added Post and initial mesasages implementation
+// Prim reworked messages implementation to work with finalized backend APIs
+
 import 'dart:async';
 import 'dart:io';
 import 'package:path/path.dart';
@@ -34,6 +40,7 @@ class DatabaseHandler {
   FutureOr<void> _onOpen(Database db) async {
   }
 
+  // If a new database version, create tables
   Future<void> _onCreate(Database db, int version) async {
     print("tables created");
     await db.execute('''

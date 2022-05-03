@@ -1,3 +1,8 @@
+// Author: Vincent
+// The Scaffold which encapsulates all other pages and renders them
+// when the correct navbar Icon is pressed
+// Also has a MultiProvider giving a hierarchical form of state management
+
 import 'package:flutter/material.dart';
 import 'package:adaptive_navigation/adaptive_navigation.dart';
 import 'package:dyadapp/src/pages/map.dart';

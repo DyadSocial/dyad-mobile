@@ -22,6 +22,7 @@ class Post extends $pb.GeneratedMessage {
     ..aOS(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'title')
     ..aOS(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'group')
     ..pc<CommentThread>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'comments', $pb.PbFieldType.PM, subBuilder: CommentThread.create)
+    ..aOM<$2.Timestamp>(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'eventTime', subBuilder: $2.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -35,6 +36,7 @@ class Post extends $pb.GeneratedMessage {
     $core.String? title,
     $core.String? group,
     $core.Iterable<CommentThread>? comments,
+    $2.Timestamp? eventTime,
   }) {
     final _result = create();
     if (id != null) {
@@ -60,6 +62,9 @@ class Post extends $pb.GeneratedMessage {
     }
     if (comments != null) {
       _result.comments.addAll(comments);
+    }
+    if (eventTime != null) {
+      _result.eventTime = eventTime;
     }
     return _result;
   }
@@ -155,6 +160,17 @@ class Post extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(8)
   $core.List<CommentThread> get comments => $_getList(7);
+
+  @$pb.TagNumber(9)
+  $2.Timestamp get eventTime => $_getN(8);
+  @$pb.TagNumber(9)
+  set eventTime($2.Timestamp v) { setField(9, v); }
+  @$pb.TagNumber(9)
+  $core.bool hasEventTime() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearEventTime() => clearField(9);
+  @$pb.TagNumber(9)
+  $2.Timestamp ensureEventTime() => $_ensure(8);
 }
 
 class Comment extends $pb.GeneratedMessage {

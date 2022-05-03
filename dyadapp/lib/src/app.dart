@@ -1,3 +1,9 @@
+// author: Vincent
+// Main app where we register our path templates,
+// provide keys to pages,
+// initial models,
+// main theme colors,
+// and set up routing
 import 'package:flutter/material.dart';
 
 import 'package:dyadapp/src/utils/dyad_auth.dart';
