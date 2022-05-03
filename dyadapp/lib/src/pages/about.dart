@@ -1,4 +1,4 @@
-// Author: Jake
+// Author: Jake, Prim
 import 'package:flutter/material.dart';
 
 //The about page is where users can go to find out more about the application and its creators
