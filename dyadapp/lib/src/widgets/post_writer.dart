@@ -2,6 +2,7 @@
 // A drop down widget that allows users to create posts.
 // Has form for title, events times, content images, content text
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 // Image Packages
@@ -255,7 +256,22 @@ class _PostWriterState extends State<PostWriter> {
                         ),
                         IconButton(
                           icon: Icon(Icons.collections),
-                          onPressed: () => _imagePicker(ImageSource.gallery),
+                          onPressed: () async {
+                            // Different file selector based on platform
+                            if (Platform.isAndroid || Platform.isIOS) {
+                              _imagePicker(ImageSource.gallery);
+                            } else { // Non-mobile file picker
+                              FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                type: FileType.custom,
+                                allowedExtensions: ['jpg', 'png']
+                              );
+                              if (result != null) {
+                                setState(() {
+                                  _imageFile = File(result.files.single.path!);
+                                });
+                              }
+                            }
+                          }
                         ),
                         IconButton(
                           icon: Icon(Icons.broken_image),

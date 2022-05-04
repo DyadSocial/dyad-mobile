@@ -29,6 +29,7 @@ class PostTile extends StatelessWidget {
     required this.datetime,
     this.imageURL,
     this.eventDateTime,
+    this.isModerator,
     Key? key,
   }) : super(key: key);
 
@@ -48,6 +49,7 @@ class PostTile extends StatelessWidget {
   final DateTime datetime;
   final String? imageURL;
   final DateTime? eventDateTime;
+  final bool? isModerator;
 
   @override
   Widget build(BuildContext context) {
@@ -118,6 +120,19 @@ class PostTile extends StatelessWidget {
                               },
                               child: const Text('View Author Profile',
                                   style: TextStyle(fontSize: 14))),
+                          // MODERATOR ACTIONS
+                          FutureBuilder<dynamic>(
+                            future: UserSession().get("username"),
+                            builder: (context, snapshot) => (snapshot.hasData && (groupInstance.getUser(snapshot.data)?.isModerator ?? false)) ?
+                            ElevatedButton(
+                                onPressed: () {
+                                  onDeleteCallback(this.postId, this.author);
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Delete',
+                                    style: TextStyle(fontSize: 14))) :
+                                Container()
+                          ),
                           // Show report form if user presses report
                           ElevatedButton(
                               onPressed: () {
@@ -251,6 +266,7 @@ class PostTile extends StatelessWidget {
                     author,
                     title,
                     datetime,
+                    isModerator ?? false,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
@@ -299,27 +315,32 @@ class PostTile extends StatelessWidget {
                                 }),
                               ],
                             )
-                          : Row(
-                              children: [
-                                eventDateTime != null ?
-                                Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                                  child: Schedule(eventDateTime!),
-                                ) : Container(),
-                                Text(
-                                  content,
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.clip,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: themeNotifier.isDark
-                                        ? Color(0xFFE5E9F0)
-                                        : Color(0xFF6A808F),
+                          : Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Row(
+                                children: [
+                                  eventDateTime != null ?
+                                  Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                                    child: Schedule(eventDateTime!),
+                                  ) : Container(),
+                                  Expanded(
+                                    child: Text(
+                                      content,
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.clip,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: themeNotifier.isDark
+                                            ? Color(0xFFE5E9F0)
+                                            : Color(0xFF6A808F),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
+                          ),
                     ),
                   ),
                 ],

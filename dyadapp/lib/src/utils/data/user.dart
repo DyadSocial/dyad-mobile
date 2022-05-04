@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 class User {
   final String username;
+  bool isModerator = false;
   String? nickname;
   String? profilePicture;
   String? biography;

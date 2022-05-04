@@ -90,12 +90,14 @@ class _FeedScreenState extends State<FeedScreen>
       DatabaseHandler().clearData();
       for (var post
       in await _grpcClient.runRefreshPosts(0, currentUser, currentCity)) {
+
         var profile = await APIProvider.getUserProfile(post.author);
         Provider.of<Group>(context, listen: false).updateUser(
             username: post.author,
             imageURL: profile['picture_URL'],
             biography: profile['Profile_Description'],
-            nickname: profile['Display_name']);
+            nickname: profile['Display_name'],
+            isModerator: profile['is_moderator']);
         setState(() {
           DatabaseHandler().insertPost(post);
         });
@@ -151,10 +153,9 @@ class _FeedScreenState extends State<FeedScreen>
     }
   }
 
+  // Deletes post in database then calls the gRPC to delete it on the redis database
   // Vincent
   onDeletePostCallback(int id, String author) async {
-    print("CALL TO DELETE $id:$author");
-    if (author == await UserSession().get("username")) {
       await DatabaseHandler().deletePost(id);
       setState(() {
         _posts.removeWhere((post) => post.id == id);
@@ -164,7 +165,6 @@ class _FeedScreenState extends State<FeedScreen>
         return;
       }
       print(await _grpcClient.runDeletePost(id, author, currentCity));
-    }
   }
 
   // Writes a post to server

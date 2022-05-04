@@ -103,12 +103,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     DateTime.now().millisecondsSinceEpoch);
                                 var imgURL = "";
                                 if (imageMem != null) {
-                                  String? imgPath = await APIProvider.uploadImageFile(
-                                      imageMem.path,
-                                      snapshot.data!,
-                                      uuid.toString());
+                                  String? imgPath =
+                                      await APIProvider.uploadImageFile(
+                                          imageMem.path,
+                                          snapshot.data!,
+                                          uuid.toString());
                                   if (imgPath != null) {
-                                    imgURL = "https://api.dyadsocial.com" + imgPath;
+                                    imgURL =
+                                        "https://api.dyadsocial.com" + imgPath;
                                     print(imgURL);
                                   }
                                 }
@@ -118,18 +120,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     snapshot.data!);
                                 Provider.of<Group>(context, listen: false)
                                     .updateUser(
-                                    username: snapshot.data!,
-                                    imageURL: user['picture_URL'],
-                                    biography:
-                                    user['Profile_Description'],
-                                    nickname: user['Display_name']);
+                                        username: snapshot.data!,
+                                        imageURL: user['picture_URL'],
+                                        biography: user['Profile_Description'],
+                                        nickname: user['Display_name']);
                                 // Update current widget
                                 setState(() {
-                                  this.user = Provider.of<Group>(context,
-                                      listen: false)
-                                      .getUser(snapshot.data!)!;
+                                  this.user =
+                                      Provider.of<Group>(context, listen: false)
+                                          .getUser(snapshot.data!)!;
                                 });
-
                               },
                             ),
                           ),
@@ -175,8 +175,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   );
                 }),
+            Visibility(
+              visible: user.isModerator,
+              child: Container(
+                  margin: EdgeInsets.only(top: 12),
+                  decoration: BoxDecoration(
+                      color: Color(0xFFA3BE8C),
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "Moderator",
+                      style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w300,
+                          color: Color(0xFFECEFF4)),
+                    ),
+                  )),
+            ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              padding: const EdgeInsets.symmetric(vertical: 5.0),
               child: Center(
                 child: Text(
                   '${(user.nickname != "") ? user.nickname : user.username}',

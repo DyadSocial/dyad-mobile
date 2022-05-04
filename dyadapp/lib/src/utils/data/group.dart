@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 
 class Group extends ChangeNotifier {
   final List<User> allUsers = [];
+  User? self = null;
 
   Group() {
   }
@@ -44,7 +45,8 @@ class Group extends ChangeNotifier {
       {required String username,
       String? nickname,
       String? biography,
-      String? imageURL}) {
+      String? imageURL,
+      bool? isModerator}) {
     int idx = allUsers.indexWhere((user) => user.username == username);
     // Don't want error trying to access idx = -1
     // If user not found add it
@@ -59,6 +61,9 @@ class Group extends ChangeNotifier {
     }
     if (imageURL != null) {
       allUsers[idx].profilePicture = imageURL;
+    }
+    if (isModerator != null) {
+      allUsers[idx].isModerator = isModerator;
     }
     notifyListeners();
   }

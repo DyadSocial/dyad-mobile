@@ -188,7 +188,8 @@ class _PostScreenState extends State<PostScreen> {
               _author.username,
               _post.title,
               DateTime.fromMillisecondsSinceEpoch(
-                  (_post.created.seconds * 1000).toInt())),
+                  (_post.created.seconds * 1000).toInt()),
+              _author.isModerator),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -198,7 +199,10 @@ class _PostScreenState extends State<PostScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                           "${DateFormat("LLL d, EEEE").format(DateTime.fromMillisecondsSinceEpoch((_post.eventTime.seconds * 1000).toInt()))} ${DateFormat("jm").format(DateTime.fromMillisecondsSinceEpoch((_post.eventTime.seconds * 1000).toInt()))}",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Color(0xFF81A1C1))),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Color(0xFF81A1C1))),
                     )
                   : Container(),
               // If text is editable show icon based on editing state

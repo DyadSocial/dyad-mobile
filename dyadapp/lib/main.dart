@@ -4,8 +4,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:dyadapp/src/app.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite/sqflite.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -17,7 +20,12 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 void main() {
+  if (Platform.isWindows || Platform.isLinux) {
+    sqfliteFfiInit();
+  }
   HttpOverrides.global = new MyHttpOverrides();
   setHashUrlStrategy();
+  // Update the factory to use Ffi Implementation
+  databaseFactory = databaseFactoryFfi;
   runApp(const Dyad());
 }

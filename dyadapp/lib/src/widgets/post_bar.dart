@@ -19,7 +19,8 @@ class PostBar extends StatelessWidget {
     this.profilePicture,
     this.author,
     this.title,
-    this.datetime, {
+    this.datetime,
+    this.isModerator, {
     Key? key,
   }) : super(key: key);
 
@@ -27,9 +28,11 @@ class PostBar extends StatelessWidget {
   final String title;
   final String author;
   final DateTime datetime;
+  final bool isModerator;
 
   @override
   Widget build(BuildContext context) {
+    print("$author:$isModerator");
     return Consumer(builder: (context, ThemeModel themeNotifier, child) {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
@@ -49,7 +52,8 @@ class PostBar extends StatelessWidget {
                           username: author,
                           imageURL: data['picture_URL'],
                           biography: data['Profile_Description'],
-                          nickname: data["Display_name"]);
+                          nickname: data["Display_name"],
+                          isModerator: data["is_moderator"]);
                       var user = Provider.of<Group>(context, listen: false)
                           .getUser(author);
                       if (user != null) {
@@ -78,12 +82,30 @@ class PostBar extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(author,
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: themeNotifier.isDark
-                                ? Color(0xFFD8DEE9)
-                                : Color(0xFF6A808F))),
+                    Row(
+                      children: [
+                        // Moderator tag
+                        isModerator
+                            ? Container(
+                                margin: EdgeInsets.only(right: 4),
+                                padding: EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFA3BE8C),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Text("MOD",
+                                    style: TextStyle(
+                                        color: Color(0xFFECEFF4),
+                                        fontWeight: FontWeight.w500)))
+                            : Container(),
+                        Text(author,
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: themeNotifier.isDark
+                                    ? Color(0xFFD8DEE9)
+                                    : Color(0xFF6A808F))),
+                      ],
+                    ),
                     Text(
                       title,
                       style: TextStyle(

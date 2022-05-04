@@ -103,6 +103,7 @@ class _FeedListState extends State<FeedList> {
                       (post.created.seconds * 1000).toInt()),
                   eventDateTime: post.hasEventTime() ? DateTime.fromMillisecondsSinceEpoch(
                       (post.eventTime.seconds * 1000).toInt()) : null,
+                  isModerator: group.getUser(post.author)?.isModerator ?? false
                 );
               }),
         ),

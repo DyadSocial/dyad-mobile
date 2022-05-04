@@ -50,19 +50,22 @@ class SettingsScreen extends StatelessWidget {
                   child: Text("View Profile"),
                   onPressed: () async {
                     final currentUsername = await UserSession().get("username");
-                    var user =
-                        Provider.of<Group>(context, listen: false).getUser(currentUsername);
+                    var user = Provider.of<Group>(context, listen: false)
+                        .getUser(currentUsername);
                     if (user == null) {
-                      Provider.of<Group>(context, listen: false).addUser(username: currentUsername);
-                      user = Provider.of<Group>(context, listen: false).getUser(currentUsername);
+                      Provider.of<Group>(context, listen: false)
+                          .addUser(username: currentUsername);
+                      user = Provider.of<Group>(context, listen: false)
+                          .getUser(currentUsername);
                     }
-                    var profileData = await APIProvider.getUserProfile(currentUsername);
-                    print("Profile Data: $profileData");
+                    var profileData =
+                        await APIProvider.getUserProfile(currentUsername);
                     Provider.of<Group>(context, listen: false).updateUser(
-                      username: currentUsername,
-                      imageURL: profileData['picture_URL'],
-                      biography: profileData['Profile_Description'],
-                      nickname: profileData['Display_name']);
+                        username: currentUsername,
+                        imageURL: profileData['picture_URL'],
+                        biography: profileData['Profile_Description'],
+                        nickname: profileData['Display_name'],
+                        isModerator: profileData['is_moderator']);
 
                     Navigator.of(context).push<void>(MaterialPageRoute<void>(
                         builder: (context) => ProfileScreen(user!)));
